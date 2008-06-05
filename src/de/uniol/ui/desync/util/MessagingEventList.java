@@ -582,6 +582,7 @@ public class MessagingEventList extends EventList {
 	 * @param signature
 	 *            Signature of stop event
 	 */
+	@SuppressWarnings("unchecked")
 	public void stopOnEvent(int numberEvents, String eventName,
 			Class... signature) {
 		if (numberEvents > 0) {
@@ -606,6 +607,7 @@ public class MessagingEventList extends EventList {
 	/**
 	 * @deprecated Use stopOnEvent(int, String, Class...) instead
 	 */
+	@SuppressWarnings("unchecked")
 	public void stopOnEvent(String eventName, Class[] signature,
 			int numberEvents) {
 		stopOnEvent(numberEvents, eventName, signature);
