@@ -4,6 +4,9 @@ import de.uniol.ui.desync.util.VarianceGenerator;
 
 public class Fridge extends SimEntityBase {
 
+	/** Runtime ID counter */
+	private static int instance = 0;
+	
 	/* constants */
 	public final static String EV_BEGIN_WARMING = "BeginWarming";
 	public final static String EV_BEGIN_COOLING = "BeginCooling";
@@ -11,6 +14,7 @@ public class Fridge extends SimEntityBase {
 	public final static String EV_COOLING = "Cooling";
 	public final static String PROP_TEMPERATURE = "temperature";
 	public final static String PROP_LOAD = "load";
+	public final static double SIMULATION_CLOCK = 1.0;
 
 	/* device parameters */
 	/** surrounding temperature */
@@ -45,6 +49,7 @@ public class Fridge extends SimEntityBase {
 	protected double load = 0.0;
 
 	public Fridge(VarianceGenerator vg) {
+		setName("Fridge" + instance++);
 		// Init default values
 		initDefault();
 		if (vg != null) {
@@ -94,14 +99,14 @@ public class Fridge extends SimEntityBase {
 		// Announce state change
 		firePropertyChange(PROP_LOAD, q_warming, q_cooling);
 		// Delay next state change
-		waitDelay(EV_COOLING, 1.0);
+		waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
 	}
 	
 	public void doBeginWarming() {
 		// Announce state change
 		firePropertyChange(PROP_LOAD, q_cooling, q_warming);
 		// Delay next state change
-		waitDelay(EV_WARMING, 1.0);
+		waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
 	}
 
 	public void doCooling() {
@@ -113,7 +118,7 @@ public class Fridge extends SimEntityBase {
 			waitDelay(EV_BEGIN_WARMING, 0.0);
 		} else {
 			// Desired temperature not reached, continue cooling
-			waitDelay(EV_COOLING, 1.0);
+			waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
 		}
 	}
 
@@ -126,7 +131,7 @@ public class Fridge extends SimEntityBase {
 			waitDelay(EV_BEGIN_COOLING, 0.0);
 		} else {
 			// Still cool enough, continue warming
-			waitDelay(EV_WARMING, 1.0);
+			waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
 		}
 	}
 

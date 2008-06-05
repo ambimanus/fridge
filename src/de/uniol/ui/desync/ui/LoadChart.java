@@ -70,10 +70,10 @@ public class LoadChart extends ChartComposite {
 	        return chart;
 	}
 	
-	public static void openChart(double[][] results) {
+	public static void openChart(double[][] results, boolean blocking) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
-		shell.setSize(600, 300);
+		shell.setSize(900, 400);
 		shell.setLayout(new FillLayout());
 		shell.setText("Simulation results");
 		ChartComposite cc = new LoadChart(shell, results);
@@ -81,7 +81,7 @@ public class LoadChart extends ChartComposite {
 		cc.setHorizontalAxisTrace(false);
 		cc.setVerticalAxisTrace(false);
 		shell.open();
-		while (!shell.isDisposed()) {
+		while (blocking && !shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}

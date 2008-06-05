@@ -1,24 +1,21 @@
-package de.uniol.ui.desync.util;
+package de.uniol.ui.desync.util.collectors;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-
-import de.uniol.ui.model.Fridge;
 
 import simkit.Schedule;
 import simkit.stat.SimpleStatsTally;
+import de.uniol.ui.model.Fridge;
 
-public class XYCollector implements PropertyChangeListener {
+public class LinearCollector extends AbstractCollector {
 
-	private int list;
-	private double lastSimTime = 0.0;
-	private ArrayList<Double> times = new ArrayList<Double>();
-	private ArrayList<Double> values = new ArrayList<Double>();
-	private SimpleStatsTally sst = new SimpleStatsTally(Fridge.PROP_TEMPERATURE);
+	protected double lastSimTime = 0.0;
+	protected ArrayList<Double> times = new ArrayList<Double>();
+	protected ArrayList<Double> values = new ArrayList<Double>();
+	protected SimpleStatsTally sst = new SimpleStatsTally(Fridge.PROP_TEMPERATURE);
 
-	public XYCollector(int eventListId) {
-		this.list = eventListId;
+	public LinearCollector(int eventListId, String name) {
+		super(eventListId, name);
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {

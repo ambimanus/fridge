@@ -2,10 +2,11 @@ package de.uniol.ui.desync.ui;
 
 import java.awt.Color;
 import java.text.NumberFormat;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartFactory;
@@ -20,7 +21,9 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.RectangleInsets;
 
-public class TemperatureChart extends ChartComposite {
+import de.uniol.ui.desync.util.collectors.AbstractCollector;
+
+public class ChartDialog extends Dialog {
 
 	protected static NumberFormat nf = NumberFormat.getNumberInstance();
 	static {
@@ -32,17 +35,34 @@ public class TemperatureChart extends ChartComposite {
 		nf2.setMaximumFractionDigits(3);
 		nf2.setMinimumFractionDigits(3);
 	}
-	
-	public TemperatureChart(Composite parent, double[][] results) {
-		super(parent, SWT.NONE, createChart(results), true);
+
+	private DefaultXYDataset xy;
+	private String title;
+	private String xTitle;
+	private String yTitle;
+
+	public ChartDialog(Shell parent, String title, String xTitle, String yTitle) {
+		super(parent, SWT.APPLICATION_MODAL);
+		this.title = title;
+		this.xTitle = xTitle;
+		this.yTitle = yTitle;
+		xy = new DefaultXYDataset();
+	}
+
+	public void addSeries(AbstractCollector col) {
+		xy.addSeries(col.getName(), col.getResults());
 	}
 	
-	protected static JFreeChart createChart(double[][] results) {
-		DefaultXYDataset xy = new DefaultXYDataset();
-		xy.addSeries("mean values over all fridges", results);
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-				"Temperature progress", "Time (min)", "Temperature (°C)", xy,
-				true, true, false);
+	public void addAllSeries(List<? extends AbstractCollector> list) {
+		Iterator<? extends AbstractCollector> it = list.iterator();
+		while(it.hasNext()) {
+			addSeries(it.next());
+		}
+	}
+
+	private JFreeChart createChart() {
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, xTitle,
+				yTitle, xy, true, true, false);
 
 		chart.setBackgroundPaint(Color.white);
 
@@ -65,23 +85,26 @@ public class TemperatureChart extends ChartComposite {
 			});
 		}
 
-		NumberAxis axis = new NumberAxis("Time (min)");
+		NumberAxis axis = new NumberAxis(xTitle);
 		plot.setDomainAxis(axis);
 
 		return chart;
 	}
 	
-	public static void openChart(double[][] results, boolean blocking) {
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		shell.setSize(900, 400);
-		shell.setLayout(new FillLayout());
-		shell.setText("Simulation results");
-		ChartComposite cc = new TemperatureChart(shell, results);
+	public void create() {
+		Shell shell = getParent();
+		ChartComposite cc = new ChartComposite(shell, SWT.NONE, createChart(),
+				true);
 		cc.setDisplayToolTips(true);
 		cc.setHorizontalAxisTrace(false);
 		cc.setVerticalAxisTrace(false);
+	}
+
+	public void open(boolean blocking) {
+		create();
+		Shell shell = getParent();
 		shell.open();
+		Display display = shell.getDisplay();
 		while (blocking && !shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
