@@ -73,7 +73,7 @@ public class Fridge extends SimEntityBase {
 		eta = 3.0;
 		t_min = 3.0;
 		t_max = 8.0;
-		tau = 1.0 / 60.0;
+		tau = Fridge.SIMULATION_CLOCK / 60.0;
 		// Init aux vars
 		eps = Math.exp(-(tau * a) / m_c);
 		t_previous = Double.NaN;
