@@ -1,6 +1,8 @@
 package de.uniol.ui.desync.ui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.SystemColor;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +14,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.Range;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
@@ -40,6 +44,7 @@ public class ChartDialog extends Dialog {
 	private String title;
 	private String xTitle;
 	private String yTitle;
+	private int highlightedSeriesId = -1;
 
 	public ChartDialog(Shell parent, String title, String xTitle, String yTitle) {
 		super(parent, SWT.APPLICATION_MODAL);
@@ -58,6 +63,14 @@ public class ChartDialog extends Dialog {
 		while(it.hasNext()) {
 			addSeries(it.next());
 		}
+	}
+
+	public int getHighlightedSeriesId() {
+		return highlightedSeriesId;
+	}
+
+	public void setHighlightedSeriesId(int highlightedSeriesId) {
+		this.highlightedSeriesId = highlightedSeriesId;
 	}
 
 	private JFreeChart createChart() {
@@ -83,10 +96,21 @@ public class ChartDialog extends Dialog {
 							+ "°C";
 				}
 			});
+			
+			if (highlightedSeriesId != -1) {
+				xyr.setSeriesPaint(highlightedSeriesId, SystemColor.BLACK);
+				xyr.setSeriesStroke(highlightedSeriesId, new BasicStroke(2.0f));
+			}
 		}
 
-		NumberAxis axis = new NumberAxis(xTitle);
-		plot.setDomainAxis(axis);
+		NumberAxis xaxis = new NumberAxis(xTitle);
+		plot.setDomainAxis(xaxis);
+
+		ValueAxis yaxis = plot.getRangeAxis();
+		Range old = yaxis.getRange();
+		yaxis.setRange(new Range(old.getLowerBound()
+				- (old.getUpperBound() * 0.1), old.getUpperBound()
+				+ (old.getUpperBound() * 0.1)));
 
 		return chart;
 	}
