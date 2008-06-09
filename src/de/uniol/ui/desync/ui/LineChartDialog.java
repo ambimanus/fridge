@@ -2,8 +2,8 @@ package de.uniol.ui.desync.ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.SystemColor;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,7 +27,7 @@ import org.jfree.ui.RectangleInsets;
 
 import de.uniol.ui.desync.util.collectors.AbstractCollector;
 
-public class ChartDialog extends Dialog {
+public class LineChartDialog extends Dialog {
 
 	protected static NumberFormat nf = NumberFormat.getNumberInstance();
 	static {
@@ -40,13 +40,15 @@ public class ChartDialog extends Dialog {
 		nf2.setMinimumFractionDigits(3);
 	}
 
-	private DefaultXYDataset xy;
-	private String title;
-	private String xTitle;
-	private String yTitle;
-	private int highlightedSeriesId = -1;
+	protected DefaultXYDataset xy;
+	protected String title;
+	protected String xTitle;
+	protected String yTitle;
+	
+	protected HashMap<Integer, Float> seriesWidths = new HashMap<Integer, Float>();
+	protected HashMap<Integer, Color> seriesColors = new HashMap<Integer, Color>();
 
-	public ChartDialog(Shell parent, String title, String xTitle, String yTitle) {
+	public LineChartDialog(Shell parent, String title, String xTitle, String yTitle) {
 		super(parent, SWT.APPLICATION_MODAL);
 		this.title = title;
 		this.xTitle = xTitle;
@@ -65,15 +67,15 @@ public class ChartDialog extends Dialog {
 		}
 	}
 
-	public int getHighlightedSeriesId() {
-		return highlightedSeriesId;
+	public void setSeriesWidth(int series, float width) {
+		seriesWidths.put(series, width);
+	}
+	
+	public void setSeriesColor(int series, Color c) {
+		seriesColors.put(series, c);
 	}
 
-	public void setHighlightedSeriesId(int highlightedSeriesId) {
-		this.highlightedSeriesId = highlightedSeriesId;
-	}
-
-	private JFreeChart createChart() {
+	protected JFreeChart createChart() {
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, xTitle,
 				yTitle, xy, true, true, false);
 
@@ -97,9 +99,11 @@ public class ChartDialog extends Dialog {
 				}
 			});
 			
-			if (highlightedSeriesId != -1) {
-				xyr.setSeriesPaint(highlightedSeriesId, SystemColor.BLACK);
-				xyr.setSeriesStroke(highlightedSeriesId, new BasicStroke(2.0f));
+			for (int i : seriesWidths.keySet()) {
+				xyr.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
+			}
+			for (int i : seriesColors.keySet()) {
+				xyr.setSeriesPaint(i, seriesColors.get(i));
 			}
 		}
 

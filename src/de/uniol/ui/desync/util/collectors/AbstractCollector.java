@@ -1,19 +1,12 @@
 package de.uniol.ui.desync.util.collectors;
 
-import java.beans.PropertyChangeListener;
 
-public abstract class AbstractCollector implements PropertyChangeListener {
+public abstract class AbstractCollector {
 	
-	protected int list;
 	protected String name;
 	
-	public AbstractCollector(int eventListId, String name) {
-		this.list = eventListId;
+	public AbstractCollector(String name) {
 		this.name = name;
-	}
-	
-	public int getEventListId() {
-		return list;
 	}
 	
 	public String getName() {

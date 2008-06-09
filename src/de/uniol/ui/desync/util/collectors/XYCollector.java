@@ -3,29 +3,27 @@ package de.uniol.ui.desync.util.collectors;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
-import simkit.Schedule;
-import simkit.stat.SimpleStatsTally;
-import de.uniol.ui.model.Fridge;
-
-public class LinearCollector extends AbstractCollector {
+public class XYCollector extends AbstractCollector {
 
 	protected double lastSimTime = 0.0;
 	protected ArrayList<Double> times = new ArrayList<Double>();
 	protected ArrayList<Double> values = new ArrayList<Double>();
-	protected SimpleStatsTally sst = new SimpleStatsTally(Fridge.PROP_TEMPERATURE);
 
-	public LinearCollector(int eventListId, String name) {
-		super(eventListId, name);
+	public XYCollector(int eventListId, String name) {
+		super(name);
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (lastSimTime != Schedule.getEventList(list).getSimTime()) {
-			times.add(lastSimTime);
-			values.add(sst.getMean());
-			sst.reset();
-			lastSimTime = Schedule.getEventList(list).getSimTime();
+		if (!(evt.getNewValue() instanceof Double)) {
+			throw new IllegalArgumentException("Expected Double, but got "
+					+ evt.getNewValue().getClass());
 		}
-		sst.newObservation((Double) evt.getNewValue());
+		times.add(lastSimTime);
+		values.add((Double)evt.getNewValue());
+//		if (Fridge.PROP_LOAD.equals(sst.getName())) {
+//			System.out.println(getName() + ": " + lastSimTime + " - "
+//					+ sst.getMean() + " W");
+//		}
 	}
 
 	public double[][] getResults() {
