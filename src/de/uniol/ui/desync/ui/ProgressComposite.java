@@ -25,7 +25,7 @@ public class ProgressComposite extends Composite {
 	private void initialize() {
 		setLayout(new FillLayout());
 		
-		bar = new ProgressBar(this, SWT.SMOOTH);
+		bar = new ProgressBar(this, SWT.NONE);
 		bar.setMinimum(0);
 		bar.setMaximum(100);
 	}
@@ -56,16 +56,14 @@ public class ProgressComposite extends Composite {
 		return shell;
 	}
 	
-	public void open(boolean block) {
+	public void open() {
 		if (shell == null) {
 			createShell();
 		}
 		shell.open();
-		if (block) {
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
 		}
 	}
 }

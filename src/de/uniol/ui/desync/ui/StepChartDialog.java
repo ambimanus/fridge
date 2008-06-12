@@ -22,8 +22,16 @@ import org.jfree.ui.RectangleInsets;
 
 public class StepChartDialog extends LineChartDialog {
 
-	public StepChartDialog(Shell parent, String title, String xTitle, String yTitle) {
-		super(parent, title, xTitle, yTitle);
+	private double minRange = -10.0;
+	private double maxRange = 80.0;
+	
+	public StepChartDialog(Shell parent, String title, String xTitle,
+			String yTitle, String tooltipRangeUnits, String tooltipValueUnits,
+			double minRange, double maxRange) {
+		super(parent, title, xTitle, yTitle, tooltipRangeUnits,
+				tooltipValueUnits);
+		this.maxRange = maxRange;
+		this.minRange = minRange;
 	}
 
 	protected JFreeChart createChart() {
@@ -44,9 +52,10 @@ public class StepChartDialog extends LineChartDialog {
 			xyr.setBaseToolTipGenerator(new XYToolTipGenerator() {
 				public String generateToolTip(XYDataset dataset, int series,
 						int item) {
-					return nf.format(dataset.getXValue(series, item)) + "min, "
+					return nf.format(dataset.getXValue(series, item))
+							+ tooltipRangeUnits + ", "
 							+ nf2.format(dataset.getYValue(series, item))
-							+ "°C";
+							+ tooltipValueUnits;
 				}
 			});
 			
@@ -62,10 +71,7 @@ public class StepChartDialog extends LineChartDialog {
 		plot.setDomainAxis(xaxis);
 
 		ValueAxis yaxis = plot.getRangeAxis();
-		Range old = yaxis.getRange();
-		yaxis.setRange(new Range(old.getLowerBound()
-				- (old.getUpperBound() * 0.1), old.getUpperBound()
-				+ (old.getUpperBound() * 0.1)));
+		yaxis.setRange(new Range(minRange, maxRange));
 
 		return chart;
 	}

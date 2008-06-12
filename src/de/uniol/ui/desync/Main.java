@@ -18,13 +18,8 @@ public class Main {
 	/** Thermal mass maximum */
 	public final static double MC_MAX = 32.0;
 
-	/** Overall variance minimum */
-	public final static double VARIANCE_MIN = 0.8;
-	/** Overall variance maximum */
-	public final static double VARIANCE_MAX = 1.2;
-
 	/* Simulation params */
-	public final static int POPULATION_SIZE = 200;
+	public final static int POPULATION_SIZE = 1000;
 	public final static double SIMULATION_LENGTH = 1800.0;
 
 	public static void main(String[] args) {

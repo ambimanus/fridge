@@ -55,7 +55,6 @@ public class Experiment {
 
 	public void simulate(double end) {
 		final ProgressComposite pc = new ProgressComposite();
-		pc.open(false);
 		el.stopAtTime(end);
 		el.reset();
 		el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
@@ -64,7 +63,12 @@ public class Experiment {
 						pc.setProgress(progress);
 					}
 				});
-		el.startSimulation();
+		new Thread() {
+			public void run() {
+				el.startSimulation();
+			}
+		}.start();
+		pc.open();
 	}
 
 	public void showResults(boolean showAll, boolean highlightFirst,
@@ -76,7 +80,8 @@ public class Experiment {
 		shell.setText("Simulation results");
 		// Temperature chart
 		LineChartDialog lcd = new LineChartDialog(shell,
-				"Temperature progress", "Time (min)", "Temperature (°C)");
+				"Temperature progress", "Time (min)", "Temperature (°C)",
+				"min", "°C");
 		lcd.addSeries(meanTemp);
 		if (firstColor != null) {
 			lcd.setSeriesColor(0, firstColor);
@@ -101,7 +106,7 @@ public class Experiment {
 		}
 		// Load chart
 		StepChartDialog scd = new StepChartDialog(shell, "Load progress",
-				"Time (min)", "Load (W)");
+				"Time (min)", "Load (W)", "min", "W", -10.0, 80.0);
 		scd.addSeries(meanLoad);
 		if (firstColor != null) {
 			scd.setSeriesColor(0, firstColor);

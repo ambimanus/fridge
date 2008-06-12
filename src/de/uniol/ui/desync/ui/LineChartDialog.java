@@ -28,7 +28,7 @@ import org.jfree.ui.RectangleInsets;
 import de.uniol.ui.desync.util.collectors.AbstractCollector;
 
 public class LineChartDialog extends Dialog {
-
+	
 	protected static NumberFormat nf = NumberFormat.getNumberInstance();
 	static {
 		nf.setMaximumFractionDigits(0);
@@ -39,20 +39,26 @@ public class LineChartDialog extends Dialog {
 		nf2.setMaximumFractionDigits(3);
 		nf2.setMinimumFractionDigits(3);
 	}
-
+	
+	
 	protected DefaultXYDataset xy;
 	protected String title;
 	protected String xTitle;
 	protected String yTitle;
+	protected String tooltipRangeUnits;
+	protected String tooltipValueUnits;
 	
 	protected HashMap<Integer, Float> seriesWidths = new HashMap<Integer, Float>();
 	protected HashMap<Integer, Color> seriesColors = new HashMap<Integer, Color>();
 
-	public LineChartDialog(Shell parent, String title, String xTitle, String yTitle) {
+	public LineChartDialog(Shell parent, String title, String xTitle,
+			String yTitle, String tooltipRangeUnits, String tooltipValueUnits) {
 		super(parent, SWT.APPLICATION_MODAL);
 		this.title = title;
 		this.xTitle = xTitle;
 		this.yTitle = yTitle;
+		this.tooltipRangeUnits = tooltipRangeUnits;
+		this.tooltipValueUnits = tooltipValueUnits;
 		xy = new DefaultXYDataset();
 	}
 
@@ -93,9 +99,10 @@ public class LineChartDialog extends Dialog {
 			xyr.setBaseToolTipGenerator(new XYToolTipGenerator() {
 				public String generateToolTip(XYDataset dataset, int series,
 						int item) {
-					return nf.format(dataset.getXValue(series, item)) + "min, "
+					return nf.format(dataset.getXValue(series, item))
+							+ tooltipRangeUnits + ", "
 							+ nf2.format(dataset.getYValue(series, item))
-							+ "°C";
+							+ tooltipValueUnits;
 				}
 			});
 			
