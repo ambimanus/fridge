@@ -30,14 +30,10 @@ public class Experiment {
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
 
-	/** Progress bar */
-	private final ProgressComposite pc;
-
 	public Experiment(MessagingEventList el, ArrayList<Fridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
 		initStatistics();
-		pc = ProgressComposite.prepareOpening();
 	}
 
 	private void initStatistics() {
@@ -58,6 +54,8 @@ public class Experiment {
 	}
 
 	public void simulate(double end) {
+		final ProgressComposite pc = new ProgressComposite();
+		pc.open(false);
 		el.stopAtTime(end);
 		el.reset();
 		el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
@@ -66,14 +64,7 @@ public class Experiment {
 						pc.setProgress(progress);
 					}
 				});
-		new Thread() {
-			public void run() {
-				System.out.println("Starting simulation.");
-				el.startSimulation();
-				System.out.println("Stopping simulation.");
-			}
-		}.start();
-		pc.open();
+		el.startSimulation();
 	}
 
 	public void showResults(boolean showAll, boolean highlightFirst,

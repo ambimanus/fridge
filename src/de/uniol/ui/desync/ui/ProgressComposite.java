@@ -13,6 +13,10 @@ public class ProgressComposite extends Composite {
 	private static Display display;
 	private static Shell shell;
 	
+	public ProgressComposite() {
+		this(createShell(), SWT.APPLICATION_MODAL);
+	}
+	
 	public ProgressComposite(Composite parent, int style) {
 		super(parent, style);
 		initialize();
@@ -29,7 +33,7 @@ public class ProgressComposite extends Composite {
 	public void setProgress(int p) {
 		final int pr = p;
 		if (!isDisposed()) {
-			getDisplay().asyncExec(new Runnable() {
+			getDisplay().syncExec(new Runnable() {
 				public void run() {
 					if (pr < 100) {
 						if (!bar.isDisposed()) {
@@ -43,25 +47,25 @@ public class ProgressComposite extends Composite {
 		}
 	}
 	
-	public static ProgressComposite prepareOpening() {
+	public static Shell createShell() {
 		display = Display.getDefault();
-		if (shell == null) {
-			shell = new Shell(display);
-		}
+		shell = new Shell(display);
 		shell.setSize(600, 64);
 		shell.setLayout(new FillLayout());
 		shell.setText("Simulation progress");
-		return new ProgressComposite(shell, SWT.NONE);
+		return shell;
 	}
 	
-	public void open() {
+	public void open(boolean block) {
 		if (shell == null) {
-			prepareOpening();
+			createShell();
 		}
 		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
+		if (block) {
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch())
+					display.sleep();
+			}
 		}
 	}
 }
