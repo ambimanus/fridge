@@ -3,96 +3,62 @@ package de.uniol.ui.desync;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-
 import simkit.Schedule;
-import de.uniol.ui.desync.ui.LineChartDialog;
-import de.uniol.ui.desync.ui.ProgressComposite;
-import de.uniol.ui.desync.ui.StepChartDialog;
+import simkit.random.RandomVariate;
+import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
-import de.uniol.ui.desync.util.ProgressListener;
-import de.uniol.ui.desync.util.VarianceGenerator;
-import de.uniol.ui.desync.util.collectors.MultiLinearCollector;
-import de.uniol.ui.desync.util.collectors.XYCollector;
+import de.uniol.ui.model.Experiment;
 import de.uniol.ui.model.Fridge;
 
 public class Main {
 
-	public final static int POPULATION_SIZE = 5000;
-	public final static double MAX_VARIANCE = 0.2;
-	public final static int MAX_VARIANCE_FRACTION = 2;
-	public final static double SIMULATION_LENGTH = 800.0;
-	
-	private static ArrayList<XYCollector> temps = new ArrayList<XYCollector>();
-	private static ArrayList<XYCollector> loads = new ArrayList<XYCollector>();
-	
+	/* Population params */
+	/** Thermal mass minimum */
+	public final static double MC_MIN = 7.9;
+	/** Thermal mass maximum */
+	public final static double MC_MAX = 32.0;
+
+	/** Overall variance minimum */
+	public final static double VARIANCE_MIN = 0.8;
+	/** Overall variance maximum */
+	public final static double VARIANCE_MAX = 1.2;
+
+	/* Simulation params */
+	public final static int POPULATION_SIZE = 200;
+	public final static double SIMULATION_LENGTH = 1800.0;
+
 	public static void main(String[] args) {
+		// Prepare FEL
 		final int list = Schedule.addNewEventList(MessagingEventList.class);
-		final ProgressComposite pc = ProgressComposite.prepareOpening();
-		final MessagingEventList el = (MessagingEventList) Schedule.getEventList(list);
-		
-		MultiLinearCollector temp = new MultiLinearCollector(el, "mean temperature");
-		MultiLinearCollector load = new MultiLinearCollector(el, "mean load");
-		VarianceGenerator vg = new VarianceGenerator(MAX_VARIANCE,
-				MAX_VARIANCE_FRACTION);
+		final MessagingEventList el = (MessagingEventList) Schedule
+				.getEventList(list);
+
+		// Prepare experiment
+		Experiment exp = new Experiment(el, createFridges(list));
+
+		// Simulate
+		exp.simulate(SIMULATION_LENGTH);
+
+		// Create charts
+		exp.showResults(false, false, SystemColor.BLACK);
+	}
+
+	/**
+	 * Creates the fridges population.
+	 * 
+	 * @param list the underlying FEL id
+	 * @return the population
+	 */
+	private static ArrayList<Fridge> createFridges(int list) {
+		RandomVariate thermalMassVariate = new UniformVariate();
+		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
 		ArrayList<Fridge> fridges = new ArrayList<Fridge>(POPULATION_SIZE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
-			Fridge f = new Fridge(vg);
+			Fridge f = new Fridge();
+			f.generate_mC(thermalMassVariate);
 			f.setEventListID(list);
 			fridges.add(f);
-			
-			temp.addEntity(f, Fridge.PROP_TEMPERATURE);
-			load.addEntity(f, Fridge.PROP_LOAD);
-			
-//			XYCollector t = new XYCollector(list, f.getName());
-//			f.addPropertyChangeListener(Fridge.PROP_TEMPERATURE, t);
-//			temps.add(t);
-//			
-//			XYCollector l = new XYCollector(list, f.getName());
-//			f.addPropertyChangeListener(Fridge.PROP_LOAD, l);
-//			loads.add(l);
 		}
-		
-
-		el.stopAtTime(SIMULATION_LENGTH);
-		el.reset();
-		el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
-				new ProgressListener(SIMULATION_LENGTH) {
-					protected void progressChanged(int progress) {
-						pc.setProgress(progress);
-					}
-				});
-		new Thread() {
-			public void run() {
-				System.out.println("Starting simulation.");
-				el.startSimulation();
-				System.out.println("Stopping simulation.");
-			}
-		}.start();
-		pc.open();
-		
-		System.out.println("Creating report.");
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		shell.setSize(900, 800);
-		shell.setLayout(new FillLayout(SWT.VERTICAL));
-		shell.setText("Simulation results");
-		LineChartDialog lcd = new LineChartDialog(shell, "Temperature progress", "Time (min)",
-				"Temperature (°C)");
-		lcd.addSeries(temp);
-		lcd.addAllSeries(temps);
-		lcd.setSeriesColor(0, SystemColor.BLACK);
-//		lcd.setSeriesWidth(0, 2.0f);
-		lcd.create();
-		StepChartDialog scd = new StepChartDialog(shell, "Load progress", "Time (min)",
-		"Load (W)");
-		scd.addSeries(load);
-		scd.addAllSeries(loads);
-		scd.setSeriesColor(0, SystemColor.BLACK);
-//		scd.setSeriesWidth(0, 2.0f);
-		scd.open(true);
+		return fridges;
 	}
 }

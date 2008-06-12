@@ -9,20 +9,17 @@ import simkit.SimEntity;
 import simkit.stat.SimpleStatsTally;
 import de.uniol.ui.desync.util.MessagingEventList;
 
-public class MultiLinearCollector extends AbstractCollector {
+public class TimeseriesMultiMeanCollector extends AbstractCollector {
 
-	protected MessagingEventList eventlist;
 	protected HashMap<SimEntity, Double> entities = new HashMap<SimEntity, Double>();
 	protected SimpleStatsTally sst;
-	protected XYCollector col;
 	protected boolean changed = false;
 	
 	protected ArrayList<Double> times = new ArrayList<Double>();
 	protected ArrayList<Double> values = new ArrayList<Double>();
 	
-	public MultiLinearCollector(MessagingEventList eventlist, String name) {
+	public TimeseriesMultiMeanCollector(MessagingEventList eventlist, String name) {
 		super(name);
-		this.eventlist = eventlist;
 		eventlist.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME, new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				nextInterval((Double) evt.getOldValue(), (Double) evt
@@ -30,7 +27,6 @@ public class MultiLinearCollector extends AbstractCollector {
 			}
 		});
 		sst = new SimpleStatsTally();
-		col = new XYCollector(eventlist.getID(), name);
 	}
 	
 	public void addEntity(SimEntity entity, String property) {
@@ -50,10 +46,14 @@ public class MultiLinearCollector extends AbstractCollector {
 			for (SimEntity se : entities.keySet()) {
 				sst.newObservation(entities.get(se));
 			}
-			times.add(oldSimtime);
-			values.add(sst.getMean());
+			addObservation(oldSimtime, sst.getMean());
 		}
 		changed = false;
+	}
+
+	public void addObservation(double time, double value) {
+		times.add(time);
+		values.add(value);
 	}
 	
 	public double[][] getResults() {
@@ -67,5 +67,13 @@ public class MultiLinearCollector extends AbstractCollector {
 			v[i] = values.get(i);
 		}
 		return new double[][] { t, v };
+	}
+
+	public double[] getObservation(int index) {
+		return new double[] { times.get(index), values.get(index) };
+	}
+
+	public int getSize() {
+		return times.size();
 	}
 }

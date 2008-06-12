@@ -1,6 +1,6 @@
 package de.uniol.ui.model;
 import simkit.SimEntityBase;
-import de.uniol.ui.desync.util.VarianceGenerator;
+import simkit.random.RandomVariate;
 
 public class Fridge extends SimEntityBase {
 
@@ -38,7 +38,7 @@ public class Fridge extends SimEntityBase {
 	/** time between simulation steps (for equations, one unit == one hour) */
 	private double tau = 1.0 / 60.0;
 	/** system intertia, calculated value */
-	private double eps = Math.exp(-(tau * a) / m_c);
+	private double eps; // = Math.exp(-(tau * a) / m_c)
 	/** inner temperature at previous timestamp */
 	private double t_previous = Double.NaN;
 
@@ -48,19 +48,86 @@ public class Fridge extends SimEntityBase {
 	/** load at current timestamp */
 	protected double load = 0.0;
 
-	public Fridge(VarianceGenerator vg) {
+	public Fridge() {
 		setName("Fridge" + instance++);
 		// Init default values
 		initDefault();
-		if (vg != null) {
-			// Deviate device parameters
-			t_surround *= vg.generate();
-			a *= vg.generate();
-			q_cooling *= vg.generate();
-			q_warming *= vg.generate();
-			m_c *= vg.generate();
-			eta *= vg.generate();
-		}
+	}
+	
+	public void variateAllSequential(RandomVariate rv) {
+		variate_a(rv);
+		variate_eta(rv);
+		variate_mC(rv);
+		variate_qCooling(rv);
+		variate_qWarming(rv);
+		variate_tSurround(rv);
+	}
+	
+	public void variateAllParallel(RandomVariate rv) {
+		double var = rv.generate();
+		a *= var;
+		eta *= var;
+		m_c *= var;
+		q_cooling *= var;
+		q_warming *= var;
+		t_surround *= var;
+	}
+	
+	public void variate_a(RandomVariate rv) {
+		a *= rv.generate();
+	}
+	
+	public void variate_eta(RandomVariate rv) {
+		eta *= rv.generate();
+	}
+	
+	public void variate_mC(RandomVariate rv) {
+		m_c *= rv.generate();
+	}
+	
+	public void variate_qCooling(RandomVariate rv) {
+		q_cooling *= rv.generate();
+	}
+	
+	public void variate_qWarming(RandomVariate rv) {
+		q_warming *= rv.generate();
+	}
+	
+	public void variate_tSurround(RandomVariate rv) {
+		t_surround *= rv.generate();
+	}
+	
+	public void generateAllSequential(RandomVariate rv) {
+		generate_a(rv);
+		generate_eta(rv);
+		generate_mC(rv);
+		generate_qCooling(rv);
+		generate_qWarming(rv);
+		generate_tSurround(rv);
+	}
+	
+	public void generate_a(RandomVariate rv) {
+		a = rv.generate();
+	}
+	
+	public void generate_eta(RandomVariate rv) {
+		eta = rv.generate();
+	}
+	
+	public void generate_mC(RandomVariate rv) {
+		m_c = rv.generate();
+	}
+	
+	public void generate_qCooling(RandomVariate rv) {
+		q_cooling = rv.generate();
+	}
+	
+	public void generate_qWarming(RandomVariate rv) {
+		q_warming = rv.generate();
+	}
+	
+	public void generate_tSurround(RandomVariate rv) {
+		t_surround = rv.generate();
 	}
 	
 	public void initDefault() {
@@ -75,7 +142,6 @@ public class Fridge extends SimEntityBase {
 		t_max = 8.0;
 		tau = Fridge.SIMULATION_CLOCK / 60.0;
 		// Init aux vars
-		eps = Math.exp(-(tau * a) / m_c);
 		t_previous = Double.NaN;
 		// Init state vars
 		t_current = 3.0;
@@ -83,6 +149,8 @@ public class Fridge extends SimEntityBase {
 	}
 
 	public void doRun() {
+		// Calculate proper epsilon
+		eps = Math.exp(-(tau * a) / m_c);
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Be passive until necessary:
