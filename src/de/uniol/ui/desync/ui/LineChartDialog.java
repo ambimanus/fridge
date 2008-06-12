@@ -47,18 +47,23 @@ public class LineChartDialog extends Dialog {
 	protected String yTitle;
 	protected String tooltipRangeUnits;
 	protected String tooltipValueUnits;
+	protected double minRange;
+	protected double maxRange;
 	
 	protected HashMap<Integer, Float> seriesWidths = new HashMap<Integer, Float>();
 	protected HashMap<Integer, Color> seriesColors = new HashMap<Integer, Color>();
 
 	public LineChartDialog(Shell parent, String title, String xTitle,
-			String yTitle, String tooltipRangeUnits, String tooltipValueUnits) {
+			String yTitle, String tooltipRangeUnits, String tooltipValueUnits,
+			double minRange, double maxRange) {
 		super(parent, SWT.APPLICATION_MODAL);
 		this.title = title;
 		this.xTitle = xTitle;
 		this.yTitle = yTitle;
 		this.tooltipRangeUnits = tooltipRangeUnits;
 		this.tooltipValueUnits = tooltipValueUnits;
+		this.maxRange = maxRange;
+		this.minRange = minRange;
 		xy = new DefaultXYDataset();
 	}
 
@@ -118,10 +123,7 @@ public class LineChartDialog extends Dialog {
 		plot.setDomainAxis(xaxis);
 
 		ValueAxis yaxis = plot.getRangeAxis();
-		Range old = yaxis.getRange();
-		yaxis.setRange(new Range(old.getLowerBound()
-				- (old.getUpperBound() * 0.1), old.getUpperBound()
-				+ (old.getUpperBound() * 0.1)));
+		yaxis.setRange(new Range(minRange, maxRange));
 
 		return chart;
 	}

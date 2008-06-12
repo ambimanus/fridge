@@ -22,16 +22,11 @@ import org.jfree.ui.RectangleInsets;
 
 public class StepChartDialog extends LineChartDialog {
 
-	private double minRange = -10.0;
-	private double maxRange = 80.0;
-	
 	public StepChartDialog(Shell parent, String title, String xTitle,
 			String yTitle, String tooltipRangeUnits, String tooltipValueUnits,
 			double minRange, double maxRange) {
 		super(parent, title, xTitle, yTitle, tooltipRangeUnits,
-				tooltipValueUnits);
-		this.maxRange = maxRange;
-		this.minRange = minRange;
+				tooltipValueUnits, minRange, maxRange);
 	}
 
 	protected JFreeChart createChart() {

@@ -81,7 +81,7 @@ public class Experiment {
 		// Temperature chart
 		LineChartDialog lcd = new LineChartDialog(shell,
 				"Temperature progress", "Time (min)", "Temperature (°C)",
-				"min", "°C");
+				"min", "°C", 2.0, 9.0);
 		lcd.addSeries(meanTemp);
 		if (firstColor != null) {
 			lcd.setSeriesColor(0, firstColor);
