@@ -1,4 +1,5 @@
 package de.uniol.ui.model;
+
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
 
@@ -36,7 +37,7 @@ public class Fridge extends SimEntityBase {
 
 	/* auxiliary variables */
 	/** time between simulation steps (for equations, one unit == one hour) */
-	private double tau = 1.0 / 60.0;
+	private double tau = SIMULATION_CLOCK / 60.0;
 	/** system intertia, calculated value */
 	private double eps; // = Math.exp(-(tau * a) / m_c)
 	/** inner temperature at previous timestamp */
@@ -44,15 +45,84 @@ public class Fridge extends SimEntityBase {
 
 	/* state variables */
 	/** inner temperature at current timestamp */
-	protected double t_current = 3.0;
+	protected double t_current = t_min;
 	/** load at current timestamp */
-	protected double load = 0.0;
+	protected double load = q_warming;
 
 	public Fridge() {
 		setName("Fridge" + instance++);
 		// Init default values
 		initDefault();
 	}
+	
+	/*
+	 * Events:
+	 */
+
+	public void doRun() {
+		// Calculate proper epsilon
+		eps = Math.exp(-(tau * a) / m_c);
+		// Announce initial state
+		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
+		// Be passive until necessary:
+		if (t_current < t_max) {
+			// Cool enough, start in warming phase immediately
+			waitDelay(EV_BEGIN_WARMING, 0.0);
+		} else {
+			// Too warm, start cooling immediately
+			waitDelay(EV_BEGIN_COOLING, 0.0);
+		}
+	}
+	
+	public void doBeginCooling() {
+		// Update load
+		double bak = load;
+		load = q_cooling;
+		// Announce state change
+		firePropertyChange(PROP_LOAD, bak, load);
+		// Delay next state change
+		waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
+	}
+	
+	public void doBeginWarming() {
+		// Update load
+		double bak = load;
+		load = q_warming;
+		// Announce state change
+		firePropertyChange(PROP_LOAD, bak, load);
+		// Delay next state change
+		waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
+	}
+
+	public void doCooling() {
+		// Calculate and announce new temperature
+		updateTemperature();
+		// Delay next state change
+		if(t_current <= t_min) {
+			// Cool enough, switch to 'warming' immediately
+			waitDelay(EV_BEGIN_WARMING, 0.0);
+		} else {
+			// Desired temperature not reached, continue cooling
+			waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
+		}
+	}
+
+	public void doWarming() {
+		// Calculate and announce new temperature
+		updateTemperature();
+		// Delay next state change
+		if (t_current >= t_max) {
+			// Too warm, start cooling immediately
+			waitDelay(EV_BEGIN_COOLING, 0.0);
+		} else {
+			// Still cool enough, continue warming
+			waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
+		}
+	}
+	
+	/*
+	 * Parameter variance util methods:
+	 */
 	
 	public void variateAllSequential(RandomVariate rv) {
 		variate_a(rv);
@@ -144,66 +214,15 @@ public class Fridge extends SimEntityBase {
 		// Init aux vars
 		t_previous = Double.NaN;
 		// Init state vars
-		t_current = 3.0;
-		load = 0.0;
-	}
-
-	public void doRun() {
-		// Calculate proper epsilon
-		eps = Math.exp(-(tau * a) / m_c);
-		// Announce initial state
-		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-		// Be passive until necessary:
-		if (t_current < t_max) {
-			// Cool enough, start in warming phase immediately
-			waitDelay(EV_BEGIN_WARMING, 0);
-		} else {
-			// Too warm, start cooling immediately
-			waitDelay(EV_BEGIN_COOLING, 0.0);
-		}
+		t_current = t_min;
+		load = Double.NaN;
 	}
 	
-	public void doBeginCooling() {
-		// Announce state change
-		firePropertyChange(PROP_LOAD, q_warming, q_cooling);
-		// Delay next state change
-		waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
-	}
-	
-	public void doBeginWarming() {
-		// Announce state change
-		firePropertyChange(PROP_LOAD, q_cooling, q_warming);
-		// Delay next state change
-		waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
-	}
+	/*
+	 * Misc:
+	 */
 
-	public void doCooling() {
-		// Calculate and announce new temperature
-		updateTemperature(q_cooling);
-		// Delay next state change
-		if(t_current <= t_min) {
-			// Cool enough, switch to 'warming' immediately
-			waitDelay(EV_BEGIN_WARMING, 0.0);
-		} else {
-			// Desired temperature not reached, continue cooling
-			waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
-		}
-	}
-
-	public void doWarming() {
-		// Calculate and announce new temperature
-		updateTemperature(q_warming);
-		// Delay next state change
-		if (t_current >= t_max) {
-			// Too warm, start cooling immediately
-			waitDelay(EV_BEGIN_COOLING, 0.0);
-		} else {
-			// Still cool enough, continue warming
-			waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
-		}
-	}
-
-	private void updateTemperature(double load) {
+	private void updateTemperature() {
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
 		t_current = (eps * t_current)
