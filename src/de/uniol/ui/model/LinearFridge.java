@@ -91,6 +91,8 @@ public class LinearFridge extends SimEntityBase {
 		lastActionTime = getEventList().getSimTime();
 		// Delay next state change when cooling is finished
 		waitDelay(EV_BEGIN_WARMING, timespan, t_max);
+		
+		// TODO interrupt pending event
 	}
 
 	public void doBeginWarming(Object... args) {
@@ -113,6 +115,8 @@ public class LinearFridge extends SimEntityBase {
 		lastActionTime = getEventList().getSimTime();
 		// Delay next state change when warming is finished
 		waitDelay(EV_BEGIN_COOLING, timespan, t_min);
+		
+		// TODO interrupt pending event
 	}
 	
 	/*
