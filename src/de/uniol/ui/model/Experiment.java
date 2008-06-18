@@ -22,34 +22,43 @@ public class Experiment {
 	/** The underlying FEL */
 	private MessagingEventList el;
 	/** The simulated entities */
-	private ArrayList<Fridge> fridges;
+	private ArrayList<? extends AbstractFridge> fridges;
 
 	/* Statistics collectors */
 	private static ArrayList<TimeseriesCollector> temps = new ArrayList<TimeseriesCollector>();
 	private static ArrayList<TimeseriesCollector> loads = new ArrayList<TimeseriesCollector>();
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
+	private boolean collectTemperature = true;;
+	private boolean collectLoad = true;;
 
-	public Experiment(MessagingEventList el, ArrayList<Fridge> fridges) {
+	public Experiment(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
 		initStatistics();
 	}
 
 	private void initStatistics() {
-		meanTemp = new TimeseriesMultiMeanCollector(el, "mean temperature");
-		meanLoad = new TimeseriesMultiMeanCollector(el, "mean load");
-		for (Fridge f : fridges) {
-			meanTemp.addEntity(f, Fridge.PROP_TEMPERATURE);
-			meanLoad.addEntity(f, Fridge.PROP_LOAD);
-
-			TimeseriesCollector t = new TimeseriesCollector(el,
-					"Temperature of " + f.getName(), f, Fridge.PROP_TEMPERATURE);
-			temps.add(t);
-
-			TimeseriesCollector l = new TimeseriesCollector(el, "Load of "
-					+ f.getName(), f, Fridge.PROP_LOAD);
-			loads.add(l);
+		if (collectTemperature) {
+			meanTemp = new TimeseriesMultiMeanCollector(el, "mean temperature");
+		}
+		if (collectLoad) {
+			meanLoad = new TimeseriesMultiMeanCollector(el, "mean load");
+		}
+		for (AbstractFridge f : fridges) {
+			if (collectTemperature) {
+				meanTemp.addEntity(f, Fridge.PROP_TEMPERATURE);
+				TimeseriesCollector t = new TimeseriesCollector(el,
+						"Temperature of " + f.getName(), f,
+						Fridge.PROP_TEMPERATURE);
+				temps.add(t);
+			}
+			if (collectLoad) {
+				meanLoad.addEntity(f, Fridge.PROP_LOAD);
+				TimeseriesCollector l = new TimeseriesCollector(el, "Load of "
+						+ f.getName(), f, Fridge.PROP_LOAD);
+				loads.add(l);
+			}
 		}
 	}
 
@@ -75,48 +84,78 @@ public class Experiment {
 			Color firstColor) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
-		shell.setSize(900, 800);
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		shell.setText("Simulation results");
-		// Temperature chart
-		LineChartDialog lcd = new LineChartDialog(shell,
-				"Temperature progress", "Time (min)", "Temperature (°C)",
-				"min", "°C", 2.0, 9.0);
-		lcd.addSeries(meanTemp);
-		if (firstColor != null) {
-			lcd.setSeriesColor(0, firstColor);
-		}
-		if (highlightFirst) {
-			lcd.setSeriesWidth(0, 2.0f);
-		}
-		if (showAll) {
-			lcd.addAllSeries(temps);
-		}
-		lcd.create();
-		// Add load observations at finish time
-		if (meanLoad.getSize() != 0) {
-			meanLoad.addObservation(el.getStopTime(), meanLoad
-					.getObservation(meanLoad.getSize() - 1)[1]);
-		}
-		for (AbstractCollector col : loads) {
-			if (col.getSize() != 0) {
-				col.addObservation(el.getStopTime(), col.getObservation(col
-						.getSize() - 1)[1]);
+		int numberOfCharts = 0;
+		if (collectTemperature) {
+			// Temperature chart
+			LineChartDialog lcd = new LineChartDialog(shell,
+					"Temperature progress", "Time (min)", "Temperature (°C)",
+					"min", "°C", 2.0, 9.0);
+			lcd.addSeries(meanTemp);
+			if (firstColor != null) {
+				lcd.setSeriesColor(0, firstColor);
 			}
+			if (highlightFirst) {
+				lcd.setSeriesWidth(0, 2.0f);
+			}
+			if (showAll) {
+				lcd.addAllSeries(temps);
+			}
+			lcd.create();
+			numberOfCharts++;
 		}
-		// Load chart
-		StepChartDialog scd = new StepChartDialog(shell, "Load progress",
-				"Time (min)", "Load (W)", "min", "W", -10.0, 80.0);
-		scd.addSeries(meanLoad);
-		if (firstColor != null) {
-			scd.setSeriesColor(0, firstColor);
+		if (collectLoad) {
+			// Add load observations at finish time
+			if (meanLoad.getSize() != 0) {
+				meanLoad.addObservation(el.getStopTime(), meanLoad
+						.getObservation(meanLoad.getSize() - 1)[1]);
+			}
+			for (AbstractCollector col : loads) {
+				if (col.getSize() != 0) {
+					col.addObservation(el.getStopTime(), col.getObservation(col
+							.getSize() - 1)[1]);
+				}
+			}
+			// Load chart
+			StepChartDialog scd = new StepChartDialog(shell, "Load progress",
+					"Time (min)", "Load (W)", "min", "W", -10.0, 80.0);
+			scd.addSeries(meanLoad);
+			if (firstColor != null) {
+				scd.setSeriesColor(0, firstColor);
+			}
+			if (highlightFirst) {
+				scd.setSeriesWidth(0, 2.0f);
+			}
+			if (showAll) {
+				scd.addAllSeries(loads);
+			}
+			scd.create();
+			numberOfCharts++;
 		}
-		if (highlightFirst) {
-			scd.setSeriesWidth(0, 2.0f);
+		
+		// Open shell
+		shell.setSize(900, numberOfCharts * 400);
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
 		}
-		if (showAll) {
-			scd.addAllSeries(loads);
-		}
-		scd.open(true);
+	}
+
+	public boolean isCollectTemperature() {
+		return collectTemperature;
+	}
+
+	public void setCollectTemperature(boolean collectTemperature) {
+		this.collectTemperature = collectTemperature;
+	}
+
+	public boolean isCollectLoad() {
+		return collectLoad;
+	}
+
+	public void setCollectLoad(boolean collectLoad) {
+		this.collectLoad = collectLoad;
 	}
 }
