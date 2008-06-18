@@ -7,21 +7,41 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * This composite represents a progress bar.
+ * 
+ * @author Chh
+ */
 public class ProgressComposite extends Composite {
 
+	/** underlying progress bar widget */
 	private ProgressBar bar;
+	/** parent dislay */
 	private static Display display;
+	/** parent shell */
 	private static Shell shell;
 	
+	/**
+	 * Creates a shell with this composite as contents.
+	 */
 	public ProgressComposite() {
 		this(createShell(), SWT.APPLICATION_MODAL);
 	}
 	
+	/**
+	 * Creates this composite in the given shell.
+	 * 
+	 * @param parent
+	 * @param style
+	 */
 	public ProgressComposite(Composite parent, int style) {
 		super(parent, style);
 		initialize();
 	}
 
+	/**
+	 * Initializes the progress bar.
+	 */
 	private void initialize() {
 		setLayout(new FillLayout());
 		
@@ -30,6 +50,11 @@ public class ProgressComposite extends Composite {
 		bar.setMaximum(100);
 	}
 	
+	/**
+	 * Sets the new progress. This method is thread-safe.
+	 * 
+	 * @param p
+	 */
 	public void setProgress(int p) {
 		final int pr = p;
 		if (!isDisposed()) {
@@ -47,6 +72,11 @@ public class ProgressComposite extends Composite {
 		}
 	}
 	
+	/**
+	 * Creates a new shell for this composite.
+	 * 
+	 * @return
+	 */
 	public static Shell createShell() {
 		display = Display.getDefault();
 		shell = new Shell(display);
@@ -56,9 +86,13 @@ public class ProgressComposite extends Composite {
 		return shell;
 	}
 	
+	/**
+	 * Opens the parent shell and shows the contents. Blocks until the shell is
+	 * closed.
+	 */
 	public void open() {
 		if (shell == null) {
-			createShell();
+			shell = getShell();
 		}
 		shell.open();
 		while (!shell.isDisposed()) {

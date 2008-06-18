@@ -7,13 +7,25 @@ import simkit.Schedule;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
-import de.uniol.ui.model.AbstractFridge;
-import de.uniol.ui.model.CompactLinearFridge;
 import de.uniol.ui.model.Experiment;
-import de.uniol.ui.model.Fridge;
-import de.uniol.ui.model.LinearFridge;
+import de.uniol.ui.model.fridges.AbstractFridge;
+import de.uniol.ui.model.fridges.CompactLinearFridge;
+import de.uniol.ui.model.fridges.Fridge;
+import de.uniol.ui.model.fridges.LinearFridge;
 
+/**
+ * This class is the main class of this simulation. It creates all entities and
+ * prepares and runs the experiment.
+ * 
+ * @author Chh
+ */
 public class Main {
+
+	/* Constants */
+	/** Available model types */
+	public static enum MODES {
+		ITERATIV, LINEAR, COMPACT_LINEAR
+	}
 
 	/* Population params */
 	/** Thermal mass minimum */
@@ -22,13 +34,19 @@ public class Main {
 	public final static double MC_MAX = 32.0;
 
 	/* Simulation params */
+	/** Amount of simulated fridges */
 	public final static int POPULATION_SIZE = 1000;
-	public final static double SIMULATION_LENGTH = 1800.0; // 1 unit == 1 minute !!
-	public static enum MODES {
-		ITERATIV, LINEAR, COMPACT_LINEAR
-	}
+	/** Lenght of simulation, 1 unit == 1 minute */
+	public final static double SIMULATION_LENGTH = 1800.0;
+	/** Used model type */
 	public final static MODES mode = MODES.COMPACT_LINEAR;
 
+	/**
+	 * Creates all entities and prepares and runs the experiment.
+	 * 
+	 * @param args
+	 *            not used yet
+	 */
 	public static void main(String[] args) {
 		// Prepare FEL
 		final int list = Schedule.addNewEventList(MessagingEventList.class);
@@ -45,7 +63,7 @@ public class Main {
 		exp.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
 				&& POPULATION_SIZE < 10, SystemColor.BLACK);
 	}
-	
+
 	/**
 	 * Creates the fridges population using the runtime type defined in
 	 * {@link mode}.

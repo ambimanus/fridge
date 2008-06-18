@@ -27,32 +27,62 @@ import org.jfree.ui.RectangleInsets;
 
 import de.uniol.ui.desync.util.collectors.AbstractCollector;
 
+/**
+ * This class shows a line chart. That is a chart which connects all given data
+ * points with straight lines.
+ * 
+ * @author Chh
+ */
 public class LineChartDialog extends Dialog {
 	
+	/** NumberFormat used in tooltips for x-values */
 	protected static NumberFormat nf = NumberFormat.getNumberInstance();
 	static {
 		nf.setMaximumFractionDigits(0);
 		nf.setMinimumFractionDigits(0);
 	}
+	
+	/** NumberFormat used in tooltips for y-values */
 	protected static NumberFormat nf2 = NumberFormat.getNumberInstance();
 	static {
 		nf2.setMaximumFractionDigits(3);
 		nf2.setMinimumFractionDigits(3);
 	}
 	
-	
+	/** Underlying dataset */
 	protected DefaultXYDataset xy;
+	/** title of this chart */
 	protected String title;
+	/** title of the x axis */
 	protected String xTitle;
+	/** title of the y axis */
 	protected String yTitle;
+	/** unit string for x values */
 	protected String tooltipRangeUnits;
+	/** unit string for y values */
 	protected String tooltipValueUnits;
+	/** lower border of y axis range */
 	protected double minRange;
+	/** upper border of y axis range */
 	protected double maxRange;
 	
+	/** Defines width values for individual series */
 	protected HashMap<Integer, Float> seriesWidths = new HashMap<Integer, Float>();
+	/** Defines color values for individual series */
 	protected HashMap<Integer, Color> seriesColors = new HashMap<Integer, Color>();
 
+	/**
+	 * Creates a new line chart with the given values.
+	 * 
+	 * @param parent
+	 * @param title
+	 * @param xTitle
+	 * @param yTitle
+	 * @param tooltipRangeUnits
+	 * @param tooltipValueUnits
+	 * @param minRange
+	 * @param maxRange
+	 */
 	public LineChartDialog(Shell parent, String title, String xTitle,
 			String yTitle, String tooltipRangeUnits, String tooltipValueUnits,
 			double minRange, double maxRange) {
@@ -67,10 +97,20 @@ public class LineChartDialog extends Dialog {
 		xy = new DefaultXYDataset();
 	}
 
+	/**
+	 * Adds a series represented in the given Collector.
+	 * 
+	 * @param col
+	 */
 	public void addSeries(AbstractCollector col) {
 		xy.addSeries(col.getName(), col.getResults());
 	}
 	
+	/**
+	 * Adds all series from the given list of Collectors.
+	 * 
+	 * @param list
+	 */
 	public void addAllSeries(List<? extends AbstractCollector> list) {
 		Iterator<? extends AbstractCollector> it = list.iterator();
 		while(it.hasNext()) {
@@ -78,14 +118,29 @@ public class LineChartDialog extends Dialog {
 		}
 	}
 
+	/**
+	 * Defines the width of the specified series.
+	 * 
+	 * @param series
+	 * @param width
+	 */
 	public void setSeriesWidth(int series, float width) {
 		seriesWidths.put(series, width);
 	}
 	
+	/**
+	 * Defines the color of the specified series.
+	 * 
+	 * @param series
+	 * @param c
+	 */
 	public void setSeriesColor(int series, Color c) {
 		seriesColors.put(series, c);
 	}
 
+	/**
+	 * @return the resulting chart object
+	 */
 	protected JFreeChart createChart() {
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, xTitle,
 				yTitle, xy, true, true, false);
@@ -128,6 +183,9 @@ public class LineChartDialog extends Dialog {
 		return chart;
 	}
 	
+	/**
+	 * Creates the chart object in the current parent shell.
+	 */
 	public void create() {
 		Shell shell = getParent();
 		ChartComposite cc = new ChartComposite(shell, SWT.NONE, createChart(),
@@ -137,6 +195,13 @@ public class LineChartDialog extends Dialog {
 		cc.setVerticalAxisTrace(false);
 	}
 
+	/**
+	 * Creates the chart object in the current parent shell and shows this
+	 * shell.
+	 * 
+	 * @param blocking
+	 *            defines whether this methods blocks until the shell is closed
+	 */
 	public void open(boolean blocking) {
 		create();
 		Shell shell = getParent();

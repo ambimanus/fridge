@@ -8,6 +8,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import simkit.EventList;
+import simkit.SimEntity;
+
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.ProgressComposite;
 import de.uniol.ui.desync.ui.StepChartDialog;
@@ -16,7 +19,16 @@ import de.uniol.ui.desync.util.ProgressListener;
 import de.uniol.ui.desync.util.collectors.AbstractCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
+import de.uniol.ui.model.fridges.AbstractFridge;
+import de.uniol.ui.model.fridges.Fridge;
 
+/**
+ * This class controls the actual simulation run. It gets the simulated entities
+ * as input, provides them with statistical collectors if desired and is able to
+ * present the collected data visually after the simulation finished.
+ * 
+ * @author Chh
+ */
 public class Experiment {
 
 	/** The underlying FEL */
@@ -29,15 +41,28 @@ public class Experiment {
 	private static ArrayList<TimeseriesCollector> loads = new ArrayList<TimeseriesCollector>();
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
+	
+	/** defines whether to collect temperature changes */
 	private boolean collectTemperature = false;
+	/** defines whether to collect load changes */
 	private boolean collectLoad = true;
 
+	/**
+	 * Creates a new experiment using the specified {@link EventList} and the
+	 * given population of {@link SimEntity}s.
+	 * 
+	 * @param el
+	 * @param fridges
+	 */
 	public Experiment(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
 		initStatistics();
 	}
 
+	/**
+	 * If desired, provide the entities with statistical collectors.
+	 */
 	private void initStatistics() {
 		if (collectTemperature) {
 			meanTemp = new TimeseriesMultiMeanCollector(el, "mean temperature");
@@ -48,20 +73,26 @@ public class Experiment {
 		for (AbstractFridge f : fridges) {
 			if (collectTemperature) {
 				meanTemp.addEntity(f, AbstractFridge.PROP_TEMPERATURE);
-				TimeseriesCollector t = new TimeseriesCollector(el,
+				TimeseriesCollector t = new TimeseriesCollector(
 						"Temperature of " + f.getName(), f,
 						Fridge.PROP_TEMPERATURE);
 				temps.add(t);
 			}
 			if (collectLoad) {
 				meanLoad.addEntity(f, AbstractFridge.PROP_LOAD);
-				TimeseriesCollector l = new TimeseriesCollector(el, "Load of "
+				TimeseriesCollector l = new TimeseriesCollector("Load of "
 						+ f.getName(), f, AbstractFridge.PROP_LOAD);
 				loads.add(l);
 			}
 		}
 	}
 
+	/**
+	 * Perform the simulation until the simTime reaches <code>end</code>. A
+	 * Progressbar will be shown until the simulation finishes.
+	 * 
+	 * @param end
+	 */
 	public void simulate(double end) {
 		final ProgressComposite pc = new ProgressComposite();
 		el.stopAtTime(end);
@@ -80,6 +111,13 @@ public class Experiment {
 		pc.open();
 	}
 
+	/**
+	 * Displays the simulation results as line/step charts.
+	 * 
+	 * @param showAll
+	 * @param highlightFirst
+	 * @param firstColor
+	 */
 	public void showResults(boolean showAll, boolean highlightFirst,
 			Color firstColor) {
 		Display display = Display.getDefault();
@@ -143,18 +181,32 @@ public class Experiment {
 		}
 	}
 
+	/**
+	 * @return whether temperature values are being collected
+	 */
 	public boolean isCollectTemperature() {
 		return collectTemperature;
 	}
 
+	/**
+	 * Sets whether temperature values are being collected
+	 * @param collectTemperature
+	 */
 	public void setCollectTemperature(boolean collectTemperature) {
 		this.collectTemperature = collectTemperature;
 	}
 
+	/**
+	 * @return whether load values are being collected
+	 */
 	public boolean isCollectLoad() {
 		return collectLoad;
 	}
 
+	/**
+	 * Sets whether load values are being collected
+	 * @param collectLoad
+	 */
 	public void setCollectLoad(boolean collectLoad) {
 		this.collectLoad = collectLoad;
 	}

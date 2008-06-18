@@ -1,6 +1,11 @@
-package de.uniol.ui.model;
+package de.uniol.ui.model.fridges;
 
-
+/**
+ * Iterative implementation of a fridge. This model calculates temperature and
+ * load values on each simulated time step.
+ * 
+ * @author Chh
+ */
 public class Fridge extends AbstractFridge {
 
 	/* event constants */
@@ -91,6 +96,10 @@ public class Fridge extends AbstractFridge {
 	 * Misc:
 	 */
 
+	/**
+	 * Calculate new t_current based on the temperature at last time step and
+	 * current load.
+	 */
 	protected void updateTemperature() {
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;

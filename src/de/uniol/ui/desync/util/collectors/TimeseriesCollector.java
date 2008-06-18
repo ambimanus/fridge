@@ -7,14 +7,30 @@ import java.util.ArrayList;
 import simkit.EventList;
 import simkit.SimEntity;
 
+/**
+ * This collector just collects simple data points with their occurence
+ * timestamps.
+ * 
+ * @author Chh
+ */
 public class TimeseriesCollector extends AbstractCollector {
 
+	/** holds the timestamps (x-values) */
 	protected ArrayList<Double> times = new ArrayList<Double>();
+	/** holds the collected values (y-values) */
 	protected ArrayList<Double> values = new ArrayList<Double>();
 	
-	public TimeseriesCollector(EventList eventlist, String name, SimEntity entity, String property) {
+	/**
+	 * Creates a new {@link TimeseriesCollector} listening to the specified
+	 * property in the given {@link SimEntity}.
+	 * 
+	 * @param name
+	 * @param entity
+	 * @param property
+	 */
+	public TimeseriesCollector(String name, SimEntity entity, String property) {
 		super(name);
-		final EventList el = eventlist;
+		final EventList el = entity.getEventList();
 		entity.addPropertyChangeListener(property,
 				new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent evt) {

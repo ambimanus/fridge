@@ -28,6 +28,17 @@ import simkit.SimEventListener;
 import simkit.SimkitConcurrencyException;
 import simkit.Stop;
 
+/**
+ * This class extends {@link EventList} in order to allow
+ * {@link PropertyChangeListener} objects to listen to the simulation progress.
+ * This is achieved by sending an event each time the <code>simTime</code>
+ * field changes.
+ * <p>
+ * Unfortunately the <code>simTime</code> field is a private one, so the whole
+ * class had to be copied. However, it works ;)
+ * 
+ * @author Chh
+ */
 public class MessagingEventList extends EventList {
 
 	public static Logger log = Logger.getLogger("simkit");

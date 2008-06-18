@@ -1,8 +1,15 @@
-package de.uniol.ui.model;
+package de.uniol.ui.model.fridges;
 
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
 
+/**
+ * This is the abstract base class for fridge entites. It containes the base
+ * model parameters as well as methods to distribute the values based on random
+ * variates.
+ * 
+ * @author Chh
+ */
 public abstract class AbstractFridge extends SimEntityBase {
 
 	/** Runtime ID counter */
@@ -43,12 +50,21 @@ public abstract class AbstractFridge extends SimEntityBase {
 	/** load at current timestamp */
 	protected double load = Double.NaN;
 	
+	/**
+	 * Creates a new fridge entity with the given name. An instance counter will
+	 * be added to the name for identification purposes.
+	 * 
+	 * @param nameBase
+	 */
 	public AbstractFridge(String nameBase) {
 		setName(nameBase + instance++);
 		// Init default values
 		initDefault();
 	}
 	
+	/**
+	 * Sets the device parameters to the default.
+	 */
 	public void initDefault() {
 		// Init parameters
 		t_surround = 20.0;
@@ -70,12 +86,20 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 * Events:
 	 */
 	
+	/**
+	 * This event is used to start the simulation. Implementers should chain
+	 * other events from here.
+	 */
 	public abstract void doRun();
 
 	/*
 	 * Parameter variance util methods:
 	 */
 	
+	/**
+	 * Performs a distribution of the parameter values using random numbers
+	 * produced sequentially by the given variate.
+	 */
 	public void variateAllSequential(RandomVariate rv) {
 		variate_a(rv);
 		variate_eta(rv);
@@ -85,6 +109,12 @@ public abstract class AbstractFridge extends SimEntityBase {
 		variate_tSurround(rv);
 	}
 	
+	/**
+	 * Performs a distribution of the parameter values using the first random
+	 * number produced by the given variate for all values.
+	 * 
+	 * @param rv
+	 */
 	public void variateAllParallel(RandomVariate rv) {
 		double var = rv.generate();
 		a *= var;
@@ -95,30 +125,72 @@ public abstract class AbstractFridge extends SimEntityBase {
 		t_surround *= var;
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>a</code>' using a
+	 * random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_a(RandomVariate rv) {
 		a *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>eta</code>' using a
+	 * random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_eta(RandomVariate rv) {
 		eta *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>m_c</code>' using a
+	 * random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_mC(RandomVariate rv) {
 		m_c *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>q_cooling</code>'
+	 * using a random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_qCooling(RandomVariate rv) {
 		q_cooling *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>q_warming</code>'
+	 * using a random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_qWarming(RandomVariate rv) {
 		q_warming *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>t_surround</code>'
+	 * using a random number produced by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void variate_tSurround(RandomVariate rv) {
 		t_surround *= rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution by setting the parameters to the values produced
+	 * by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generateAllSequential(RandomVariate rv) {
 		generate_a(rv);
 		generate_eta(rv);
@@ -128,26 +200,62 @@ public abstract class AbstractFridge extends SimEntityBase {
 		generate_tSurround(rv);
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>a</code>' by setting
+	 * it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_a(RandomVariate rv) {
 		a = rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>eta</code>' by
+	 * setting it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_eta(RandomVariate rv) {
 		eta = rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>m_c</code>' by
+	 * setting it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_mC(RandomVariate rv) {
 		m_c = rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>q_cooling</code>' by
+	 * setting it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_qCooling(RandomVariate rv) {
 		q_cooling = rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>q_warming</code>' by
+	 * setting it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_qWarming(RandomVariate rv) {
 		q_warming = rv.generate();
 	}
 	
+	/**
+	 * Performs a distribution of the parameter '<code>t_surround</code>' by
+	 * setting it to the value produced next by the given variate.
+	 * 
+	 * @param rv
+	 */
 	public void generate_tSurround(RandomVariate rv) {
 		t_surround = rv.generate();
 	}
