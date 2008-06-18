@@ -3,6 +3,12 @@ package de.uniol.ui.model;
 
 public class Fridge extends AbstractFridge {
 
+	/* event constants */
+	public final static String EV_BEGIN_WARMING = "BeginWarming";
+	public final static String EV_BEGIN_COOLING = "BeginCooling";
+	public final static String EV_WARMING = "Warming";
+	public final static String EV_COOLING = "Cooling";
+	
 	/** time between simulation steps (for equations, one unit == one hour) */
 	protected double tau = SIMULATION_CLOCK / 60.0;
 

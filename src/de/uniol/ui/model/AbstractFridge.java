@@ -3,16 +3,12 @@ package de.uniol.ui.model;
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
 
-public class AbstractFridge extends SimEntityBase {
+public abstract class AbstractFridge extends SimEntityBase {
 
 	/** Runtime ID counter */
 	protected static int instance = 0;
 	
 	/* constants */
-	public final static String EV_BEGIN_WARMING = "BeginWarming";
-	public final static String EV_BEGIN_COOLING = "BeginCooling";
-	public final static String EV_WARMING = "Warming";
-	public final static String EV_COOLING = "Cooling";
 	public final static String PROP_TEMPERATURE = "temperature";
 	public final static String PROP_LOAD = "load";
 	public final static double SIMULATION_CLOCK = 1.0;
@@ -45,7 +41,7 @@ public class AbstractFridge extends SimEntityBase {
 	/** inner temperature at current timestamp */
 	protected double t_current = t_min;
 	/** load at current timestamp */
-	protected double load = q_warming;
+	protected double load = Double.NaN;
 	
 	public AbstractFridge(String nameBase) {
 		setName(nameBase + instance++);
@@ -69,6 +65,12 @@ public class AbstractFridge extends SimEntityBase {
 		t_current = t_min;
 		load = Double.NaN;
 	}
+	
+	/*
+	 * Events:
+	 */
+	
+	public abstract void doRun();
 
 	/*
 	 * Parameter variance util methods:

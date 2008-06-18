@@ -29,8 +29,8 @@ public class Experiment {
 	private static ArrayList<TimeseriesCollector> loads = new ArrayList<TimeseriesCollector>();
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
-	private boolean collectTemperature = true;;
-	private boolean collectLoad = true;;
+	private boolean collectTemperature = false;
+	private boolean collectLoad = true;
 
 	public Experiment(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
@@ -47,16 +47,16 @@ public class Experiment {
 		}
 		for (AbstractFridge f : fridges) {
 			if (collectTemperature) {
-				meanTemp.addEntity(f, Fridge.PROP_TEMPERATURE);
+				meanTemp.addEntity(f, AbstractFridge.PROP_TEMPERATURE);
 				TimeseriesCollector t = new TimeseriesCollector(el,
 						"Temperature of " + f.getName(), f,
 						Fridge.PROP_TEMPERATURE);
 				temps.add(t);
 			}
 			if (collectLoad) {
-				meanLoad.addEntity(f, Fridge.PROP_LOAD);
+				meanLoad.addEntity(f, AbstractFridge.PROP_LOAD);
 				TimeseriesCollector l = new TimeseriesCollector(el, "Load of "
-						+ f.getName(), f, Fridge.PROP_LOAD);
+						+ f.getName(), f, AbstractFridge.PROP_LOAD);
 				loads.add(l);
 			}
 		}

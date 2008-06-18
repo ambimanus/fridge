@@ -3,11 +3,19 @@ package de.uniol.ui.model;
 
 public class LinearFridge extends AbstractFridge {
 
+	/* event constants */
+	public final static String EV_BEGIN_WARMING = "BeginWarming";
+	public final static String EV_BEGIN_COOLING = "BeginCooling";
+	
 	/** timestamp at which the last event occured */
 	protected double lastActionTime = Double.NaN;
 
 	public LinearFridge() {
 		super("LinearFridge");
+	}
+	
+	protected LinearFridge(String name) {
+		super(name);
 	}
 	
 	/*
@@ -37,8 +45,6 @@ public class LinearFridge extends AbstractFridge {
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
-		// Update action timestamp
-		lastActionTime = getEventList().getSimTime();
 		// Remove any next scheduled warming event if present
 		interrupt(EV_BEGIN_WARMING);
 		// Delay next warming phase when cooling is finished
@@ -55,8 +61,6 @@ public class LinearFridge extends AbstractFridge {
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
-		// Update action timestamp
-		lastActionTime = getEventList().getSimTime();
 		// Remove any next scheduled cooling event if present
 		interrupt(EV_BEGIN_COOLING);
 		// Delay next cooling phase when warming is finished
@@ -67,9 +71,14 @@ public class LinearFridge extends AbstractFridge {
 	 * Misc:
 	 */
 
+	/**
+	 * Calculate new t_current based on current load and elapsed time since
+	 * call.
+	 */
 	protected void updateTemperature() {
 		// Check simulation start phase
 		if (Double.isNaN(lastActionTime)) {
+			lastActionTime = getEventList().getSimTime();
 			return;
 		}
 		// Calculate proper tau (time between simulation steps, one unit == one
@@ -83,12 +92,23 @@ public class LinearFridge extends AbstractFridge {
 				+ ((1 - eps) * (t_surround - (eta * (load / a))));
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
+		// Update action timestamp
+		lastActionTime = getEventList().getSimTime();
 	}
 	
+	/**
+	 * Calculate time needed to reach temperature <code>t_dest</code>,
+	 * starting at temperature <code>t_from</code>. Calculation is based
+	 * (among other values) on current load.
+	 * 
+	 * @param t_from
+	 * @param t_dest
+	 * @return
+	 */
 	protected double tau(double t_from, double t_dest) {
 		double dividend = t_dest - t_surround + (eta * (load / a));
 		double divisor = t_from - t_surround + (eta * (load / a));
-		double tau = -Math.log((dividend / divisor)) * (m_c / a);
+		double tau = -1 * Math.log((dividend / divisor)) * (m_c / a);
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes
 		return tau * 60.0;

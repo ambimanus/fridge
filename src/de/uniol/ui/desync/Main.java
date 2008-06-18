@@ -7,6 +7,8 @@ import simkit.Schedule;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
+import de.uniol.ui.model.AbstractFridge;
+import de.uniol.ui.model.CompactLinearFridge;
 import de.uniol.ui.model.Experiment;
 import de.uniol.ui.model.Fridge;
 import de.uniol.ui.model.LinearFridge;
@@ -22,7 +24,10 @@ public class Main {
 	/* Simulation params */
 	public final static int POPULATION_SIZE = 1000;
 	public final static double SIMULATION_LENGTH = 1800.0; // 1 unit == 1 minute !!
-	public final static boolean LINEAR_MODE = true;
+	public static enum MODES {
+		ITERATIV, LINEAR, COMPACT_LINEAR
+	}
+	public final static MODES mode = MODES.COMPACT_LINEAR;
 
 	public static void main(String[] args) {
 		// Prepare FEL
@@ -31,53 +36,45 @@ public class Main {
 				.getEventList(list);
 
 		// Prepare experiment
-		Experiment exp = null;
-		if (LINEAR_MODE) {
-			exp = new Experiment(el, createLinearFridges(list));
-			exp.setCollectTemperature(false);
-		} else {
-			exp = new Experiment(el, createFridges(list));
-		}
+		Experiment exp = new Experiment(el, createFridges(list));
 
 		// Simulate
 		exp.simulate(SIMULATION_LENGTH);
 
 		// Create charts
-		exp.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 2
+		exp.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
 				&& POPULATION_SIZE < 10, SystemColor.BLACK);
-	}
-
-	/**
-	 * Creates the fridges population.
-	 * 
-	 * @param list the underlying FEL id
-	 * @return the population
-	 */
-	private static ArrayList<Fridge> createFridges(int list) {
-		RandomVariate thermalMassVariate = new UniformVariate();
-		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
-		ArrayList<Fridge> fridges = new ArrayList<Fridge>(POPULATION_SIZE);
-		for (int i = 0; i < POPULATION_SIZE; i++) {
-			Fridge f = new Fridge();
-			f.generate_mC(thermalMassVariate);
-			f.setEventListID(list);
-			fridges.add(f);
-		}
-		return fridges;
 	}
 	
 	/**
-	 * Creates the fridges population using the linearized model.
+	 * Creates the fridges population using the runtime type defined in
+	 * {@link mode}.
 	 * 
-	 * @param list the underlying FEL id
+	 * @param list
+	 *            the underlying FEL id
 	 * @return the population
 	 */
-	private static ArrayList<LinearFridge> createLinearFridges(int list) {
+	private static ArrayList<AbstractFridge> createFridges(int list) {
 		RandomVariate thermalMassVariate = new UniformVariate();
 		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
-		ArrayList<LinearFridge> fridges = new ArrayList<LinearFridge>(POPULATION_SIZE);
+		ArrayList<AbstractFridge> fridges = new ArrayList<AbstractFridge>(
+				POPULATION_SIZE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
-			LinearFridge f = new LinearFridge();
+			AbstractFridge f = null;
+			switch (mode) {
+			case ITERATIV: {
+				f = new Fridge();
+				break;
+			}
+			case LINEAR: {
+				f = new LinearFridge();
+				break;
+			}
+			case COMPACT_LINEAR: {
+				f = new CompactLinearFridge();
+				break;
+			}
+			}
 			f.generate_mC(thermalMassVariate);
 			f.setEventListID(list);
 			fridges.add(f);
