@@ -25,23 +25,37 @@ public class CompactLinearFridge extends LinearFridge {
 	public void doRun() {
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-		// Be passive until necessary:
-		if (t_current < t_max) {
-			// Update load
-			double bak = load;
-			load = q_warming;
+		// Check if we were set active externally
+		if (!Double.isNaN(load)) {
+			// Load has been set, take it as starting activity:
 			// Announce load change
-			firePropertyChange(PROP_LOAD, bak, load);
-			// Target to max temp
-			waitDelay(EV_TARGET_TO, 0.0, t_max);
+			firePropertyChange(PROP_LOAD, Double.NaN, load);
+			if (load > q_warming) {
+				// Target to min temp
+				waitDelay(EV_TARGET_TO, 0.0, t_min);
+			} else {
+				// Target to max temp
+				waitDelay(EV_TARGET_TO, 0.0, t_max);
+			}
 		} else {
-			// Update load
-			double bak = load;
-			load = q_cooling;
-			// Announce load change
-			firePropertyChange(PROP_LOAD, bak, load);
-			// Target to min temp
-			waitDelay(EV_TARGET_TO, 0.0, t_min);
+			// Load is undefined, start in passive mode:
+			if (t_current < t_max) {
+				// Update load
+				double bak = load;
+				load = q_warming;
+				// Announce load change
+				firePropertyChange(PROP_LOAD, bak, load);
+				// Target to max temp
+				waitDelay(EV_TARGET_TO, 0.0, t_max);
+			} else {
+				// Update load
+				double bak = load;
+				load = q_cooling;
+				// Announce load change
+				firePropertyChange(PROP_LOAD, bak, load);
+				// Target to min temp
+				waitDelay(EV_TARGET_TO, 0.0, t_min);
+			}
 		}
 	}
 	

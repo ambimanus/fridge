@@ -35,13 +35,27 @@ public class LinearFridge extends AbstractFridge {
 	public void doRun() {
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-		// Be passive until necessary:
-		if (t_current < t_max) {
-			// Cool enough, start in warming phase immediately
-			waitDelay(EV_BEGIN_WARMING, 0.0, t_max);
+		// Check if we were set active externally
+		if (!Double.isNaN(load)) {
+			// Load has been set, take it as starting activity:
+			// Announce load change
+			firePropertyChange(PROP_LOAD, Double.NaN, load);
+			if (load > q_warming) {
+				// Target to min temp
+				waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
+			} else {
+				// Target to max temp
+				waitDelay(EV_BEGIN_WARMING, 0.0, t_max);
+			}
 		} else {
-			// Too warm, start cooling immediately
-			waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
+			// Load is undefined, start in passive mode:
+			if (t_current < t_max) {
+				// Cool enough, start in warming phase immediately
+				waitDelay(EV_BEGIN_WARMING, 0.0, t_max);
+			} else {
+				// Too warm, start cooling immediately
+				waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
+			}
 		}
 	}
 	

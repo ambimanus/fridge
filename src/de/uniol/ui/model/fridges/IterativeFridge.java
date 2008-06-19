@@ -6,7 +6,7 @@ package de.uniol.ui.model.fridges;
  * 
  * @author Chh
  */
-public class Fridge extends AbstractFridge {
+public class IterativeFridge extends AbstractFridge {
 
 	/* event constants */
 	public final static String EV_BEGIN_WARMING = "BeginWarming";
@@ -17,7 +17,7 @@ public class Fridge extends AbstractFridge {
 	/** time between simulation steps (for equations, one unit == one hour) */
 	protected double tau = SIMULATION_CLOCK / 60.0;
 
-	public Fridge() {
+	public IterativeFridge() {
 		super("Fridge");
 	}
 	
@@ -30,13 +30,28 @@ public class Fridge extends AbstractFridge {
 		eps = Math.exp(-(tau * a) / m_c);
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-		// Be passive until necessary:
-		if (t_current < t_max) {
-			// Cool enough, start in warming phase immediately
-			waitDelay(EV_BEGIN_WARMING, 0.0);
+
+		// Check if we were set active externally
+		if (!Double.isNaN(load)) {
+			// Load has been set, take it as starting activity:
+			// Announce load change
+			firePropertyChange(PROP_LOAD, Double.NaN, load);
+			if (load > q_warming) {
+				// Target to min temp
+				waitDelay(EV_BEGIN_COOLING, 0.0);
+			} else {
+				// Target to max temp
+				waitDelay(EV_BEGIN_WARMING, 0.0);
+			}
 		} else {
-			// Too warm, start cooling immediately
-			waitDelay(EV_BEGIN_COOLING, 0.0);
+			// Be passive until necessary:
+			if (t_current < t_max) {
+				// Cool enough, start in warming phase immediately
+				waitDelay(EV_BEGIN_WARMING, 0.0);
+			} else {
+				// Too warm, start cooling immediately
+				waitDelay(EV_BEGIN_COOLING, 0.0);
+			}
 		}
 	}
 	
@@ -47,7 +62,7 @@ public class Fridge extends AbstractFridge {
 		// Announce state change
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Delay next state change
-		waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
+		waitDelay(EV_COOLING, IterativeFridge.SIMULATION_CLOCK);
 	}
 	
 	public void doBeginWarming() {
@@ -57,7 +72,7 @@ public class Fridge extends AbstractFridge {
 		// Announce state change
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Delay next state change
-		waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
+		waitDelay(EV_WARMING, IterativeFridge.SIMULATION_CLOCK);
 	}
 
 	public void doCooling() {
@@ -69,7 +84,7 @@ public class Fridge extends AbstractFridge {
 			waitDelay(EV_BEGIN_WARMING, 0.0);
 		} else {
 			// Desired temperature not reached, continue cooling
-			waitDelay(EV_COOLING, Fridge.SIMULATION_CLOCK);
+			waitDelay(EV_COOLING, IterativeFridge.SIMULATION_CLOCK);
 		}
 	}
 
@@ -82,14 +97,14 @@ public class Fridge extends AbstractFridge {
 			waitDelay(EV_BEGIN_COOLING, 0.0);
 		} else {
 			// Still cool enough, continue warming
-			waitDelay(EV_WARMING, Fridge.SIMULATION_CLOCK);
+			waitDelay(EV_WARMING, IterativeFridge.SIMULATION_CLOCK);
 		}
 	}
 	
 	public void initDefault() {
 		super.initDefault();
 		// Init tau
-		tau = Fridge.SIMULATION_CLOCK / 60.0;
+		tau = IterativeFridge.SIMULATION_CLOCK / 60.0;
 	}
 	
 	/*

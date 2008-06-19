@@ -4,13 +4,14 @@ import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import simkit.Schedule;
+import simkit.random.BernoulliVariate;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.model.Experiment;
 import de.uniol.ui.model.fridges.AbstractFridge;
 import de.uniol.ui.model.fridges.CompactLinearFridge;
-import de.uniol.ui.model.fridges.Fridge;
+import de.uniol.ui.model.fridges.IterativeFridge;
 import de.uniol.ui.model.fridges.LinearFridge;
 
 /**
@@ -32,10 +33,12 @@ public class Main {
 	public final static double MC_MIN = 7.9;
 	/** Thermal mass maximum */
 	public final static double MC_MAX = 32.0;
+	/** The propability a fridge is set active at simulation start */
+	public final static double ACTIVE_AT_START_PROPABILITY = 0.22;
 
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public final static int POPULATION_SIZE = 1000;
+	public final static int POPULATION_SIZE = 5000;
 	/** Lenght of simulation, 1 unit == 1 minute */
 	public final static double SIMULATION_LENGTH = 1800.0;
 	/** Used model type */
@@ -75,13 +78,18 @@ public class Main {
 	private static ArrayList<AbstractFridge> createFridges(int list) {
 		RandomVariate thermalMassVariate = new UniformVariate();
 		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
+		RandomVariate tCurrentVariate = new UniformVariate();
+		RandomVariate activityAtStartVariate = new BernoulliVariate();
+		activityAtStartVariate.setParameters(ACTIVE_AT_START_PROPABILITY);
+		tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
+				AbstractFridge.DEFAULT_t_max);
 		ArrayList<AbstractFridge> fridges = new ArrayList<AbstractFridge>(
 				POPULATION_SIZE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			AbstractFridge f = null;
 			switch (mode) {
 			case ITERATIV: {
-				f = new Fridge();
+				f = new IterativeFridge();
 				break;
 			}
 			case LINEAR: {
@@ -93,7 +101,16 @@ public class Main {
 				break;
 			}
 			}
+			// Equally distribute m_c between MC_MIN and MC_MAX
 			f.generate_mC(thermalMassVariate);
+			// Equally distribute t_current between t_min and t_max
+			f.generate_tCurrent(tCurrentVariate);
+			// Make (ACTIVE_AT_START_PROPABILITY*100)% of the fridges active
+			if (activityAtStartVariate.generate() > 0) {
+				f.setLoad(AbstractFridge.DEFAULT_q_cooling);
+			} else {
+				f.setLoad(AbstractFridge.DEFAULT_q_warming);
+			}
 			f.setEventListID(list);
 			fridges.add(f);
 		}

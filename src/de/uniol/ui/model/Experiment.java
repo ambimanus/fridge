@@ -20,7 +20,7 @@ import de.uniol.ui.desync.util.collectors.AbstractCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 import de.uniol.ui.model.fridges.AbstractFridge;
-import de.uniol.ui.model.fridges.Fridge;
+import de.uniol.ui.model.fridges.IterativeFridge;
 
 /**
  * This class controls the actual simulation run. It gets the simulated entities
@@ -75,7 +75,7 @@ public class Experiment {
 				meanTemp.addEntity(f, AbstractFridge.PROP_TEMPERATURE);
 				TimeseriesCollector t = new TimeseriesCollector(
 						"Temperature of " + f.getName(), f,
-						Fridge.PROP_TEMPERATURE);
+						IterativeFridge.PROP_TEMPERATURE);
 				temps.add(t);
 			}
 			if (collectLoad) {
