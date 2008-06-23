@@ -61,28 +61,12 @@ import org.jfree.chart.util.RelativeDateFormat;
 public class RelativeHourFormat extends DateFormat {
 
 	/**
-	 * generated
+	 * default
 	 */
-	private static final long serialVersionUID = -7047505699776734327L;
+	private static final long serialVersionUID = 1L;
 
 	/** The base milliseconds for the elapsed time calculation. */
     private long baseMillis;
-    
-    /**
-     * A flag that controls whether or not a zero day count is displayed.
-     */
-    private boolean showZeroDays;
-    
-    /** 
-     * A formatter for the day count (most likely not critical until the
-     * day count exceeds 999). 
-     */
-    private NumberFormat dayFormatter;
-    
-    /**
-     * A string appended after the day count.
-     */
-    private String daySuffix;
     
     /**
      * A string appended after the hours.
@@ -108,11 +92,6 @@ public class RelativeHourFormat extends DateFormat {
      * A constant for the number of milliseconds in one hour.
      */
     private static long MILLISECONDS_IN_ONE_HOUR = 60 * 60 * 1000L;
-
-    /**
-     * A constant for the number of milliseconds in one day.
-     */
-    private static long MILLISECONDS_IN_ONE_DAY = 24 * MILLISECONDS_IN_ONE_HOUR;
     
     /**
      * Creates a new instance.
@@ -138,9 +117,6 @@ public class RelativeHourFormat extends DateFormat {
     public RelativeHourFormat(long baseMillis) {
         super();        
         this.baseMillis = baseMillis;
-        this.showZeroDays = false;
-        this.dayFormatter = NumberFormat.getInstance();
-        this.daySuffix = "d";
         this.hourSuffix = "h";
         this.minuteSuffix = "m";
         this.secondFormatter = NumberFormat.getNumberInstance();
@@ -177,55 +153,6 @@ public class RelativeHourFormat extends DateFormat {
      */
     public void setBaseMillis(long baseMillis) {
         this.baseMillis = baseMillis;
-    }
-    
-    /**
-     * Returns the flag that controls whether or not zero day counts are 
-     * shown in the formatted output.
-     * 
-     * @return The flag.
-     * 
-     * @see #setShowZeroDays(boolean)
-     */
-    public boolean getShowZeroDays() {
-        return this.showZeroDays;
-    }
-    
-    /**
-     * Sets the flag that controls whether or not zero day counts are shown
-     * in the formatted output.
-     * 
-     * @param show  the flag.
-     * 
-     * @see #getShowZeroDays()
-     */
-    public void setShowZeroDays(boolean show) {
-        this.showZeroDays = show;
-    }
-    
-    /**
-     * Returns the string that is appended to the day count.
-     * 
-     * @return The string.
-     * 
-     * @see #setDaySuffix(String)
-     */
-    public String getDaySuffix() {
-        return this.daySuffix;
-    }
-    
-    /**
-     * Sets the string that is appended to the day count.
-     * 
-     * @param suffix  the suffix (<code>null</code> not permitted).
-     * 
-     * @see #getDaySuffix()
-     */
-    public void setDaySuffix(String suffix) {
-        if (suffix == null) {
-            throw new IllegalArgumentException("Null 'suffix' argument.");
-        }
-        this.daySuffix = suffix;
     }
 
     /**
@@ -331,19 +258,12 @@ public class RelativeHourFormat extends DateFormat {
         long elapsed = currentMillis - this.baseMillis;
         boolean zero = elapsed == 0L;
         
-        long days = elapsed / MILLISECONDS_IN_ONE_DAY;
-        elapsed = elapsed - (days * MILLISECONDS_IN_ONE_DAY);
         long hours = elapsed / MILLISECONDS_IN_ONE_HOUR;
         elapsed = elapsed - (hours * MILLISECONDS_IN_ONE_HOUR);
         long minutes = elapsed / 60000L;
         elapsed = elapsed - (minutes * 60000L);
         long seconds = elapsed / 1000L;
-        // Show days if not zero
-        if (days != 0 || this.showZeroDays) {
-            toAppendTo.append(this.dayFormatter.format(days) + getDaySuffix());
-        }
-        // Show hours if current time is 0 or hours are not zero or are in next day
-        if (zero || hours != 0 || days != 0) {
+        if (zero || hours != 0) {
         	toAppendTo.append(String.valueOf(hours) + getHourSuffix());
         }
         // Show minutes if not zero or we're on second level
@@ -354,7 +274,7 @@ public class RelativeHourFormat extends DateFormat {
         if (seconds != 0) {
         	toAppendTo.append(String.valueOf(seconds) + getSecondSuffix());
         }
-        return toAppendTo;   
+        return toAppendTo;
     }
 
     /**
@@ -390,12 +310,6 @@ public class RelativeHourFormat extends DateFormat {
         if (this.baseMillis != that.baseMillis) {
             return false;
         }
-        if (this.showZeroDays != that.showZeroDays) {
-            return false;
-        }
-        if (!this.daySuffix.equals(that.daySuffix)) {
-            return false;
-        }
         if (!this.hourSuffix.equals(that.hourSuffix)) {
             return false;
         }
@@ -420,7 +334,6 @@ public class RelativeHourFormat extends DateFormat {
         int result = 193;
         result = 37 * result 
                 + (int) (this.baseMillis ^ (this.baseMillis >>> 32));
-        result = 37 * result + this.daySuffix.hashCode();
         result = 37 * result + this.hourSuffix.hashCode();
         result = 37 * result + this.minuteSuffix.hashCode();
         result = 37 * result + this.secondSuffix.hashCode();
@@ -435,7 +348,6 @@ public class RelativeHourFormat extends DateFormat {
      */
     public Object clone() {
     	RelativeHourFormat clone = (RelativeHourFormat) super.clone();
-        clone.dayFormatter = (NumberFormat) this.dayFormatter.clone();
         clone.secondFormatter = (NumberFormat) this.secondFormatter.clone();
         return clone;
     }
