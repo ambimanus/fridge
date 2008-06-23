@@ -8,7 +8,9 @@ import simkit.random.BernoulliVariate;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
-import de.uniol.ui.model.Experiment;
+import de.uniol.ui.model.ControlCenter;
+import de.uniol.ui.model.Simulation;
+import de.uniol.ui.model.controller.DirectStorageControllerCompactLinear;
 import de.uniol.ui.model.fridges.AbstractFridge;
 import de.uniol.ui.model.fridges.CompactLinearFridge;
 import de.uniol.ui.model.fridges.IterativeFridge;
@@ -16,7 +18,7 @@ import de.uniol.ui.model.fridges.LinearFridge;
 
 /**
  * This class is the main class of this simulation. It creates all entities and
- * prepares and runs the experiment.
+ * prepares and runs the simulation.
  * 
  * @author Chh
  */
@@ -38,9 +40,9 @@ public class Main {
 
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public final static int POPULATION_SIZE = 5000;
-	/** Lenght of simulation, 1 unit == 1 minute */
-	public final static double SIMULATION_LENGTH = 1800.0;
+	public final static int POPULATION_SIZE = 1000;
+	/** Length of simulation, 1 unit == 1 minute */
+	public final static double SIMULATION_LENGTH = 6400.0;
 	/** Used model type */
 	public final static MODES mode = MODES.COMPACT_LINEAR;
 
@@ -56,14 +58,23 @@ public class Main {
 		final MessagingEventList el = (MessagingEventList) Schedule
 				.getEventList(list);
 
-		// Prepare experiment
-		Experiment exp = new Experiment(el, createFridges(list));
+		// Create fridges
+		ArrayList<AbstractFridge> fridges = createFridges(list);
+		
+		// Create controllers
+		ArrayList<DirectStorageControllerCompactLinear> controllers = createControllers(fridges);
+		ControlCenter cc = new ControlCenter(controllers, 1750, 250, false);
+		cc.setEventListID(list);
+		
+		// Prepare simulation
+		Simulation sim = new Simulation(el, fridges);
+		sim.setCollectTemperature(mode == MODES.ITERATIV);
 
 		// Simulate
-		exp.simulate(SIMULATION_LENGTH);
+		sim.simulate(SIMULATION_LENGTH);
 
 		// Create charts
-		exp.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
+		sim.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
 				&& POPULATION_SIZE < 10, SystemColor.BLACK);
 	}
 
@@ -115,5 +126,30 @@ public class Main {
 			fridges.add(f);
 		}
 		return fridges;
+	}
+	
+	private static ArrayList<DirectStorageControllerCompactLinear> createControllers(
+			ArrayList<AbstractFridge> fridges) {
+		ArrayList<DirectStorageControllerCompactLinear> controllers = new ArrayList<DirectStorageControllerCompactLinear>();
+		for (AbstractFridge af : fridges) {
+			switch (mode) {
+			case ITERATIV: {
+				// TODO
+				break;
+			}
+			case LINEAR: {
+				// TODO
+				break;
+			}
+			case COMPACT_LINEAR: {
+				DirectStorageControllerCompactLinear c = new DirectStorageControllerCompactLinear(
+						(CompactLinearFridge) af);
+				c.setEventListID(af.getEventListID());
+				controllers.add(c);
+				break;
+			}
+			}
+		}
+		return controllers;
 	}
 }

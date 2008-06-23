@@ -29,7 +29,7 @@ import de.uniol.ui.model.fridges.IterativeFridge;
  * 
  * @author Chh
  */
-public class Experiment {
+public class Simulation {
 
 	/** The underlying FEL */
 	private MessagingEventList el;
@@ -48,16 +48,15 @@ public class Experiment {
 	private boolean collectLoad = true;
 
 	/**
-	 * Creates a new experiment using the specified {@link EventList} and the
+	 * Creates a new simulation using the specified {@link EventList} and the
 	 * given population of {@link SimEntity}s.
 	 * 
 	 * @param el
 	 * @param fridges
 	 */
-	public Experiment(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
+	public Simulation(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
-		initStatistics();
 	}
 
 	/**
@@ -94,6 +93,7 @@ public class Experiment {
 	 * @param end
 	 */
 	public void simulate(double end) {
+		initStatistics();
 		final ProgressComposite pc = new ProgressComposite();
 		el.stopAtTime(end);
 		el.reset();
