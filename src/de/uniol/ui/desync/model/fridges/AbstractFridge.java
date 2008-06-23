@@ -1,4 +1,4 @@
-package de.uniol.ui.model.fridges;
+package de.uniol.ui.desync.model.fridges;
 
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;

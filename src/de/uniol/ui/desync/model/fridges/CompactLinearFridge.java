@@ -1,4 +1,4 @@
-package de.uniol.ui.model.fridges;
+package de.uniol.ui.desync.model.fridges;
 
 /**
  * Parameterized version of the linear model. This implementation uses only one

@@ -1,7 +1,7 @@
-package de.uniol.ui.model.controller;
+package de.uniol.ui.desync.model.controller;
 
 import simkit.SimEntityBase;
-import de.uniol.ui.model.fridges.AbstractFridge;
+import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
 public abstract class AbstractController extends SimEntityBase {
 

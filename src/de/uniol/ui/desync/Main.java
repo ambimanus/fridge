@@ -7,17 +7,17 @@ import simkit.Schedule;
 import simkit.random.BernoulliVariate;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
+import de.uniol.ui.desync.model.ControlCenter;
+import de.uniol.ui.desync.model.Simulation;
+import de.uniol.ui.desync.model.controller.AbstractController;
+import de.uniol.ui.desync.model.controller.ControllerCompactLinear;
+import de.uniol.ui.desync.model.controller.ControllerIterative;
+import de.uniol.ui.desync.model.controller.ControllerLinear;
+import de.uniol.ui.desync.model.fridges.AbstractFridge;
+import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
+import de.uniol.ui.desync.model.fridges.IterativeFridge;
+import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.util.MessagingEventList;
-import de.uniol.ui.model.ControlCenter;
-import de.uniol.ui.model.Simulation;
-import de.uniol.ui.model.controller.AbstractController;
-import de.uniol.ui.model.controller.ControllerCompactLinear;
-import de.uniol.ui.model.controller.ControllerIterative;
-import de.uniol.ui.model.controller.ControllerLinear;
-import de.uniol.ui.model.fridges.AbstractFridge;
-import de.uniol.ui.model.fridges.CompactLinearFridge;
-import de.uniol.ui.model.fridges.IterativeFridge;
-import de.uniol.ui.model.fridges.LinearFridge;
 
 /**
  * This class is the main class of this simulation. It creates all entities and

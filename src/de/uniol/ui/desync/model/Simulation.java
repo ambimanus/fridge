@@ -1,4 +1,4 @@
-package de.uniol.ui.model;
+package de.uniol.ui.desync.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Shell;
 import simkit.EventList;
 import simkit.SimEntity;
 
+import de.uniol.ui.desync.model.fridges.AbstractFridge;
+import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.ProgressComposite;
 import de.uniol.ui.desync.ui.StepChartDialog;
@@ -19,8 +21,6 @@ import de.uniol.ui.desync.util.ProgressListener;
 import de.uniol.ui.desync.util.collectors.AbstractCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesCollector;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
-import de.uniol.ui.model.fridges.AbstractFridge;
-import de.uniol.ui.model.fridges.IterativeFridge;
 
 /**
  * This class controls the actual simulation run. It gets the simulated entities

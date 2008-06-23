@@ -1,9 +1,9 @@
-package de.uniol.ui.model;
+package de.uniol.ui.desync.model;
 
 import java.util.ArrayList;
 
 import simkit.SimEntityBase;
-import de.uniol.ui.model.controller.AbstractController;
+import de.uniol.ui.desync.model.controller.AbstractController;
 
 public class ControlCenter extends SimEntityBase {
 

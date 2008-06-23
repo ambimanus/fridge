@@ -1,4 +1,4 @@
-package de.uniol.ui.model.fridges;
+package de.uniol.ui.desync.model.fridges;
 
 /**
  * Iterative implementation of a fridge. This model calculates temperature and

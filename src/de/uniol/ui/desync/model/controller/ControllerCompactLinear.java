@@ -1,13 +1,13 @@
-package de.uniol.ui.model.controller;
+package de.uniol.ui.desync.model.controller;
 
-import de.uniol.ui.model.fridges.IterativeFridge;
+import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
 
-public class ControllerIterative extends AbstractController {
+public class ControllerCompactLinear extends AbstractController {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
-	public ControllerIterative(IterativeFridge fridge) {
+	public ControllerCompactLinear(CompactLinearFridge fridge) {
 		super(fridge);
 		setName("DirectStorageController for " + fridge.getName());
 	}
@@ -25,10 +25,12 @@ public class ControllerIterative extends AbstractController {
 	}
 	
 	public void doLoadThermalStorageNow() {
-		fridge.waitDelay(IterativeFridge.EV_BEGIN_COOLING, 0);
+		fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0, fridge
+				.getT_min());
 	}
 	
 	public void doUnloadThermalStorageNow() {
-		fridge.waitDelay(IterativeFridge.EV_BEGIN_WARMING, 0);
+		fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0, fridge
+				.getT_max());
 	}
 }
