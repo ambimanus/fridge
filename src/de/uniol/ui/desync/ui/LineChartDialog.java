@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.XYPlot;
@@ -174,8 +174,10 @@ public class LineChartDialog extends Dialog {
 			}
 		}
 
-		NumberAxis xaxis = new NumberAxis(xTitle);
-		plot.setDomainAxis(xaxis);
+		DateAxis da = new DateAxis(xTitle);
+		da.setDateFormatOverride(new RelativeHourFormat());
+		da.setLowerMargin(0.03);
+		plot.setDomainAxis(da);
 
 		ValueAxis yaxis = plot.getRangeAxis();
 		yaxis.setRange(new Range(minRange, maxRange));

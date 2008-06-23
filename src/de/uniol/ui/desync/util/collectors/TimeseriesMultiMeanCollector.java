@@ -98,7 +98,9 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 			throw new RuntimeException("Different length of x/y arrays!");
 		}
 		for (int i = 0; i < t.length; i++) {
-			t[i] = times.get(i);
+			// Multiply by 60000 to convert to milliseconds (used in visualizing
+			// charts)
+			t[i] = times.get(i) * 60000d;
 			v[i] = values.get(i);
 		}
 		return new double[][] { t, v };
