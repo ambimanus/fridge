@@ -59,6 +59,8 @@ public abstract class AbstractFridge extends SimEntityBase {
 	protected double eps; // = Math.exp(-(tau * a) / m_c)
 	/** inner temperature at previous timestamp */
 	protected double t_previous = Double.NaN;
+	/** whether this device starts in state 'cooling' */
+	protected boolean startActive = false;
 
 	/* state variables */
 	/** inner temperature at current timestamp */
@@ -251,6 +253,26 @@ public abstract class AbstractFridge extends SimEntityBase {
 	public void setLoad(double load) {
 		this.load = load;
 	}
+	
+	/**
+	 * @return whether this device starts in state 'cooling'
+	 */
+	public boolean isStartActive() {
+		return startActive;
+	}
+
+	/**
+	 * @param startActive
+	 *            whether this device starts in state 'cooling'
+	 */
+	public void setStartActive(boolean startActive) {
+		this.startActive = startActive;
+	}
+
+	/**
+	 * @return whether the cooling device is active
+	 */
+	public abstract boolean isActive();
 
 	/*
 	 * Parameter variance util methods:

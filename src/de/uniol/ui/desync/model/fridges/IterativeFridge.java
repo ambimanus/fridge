@@ -16,6 +16,9 @@ public class IterativeFridge extends AbstractFridge {
 	
 	/** time between simulation steps (for equations, one unit == one hour) */
 	protected double tau = SIMULATION_CLOCK / 60.0;
+	
+	/** whether the cooling device is active */
+	protected boolean active = false;
 
 	public IterativeFridge() {
 		super("Fridge");
@@ -32,17 +35,9 @@ public class IterativeFridge extends AbstractFridge {
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 
 		// Check if we were set active externally
-		if (!Double.isNaN(load)) {
-			// Load has been set, take it as starting activity:
-			// Announce load change
-			firePropertyChange(PROP_LOAD, Double.NaN, load);
-			if (load > q_warming) {
-				// Target to min temp
-				waitDelay(EV_BEGIN_COOLING, 0.0);
-			} else {
-				// Target to max temp
-				waitDelay(EV_BEGIN_WARMING, 0.0);
-			}
+		if (isStartActive()) {
+			// Target to min temp
+			waitDelay(EV_BEGIN_COOLING, 0.0);
 		} else {
 			// Be passive until necessary:
 			if (t_current < t_max) {
@@ -60,6 +55,7 @@ public class IterativeFridge extends AbstractFridge {
 		double bak = load;
 		load = q_cooling;
 		// Announce state change
+		active = true;
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Delay next state change
 		waitDelay(EV_COOLING, IterativeFridge.SIMULATION_CLOCK);
@@ -70,6 +66,7 @@ public class IterativeFridge extends AbstractFridge {
 		double bak = load;
 		load = q_warming;
 		// Announce state change
+		active = false;
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Delay next state change
 		waitDelay(EV_WARMING, IterativeFridge.SIMULATION_CLOCK);
@@ -122,5 +119,9 @@ public class IterativeFridge extends AbstractFridge {
 				+ ((1 - eps) * (t_surround - (eta * (load / a))));
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 }

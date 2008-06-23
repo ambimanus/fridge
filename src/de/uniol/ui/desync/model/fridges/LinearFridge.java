@@ -19,6 +19,9 @@ public class LinearFridge extends AbstractFridge {
 	
 	/** timestamp at which the last event occured */
 	protected double lastActionTime = Double.NaN;
+	
+	/** whether the cooling device is active */
+	protected boolean active = false;
 
 	public LinearFridge() {
 		super("LinearFridge");
@@ -36,17 +39,9 @@ public class LinearFridge extends AbstractFridge {
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Check if we were set active externally
-		if (!Double.isNaN(load)) {
-			// Load has been set, take it as starting activity:
-			// Announce load change
-			firePropertyChange(PROP_LOAD, Double.NaN, load);
-			if (load > q_warming) {
-				// Target to min temp
-				waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
-			} else {
-				// Target to max temp
-				waitDelay(EV_BEGIN_WARMING, 0.0, t_max);
-			}
+		if (isStartActive()) {
+			// Target to min temp
+			waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
 		} else {
 			// Load is undefined, start in passive mode:
 			if (t_current < t_max) {
@@ -66,6 +61,7 @@ public class LinearFridge extends AbstractFridge {
 		double bak = load;
 		load = q_cooling;
 		// Announce load change
+		active = true;
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
@@ -82,6 +78,7 @@ public class LinearFridge extends AbstractFridge {
 		double bak = load;
 		load = q_warming;
 		// Announce load change
+		active = false;
 		firePropertyChange(PROP_LOAD, bak, load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
@@ -136,5 +133,9 @@ public class LinearFridge extends AbstractFridge {
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes
 		return tau * 60.0;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 }

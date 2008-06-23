@@ -93,10 +93,10 @@ public class Main {
 		RandomVariate thermalMassVariate = new UniformVariate();
 		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
 		RandomVariate tCurrentVariate = new UniformVariate();
-		RandomVariate activityAtStartVariate = new BernoulliVariate();
-		activityAtStartVariate.setParameters(ACTIVE_AT_START_PROPABILITY);
 		tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
 				AbstractFridge.DEFAULT_t_max);
+		RandomVariate activityAtStartVariate = new BernoulliVariate();
+		activityAtStartVariate.setParameters(ACTIVE_AT_START_PROPABILITY);
 		ArrayList<AbstractFridge> fridges = new ArrayList<AbstractFridge>(
 				POPULATION_SIZE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -120,11 +120,7 @@ public class Main {
 			// Equally distribute t_current between t_min and t_max
 			f.generate_tCurrent(tCurrentVariate);
 			// Make (ACTIVE_AT_START_PROPABILITY*100)% of the fridges active
-			if (activityAtStartVariate.generate() > 0) {
-				f.setLoad(AbstractFridge.DEFAULT_q_cooling);
-			} else {
-				f.setLoad(AbstractFridge.DEFAULT_q_warming);
-			}
+			f.setStartActive(activityAtStartVariate.generate() > 0);
 			f.setEventListID(list);
 			fridges.add(f);
 		}
