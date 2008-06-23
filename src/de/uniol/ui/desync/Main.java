@@ -10,7 +10,10 @@ import simkit.random.UniformVariate;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.model.ControlCenter;
 import de.uniol.ui.model.Simulation;
-import de.uniol.ui.model.controller.DirectStorageControllerCompactLinear;
+import de.uniol.ui.model.controller.AbstractController;
+import de.uniol.ui.model.controller.ControllerCompactLinear;
+import de.uniol.ui.model.controller.ControllerIterative;
+import de.uniol.ui.model.controller.ControllerLinear;
 import de.uniol.ui.model.fridges.AbstractFridge;
 import de.uniol.ui.model.fridges.CompactLinearFridge;
 import de.uniol.ui.model.fridges.IterativeFridge;
@@ -27,7 +30,7 @@ public class Main {
 	/* Constants */
 	/** Available model types */
 	public static enum MODES {
-		ITERATIV, LINEAR, COMPACT_LINEAR
+		ITERATIVE, LINEAR, COMPACT_LINEAR
 	}
 
 	/* Population params */
@@ -62,13 +65,13 @@ public class Main {
 		ArrayList<AbstractFridge> fridges = createFridges(list);
 		
 		// Create controllers
-		ArrayList<DirectStorageControllerCompactLinear> controllers = createControllers(fridges);
+		ArrayList<AbstractController> controllers = createControllers(fridges);
 		ControlCenter cc = new ControlCenter(controllers, 1750, 250, false);
 		cc.setEventListID(list);
 		
 		// Prepare simulation
 		Simulation sim = new Simulation(el, fridges);
-		sim.setCollectTemperature(mode == MODES.ITERATIV);
+		sim.setCollectTemperature(mode == MODES.ITERATIVE);
 
 		// Simulate
 		sim.simulate(SIMULATION_LENGTH);
@@ -99,7 +102,7 @@ public class Main {
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			AbstractFridge f = null;
 			switch (mode) {
-			case ITERATIV: {
+			case ITERATIVE: {
 				f = new IterativeFridge();
 				break;
 			}
@@ -128,27 +131,26 @@ public class Main {
 		return fridges;
 	}
 	
-	private static ArrayList<DirectStorageControllerCompactLinear> createControllers(
+	private static ArrayList<AbstractController> createControllers(
 			ArrayList<AbstractFridge> fridges) {
-		ArrayList<DirectStorageControllerCompactLinear> controllers = new ArrayList<DirectStorageControllerCompactLinear>();
+		ArrayList<AbstractController> controllers = new ArrayList<AbstractController>();
 		for (AbstractFridge af : fridges) {
+			AbstractController c = null;
 			switch (mode) {
-			case ITERATIV: {
-				// TODO
+			case ITERATIVE: {
+				c = new ControllerIterative((IterativeFridge) af);
 				break;
 			}
 			case LINEAR: {
-				// TODO
+				c = new ControllerLinear((LinearFridge) af);
 				break;
 			}
 			case COMPACT_LINEAR: {
-				DirectStorageControllerCompactLinear c = new DirectStorageControllerCompactLinear(
-						(CompactLinearFridge) af);
-				c.setEventListID(af.getEventListID());
-				controllers.add(c);
+				c = new ControllerCompactLinear((CompactLinearFridge) af);
 				break;
 			}
 			}
+			controllers.add(c);
 		}
 		return controllers;
 	}
