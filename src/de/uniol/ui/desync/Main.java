@@ -44,8 +44,8 @@ public class Main {
 	/* Simulation params */
 	/** Amount of simulated fridges */
 	public final static int POPULATION_SIZE = 1000;
-	/** Length of simulation, 1 unit == 1 minute */
-	public final static double SIMULATION_LENGTH = 6400.0;
+	/** Length of simulation, 1 unit == 1 hour */
+	public final static double SIMULATION_LENGTH = 30.0;
 	/** Used model type */
 	public final static MODES mode = MODES.COMPACT_LINEAR;
 
@@ -74,7 +74,7 @@ public class Main {
 		sim.setCollectTemperature(mode == MODES.ITERATIVE);
 
 		// Simulate
-		sim.simulate(SIMULATION_LENGTH);
+		sim.simulate(SIMULATION_LENGTH * 60.0);
 
 		// Create charts
 		sim.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
