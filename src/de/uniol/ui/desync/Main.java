@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import simkit.Schedule;
 import simkit.random.BernoulliVariate;
+import simkit.random.Congruential;
+import simkit.random.CongruentialSeeds;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import de.uniol.ui.desync.model.ControlCenter;
@@ -43,11 +45,17 @@ public class Main {
 
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public final static int POPULATION_SIZE = 1000;
+	public final static int POPULATION_SIZE = 5000;
 	/** Length of simulation, 1 unit == 1 hour */
-	public final static double SIMULATION_LENGTH = 30.0;
+	public final static double SIMULATION_LENGTH = 20.0;
 	/** Used model type */
 	public final static MODES mode = MODES.COMPACT_LINEAR;
+	
+	/* Direct storage control params */
+	public final static double t_notify = 1; // hours
+	public final static double t_preload = 1; // hours
+	public final static double spread = 60.0; // minutes
+	public final static boolean doUnload = false;
 
 	/**
 	 * Creates all entities and prepares and runs the experiment.
@@ -66,7 +74,8 @@ public class Main {
 		
 		// Create controllers
 		ArrayList<AbstractController> controllers = createControllers(fridges);
-		ControlCenter cc = new ControlCenter(controllers, 1750, 250, false);
+		ControlCenter cc = new ControlCenter(controllers, t_notify * 60.0,
+				t_preload * 60.0, spread, doUnload);
 		cc.setEventListID(list);
 		
 		// Prepare simulation
@@ -90,13 +99,22 @@ public class Main {
 	 * @return the population
 	 */
 	private static ArrayList<AbstractFridge> createFridges(int list) {
+		// Create distinct uniform random variates for m_c and t_current
 		RandomVariate thermalMassVariate = new UniformVariate();
+		Congruential c = new Congruential();
+		c.setSeed(CongruentialSeeds.SEED[3]);
+		thermalMassVariate.setRandomNumber(c);
 		thermalMassVariate.setParameters(MC_MIN, MC_MAX);
 		RandomVariate tCurrentVariate = new UniformVariate();
+		c = new Congruential();
+		c.setSeed(CongruentialSeeds.SEED[8]);
+		tCurrentVariate.setRandomNumber(c);
 		tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
 				AbstractFridge.DEFAULT_t_max);
+		// Create [0|1] variate for starting states
 		RandomVariate activityAtStartVariate = new BernoulliVariate();
 		activityAtStartVariate.setParameters(ACTIVE_AT_START_PROPABILITY);
+		// Create fridges
 		ArrayList<AbstractFridge> fridges = new ArrayList<AbstractFridge>(
 				POPULATION_SIZE);
 		for (int i = 0; i < POPULATION_SIZE; i++) {
