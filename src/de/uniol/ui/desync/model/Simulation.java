@@ -128,8 +128,8 @@ public class Simulation {
 		if (collectTemperature) {
 			// Temperature chart
 			LineChartDialog lcd = new LineChartDialog(shell,
-					"Temperature progress", "Time (min)", "Temperature (°C)",
-					"min", "°C", 2.0, 9.0);
+					"Temperature progress", "Time (h)", "Temperature (°C)",
+					"min", "°C", 3.0, 8.0);
 			lcd.addSeries(meanTemp);
 			if (firstColor != null) {
 				lcd.setSeriesColor(0, firstColor);
@@ -157,7 +157,7 @@ public class Simulation {
 			}
 			// Load chart
 			StepChartDialog scd = new StepChartDialog(shell, "Load progress",
-					"Time (min)", "Load (W)", "min", "W", -10.0, 80.0);
+					"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
 			scd.addSeries(meanLoad);
 			if (firstColor != null) {
 				scd.setSeriesColor(0, firstColor);
