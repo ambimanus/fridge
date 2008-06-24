@@ -2,12 +2,12 @@ package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 
-public class ControllerIterative extends AbstractController {
+public class DirectControllerIterative extends DirectAbstractController {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
-	public ControllerIterative(IterativeFridge fridge) {
+	public DirectControllerIterative(IterativeFridge fridge) {
 		super(fridge);
 		setName("DirectStorageController for " + fridge.getName());
 	}

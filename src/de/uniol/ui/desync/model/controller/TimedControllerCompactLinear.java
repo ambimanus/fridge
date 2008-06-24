@@ -1,13 +1,13 @@
 package de.uniol.ui.desync.model.controller;
 
-import de.uniol.ui.desync.model.fridges.LinearFridge;
+import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
 
-public class ControllerLinear extends AbstractController {
+public class TimedControllerCompactLinear extends DirectAbstractController {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
-	public ControllerLinear(LinearFridge fridge) {
+	public TimedControllerCompactLinear(CompactLinearFridge fridge) {
 		super(fridge);
 		setName("DirectStorageController for " + fridge.getName());
 	}
@@ -27,10 +27,12 @@ public class ControllerLinear extends AbstractController {
 	}
 	
 	public void doLoadThermalStorageNow() {
-		fridge.waitDelay(LinearFridge.EV_BEGIN_COOLING, 0, fridge.getT_min());
+		fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0, fridge
+				.getT_min());
 	}
 	
 	public void doUnloadThermalStorageNow() {
-		fridge.waitDelay(LinearFridge.EV_BEGIN_WARMING, 0, fridge.getT_max());
+		fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0, fridge
+				.getT_max());
 	}
 }
