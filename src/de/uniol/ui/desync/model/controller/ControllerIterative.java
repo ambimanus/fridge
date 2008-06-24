@@ -16,12 +16,14 @@ public class ControllerIterative extends AbstractController {
 		// no-op
 	}
 	
-	public void doLoadThermalStorage(Double t_preload) {
-		waitDelay(EV_LOAD_THERMAL_STORAGE_NOW, t_preload);
+	public void doLoadThermalStorage(Double t_preload, Double spread) {
+		waitDelay(EV_LOAD_THERMAL_STORAGE_NOW, t_preload
+				+ drawUniformRandom(0.0, spread));
 	}
 	
-	public void doUnloadThermalStorage(Double t_preload) {
-		waitDelay(EV_UNLOAD_THERMAL_STORAGE_NOW, t_preload);
+	public void doUnloadThermalStorage(Double t_preload, Double spread) {
+		waitDelay(EV_UNLOAD_THERMAL_STORAGE_NOW, t_preload
+				+ drawUniformRandom(0.0, spread));
 	}
 	
 	public void doLoadThermalStorageNow() {
