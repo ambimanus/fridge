@@ -8,15 +8,15 @@ public class DirectStrategy extends AbstractStrategy {
 	public final static String EV_NOTIFY = "Notify";
 
 	private double t_notify;
-	private double t_preload;
+	private double tau_preload;
 	private double spread;
 	private boolean doUnload;
 
-	public DirectStrategy(int eventListID, double t_notify, double t_preload,
+	public DirectStrategy(int eventListID, double t_notify, double tau_preload,
 			double spread, boolean doUnload) {
 		super(eventListID, "Strategy; Direct Storage Control");
 		this.t_notify = t_notify;
-		this.t_preload = t_preload;
+		this.tau_preload = tau_preload;
 		this.spread = spread;
 		this.doUnload = doUnload;
 	}
@@ -28,6 +28,6 @@ public class DirectStrategy extends AbstractStrategy {
 	public void doNotify(AbstractController c) {
 		String ev = doUnload ? DirectAbstractController.EV_UNLOAD_THERMAL_STORAGE
 				: DirectAbstractController.EV_LOAD_THERMAL_STORAGE;
-		c.waitDelay(ev, 0, t_preload, spread);
+		c.waitDelay(ev, 0, tau_preload, spread);
 	}
 }

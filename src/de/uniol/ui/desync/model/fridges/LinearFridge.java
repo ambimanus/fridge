@@ -41,51 +41,68 @@ public class LinearFridge extends AbstractFridge {
 		// Check if we were set active externally
 		if (isStartActive()) {
 			// Target to min temp
-			waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
+			waitDelay(EV_BEGIN_COOLING, 0.0, t_min, q_cooling);
 		} else {
 			// Load is undefined, start in passive mode:
 			if (t_current < t_max) {
 				// Cool enough, start in warming phase immediately
-				waitDelay(EV_BEGIN_WARMING, 0.0, t_max);
+				waitDelay(EV_BEGIN_WARMING, 0.0, t_max, q_warming);
 			} else {
 				// Too warm, start cooling immediately
-				waitDelay(EV_BEGIN_COOLING, 0.0, t_min);
+				waitDelay(EV_BEGIN_COOLING, 0.0, t_min, q_cooling);
 			}
 		}
 	}
 	
-	public void doBeginCooling(Double t_dest) {
+	public void doBeginCooling(Double t_dest, Double load) {
 		// Calculate current temperature based on current load and elapsed time
 		updateTemperature();
 		// Update load
-		double bak = load;
-		load = q_cooling;
+		double bak = this.load;
+		this.load = load;
 		// Announce load change
 		active = true;
-		firePropertyChange(PROP_LOAD, bak, load);
+		firePropertyChange(PROP_LOAD, bak, this.load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
 		// Remove any next scheduled warming event if present
 		interrupt(EV_BEGIN_WARMING);
 		// Delay next warming phase when cooling is finished
-		waitDelay(EV_BEGIN_WARMING, timespan, t_max);
+		waitDelay(EV_BEGIN_WARMING, timespan, t_max, q_warming);
 	}
 
-	public void doBeginWarming(Double t_dest) {
+	public void doBeginWarming(Double t_dest, Double load) {
 		// Calculate current temperature based on current load and elapsed time
 		updateTemperature();
 		// Update load
-		double bak = load;
-		load = q_warming;
+		double bak = this.load;
+		this.load = load;
 		// Announce load change
 		active = false;
-		firePropertyChange(PROP_LOAD, bak, load);
+		firePropertyChange(PROP_LOAD, bak, this.load);
 		// Calcuate time to stay in cooling state to reach t_dest
 		double timespan = tau(t_current, t_dest);
 		// Remove any next scheduled cooling event if present
 		interrupt(EV_BEGIN_COOLING);
 		// Delay next cooling phase when warming is finished
-		waitDelay(EV_BEGIN_COOLING, timespan, t_min);
+		waitDelay(EV_BEGIN_COOLING, timespan, t_min, q_cooling);
+	}
+	
+	/*
+	 * Overwritten to recalculate t_current, because this value is only
+	 * calculated at state switches in the linear model and therefore not up to
+	 * date in-between.
+	 */
+	public double getT_current() {
+		// Check simulation start phase
+		if (Double.isNaN(lastActionTime)) {
+			return t_current;
+		}
+		// Calculate elapsed time since last state switch
+		double tau = (getEventList().getSimTime() - lastActionTime);
+		// Calculate current temperature based on temperature at last state
+		// switch and elapsed time since
+		return calculateTemperatureAfter(tau, t_current, this, load);
 	}
 	
 	/*
@@ -102,37 +119,47 @@ public class LinearFridge extends AbstractFridge {
 			lastActionTime = getEventList().getSimTime();
 			return;
 		}
-		// Calculate proper tau (time between simulation steps, one unit == one
-		// hour)
-		double tau = (getEventList().getSimTime() - lastActionTime) / 60.0;
-		// Calculate proper epsilon
-		eps = Math.exp(-(tau * a) / m_c);
+		// Calculate proper tau (time between actions, one unit == one
+		// SIMULATION_STEP)
+		double tau = (getEventList().getSimTime() - lastActionTime);
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
-		t_current = (eps * t_current)
-				+ ((1 - eps) * (t_surround - (eta * (load / a))));
+		t_current = calculateTemperatureAfter(tau, t_previous, this, load);
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Update action timestamp
 		lastActionTime = getEventList().getSimTime();
 	}
 	
-	/**
-	 * Calculate time needed to reach temperature <code>t_dest</code>,
-	 * starting at temperature <code>t_from</code>. Calculation is based
-	 * (among other values) on current load.
-	 * 
-	 * @param t_from
-	 * @param t_dest
-	 * @return
-	 */
-	protected double tau(double t_from, double t_dest) {
-		double dividend = t_dest - t_surround + (eta * (load / a));
-		double divisor = t_from - t_surround + (eta * (load / a));
-		double tau = -1 * Math.log((dividend / divisor)) * (m_c / a);
-		// Multiply by 60 because tau is calculated in hours, but simulation
-		// uses minutes
-		return tau * 60.0;
+//	public static double calculateTemperatureAfter(double elapsedTime,
+//			double previousTemperature, AbstractFridge fridge, double load) {
+//		// Calculate proper epsilon
+//		double eps = Math.exp(-(elapsedTime * fridge.a) / fridge.m_c);
+//		// Calculate temperature based on given load, elapsed time and
+//		// previous temperature at (current time - elapsed time)
+//		return (eps * previousTemperature)
+//				+ ((1 - eps) * (fridge.t_surround - (fridge.eta * (load / fridge.a))));
+//	}
+	
+	public static double calculateTemperatureAfter(double elapsedTime,
+			double previousTemperature, AbstractFridge fridge, double load) {
+		double ret;
+		if (load > fridge.getQ_warming()) {
+			if (Double.isNaN(fridge.tau_cooling)) {
+				fridge.tau_cooling = fridge.tau(fridge.getT_max(), fridge
+						.getT_min(), fridge.getQ_cooling());
+			}
+			ret = previousTemperature
+					+ (((fridge.getT_min() - fridge.getT_max()) / fridge.tau_cooling) * elapsedTime);
+		} else {
+			if (Double.isNaN(fridge.tau_warming)) {
+				fridge.tau_warming = fridge.tau(fridge.getT_min(), fridge
+						.getT_max(), fridge.getQ_warming());
+			}
+			ret = previousTemperature
+					+ (((fridge.getT_max() - fridge.getT_min()) / fridge.tau_warming) * elapsedTime);
+		}
+		return ret;
 	}
 	
 	public boolean isActive() {

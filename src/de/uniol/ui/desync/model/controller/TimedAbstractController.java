@@ -1,38 +1,14 @@
 package de.uniol.ui.desync.model.controller;
 
-import simkit.random.RandomVariate;
-import simkit.random.UniformVariate;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
-public abstract class TimedAbstractController extends AbstractController  {
+public abstract class TimedAbstractController extends AbstractController {
 
-	public final static String EV_LOAD_THERMAL_STORAGE = "LoadThermalStorage";
-	public final static String EV_UNLOAD_THERMAL_STORAGE = "UnloadThermalStorage";
+	public final static String EV_REDUCE_LOAD = "ReduceLoad";
 
-	protected AbstractFridge fridge;
-	protected static RandomVariate random;
-	
 	public TimedAbstractController(AbstractFridge fridge) {
-		this.fridge = fridge;
-		setEventListID(fridge.getEventListID());
-		if (random == null) {
-			random = new UniformVariate();
-		}
+		super(fridge);
 	}
-	
-	protected double drawUniformRandom(double low, double high) {
-		Object[] params = random.getParameters();
-		if (params.length != 2) {
-			throw new IllegalArgumentException(
-					"Expected params [low,high], but got " + params);
-		}
-		if ((Double)params[0] != low || (Double)params[1] != high) {
-			random.setParameters(low, high);
-		}
-		return random.generate();
-	}
-	
-	public abstract void doLoadThermalStorage(Double t_preload, Double spread);
-	
-	public abstract void doUnloadThermalStorage(Double t_preload, Double spread);
+
+	public abstract void doReduceLoad(Double tau_preload, Double tau_reduce);
 }

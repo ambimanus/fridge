@@ -12,9 +12,11 @@ import simkit.random.UniformVariate;
 import de.uniol.ui.desync.model.ControlCenter;
 import de.uniol.ui.desync.model.Simulation;
 import de.uniol.ui.desync.model.controller.AbstractController;
-import de.uniol.ui.desync.model.controller.DirectAbstractController;
 import de.uniol.ui.desync.model.controller.DirectControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.DirectControllerIterative;
+import de.uniol.ui.desync.model.controller.DirectControllerLinear;
+import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
+import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
@@ -22,6 +24,7 @@ import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.strategies.AbstractStrategy;
 import de.uniol.ui.desync.model.strategies.DirectStrategy;
+import de.uniol.ui.desync.model.strategies.TimedStrategy;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
@@ -39,7 +42,7 @@ public class Main {
 	}
 	/** Available strategies*/
 	public static enum STRATEGIES {
-		DIRECT, TIMED
+		NONE, DIRECT, TIMED
 	}
 
 	/* Population params */
@@ -58,13 +61,18 @@ public class Main {
 	/** Used model type */
 	public final static MODELS model = MODELS.COMPACT_LINEAR;
 	/** Used strategy */
-	public final static STRATEGIES strategy = STRATEGIES.DIRECT;
+	public final static STRATEGIES strategy = STRATEGIES.TIMED;
 	
-	/* Direct storage control params */
-	public final static double t_notify = 1; // hours
-	public final static double t_preload = 1; // hours
-	public final static double spread = 30.0; // minutes
-	public final static boolean doUnload = false;
+	/* Strategy params: direct storage control */
+	public final static double direct_t_notify = 60.0;
+	public final static double direct_tau_preload = 60.0;
+	public final static double direct_spread = 30.0;
+	public final static boolean direct_doUnload = false;
+	
+	/* Strategy params: timed load reduction */
+	public final static double timed_t_notify = 60.0;
+	public final static double timed_tau_activ = 15.0;
+	public final static double timed_tau_reduce = 60.0;
 
 	/**
 	 * Creates all entities and prepares and runs the experiment.
@@ -80,17 +88,22 @@ public class Main {
 
 		// Create fridges
 		ArrayList<AbstractFridge> fridges = createFridges(list);
-		// Create controllers
-		ArrayList<AbstractController> controllers = createControllers(fridges);
-		// Create ControlCenter and Strategy
-		new ControlCenter(list, controllers, createStrategy(list));
+		if (strategy != STRATEGIES.NONE) {
+			// Create controllers
+			ArrayList<AbstractController> controllers = createControllers(fridges);
+			// Create ControlCenter and Strategy
+			new ControlCenter(list, controllers, createStrategy(list));
+		}
 		
 		// Prepare simulation
 		Simulation sim = new Simulation(el, fridges);
 		sim.setCollectTemperature(model == MODELS.ITERATIVE);
 
 		// Simulate
+		double start = System.currentTimeMillis();
 		sim.simulate(SIMULATION_LENGTH * 60.0);
+		double end = System.currentTimeMillis() - start;
+System.out.println("Elapsed time: " + end);
 
 		// Create charts
 		sim.showResults(POPULATION_SIZE < 10, POPULATION_SIZE > 1
@@ -156,18 +169,47 @@ public class Main {
 			ArrayList<AbstractFridge> fridges) {
 		ArrayList<AbstractController> controllers = new ArrayList<AbstractController>();
 		for (AbstractFridge af : fridges) {
-			DirectAbstractController c = null;
+			AbstractController c = null;
 			switch (model) {
 			case ITERATIVE: {
-				c = new DirectControllerIterative((IterativeFridge) af);
+				switch (strategy) {
+				case DIRECT: {
+					c = new DirectControllerIterative((IterativeFridge) af);
+					break;
+				}
+				case TIMED: {
+					c = new TimedControllerIterative((IterativeFridge) af);
+					break;
+				}
+				}
 				break;
 			}
 			case LINEAR: {
-				c = new TimedControllerLinear((LinearFridge) af);
+				switch (strategy) {
+				case DIRECT: {
+					c = new DirectControllerLinear((LinearFridge) af);
+					break;
+				}
+				case TIMED: {
+					c = new TimedControllerLinear((LinearFridge) af);
+					break;
+				}
+				}
 				break;
 			}
 			case COMPACT_LINEAR: {
-				c = new DirectControllerCompactLinear((CompactLinearFridge) af);
+				switch (strategy) {
+				case DIRECT: {
+					c = new DirectControllerCompactLinear(
+							(CompactLinearFridge) af);
+					break;
+				}
+				case TIMED: {
+					c = new TimedControllerCompactLinear(
+							(CompactLinearFridge) af);
+					break;
+				}
+				}
 				break;
 			}
 			}
@@ -178,13 +220,16 @@ public class Main {
 	
 	private static AbstractStrategy createStrategy(int eventListID) {
 		switch (strategy) {
+		case NONE: {
+			return null;
+		}
 		case DIRECT: {
-			return new DirectStrategy(eventListID, t_notify * 60.0,
-					t_preload * 60.0, spread, doUnload);
+			return new DirectStrategy(eventListID, direct_t_notify,
+					direct_tau_preload, direct_spread, direct_doUnload);
 		}
 		case TIMED: {
-			// TODO
-			return null;
+			return new TimedStrategy(eventListID, timed_t_notify,
+					timed_tau_activ, timed_tau_reduce);
 		}
 		}
 		return null;

@@ -28,7 +28,7 @@ public class CompactLinearFridge extends LinearFridge {
 		// Check if we were set active externally
 		if (isStartActive()) {
 			// Target to min temp
-			waitDelay(EV_TARGET_TO, 0.0, t_min);
+			waitDelay(EV_TARGET_TO, 0.0, t_min, q_cooling);
 		} else {
 			// Load is undefined, start in passive mode:
 			if (t_current < t_max) {
@@ -38,7 +38,7 @@ public class CompactLinearFridge extends LinearFridge {
 				// Announce load change
 				firePropertyChange(PROP_LOAD, bak, load);
 				// Target to max temp
-				waitDelay(EV_TARGET_TO, 0.0, t_max);
+				waitDelay(EV_TARGET_TO, 0.0, t_max, q_warming);
 			} else {
 				// Update load
 				double bak = load;
@@ -46,25 +46,21 @@ public class CompactLinearFridge extends LinearFridge {
 				// Announce load change
 				firePropertyChange(PROP_LOAD, bak, load);
 				// Target to min temp
-				waitDelay(EV_TARGET_TO, 0.0, t_min);
+				waitDelay(EV_TARGET_TO, 0.0, t_min, q_cooling);
 			}
 		}
 	}
 	
-	public void doTargetTo(Double t_dest) {
+	public void doTargetTo(Double t_dest, Double load) {
 		// Calculate current temperature based on current load and elapsed time
 		updateTemperature();
 		// Update load
-		double bak = load;
-		if (t_current < t_dest) {
-			load = q_warming;
-			active = false;
-		} else {
-			load = q_cooling;
-			active = true;
-		}
+		double bak = this.load;
+		this.load = load;
+		// Update active state
+		active = load > q_warming;
 		// Announce load change
-		firePropertyChange(PROP_LOAD, bak, load);
+		firePropertyChange(PROP_LOAD, bak, this.load);
 		// Calcuate time to reach t_dest
 		double timespan = tau(t_current, t_dest);
 		// Update action timestamp
@@ -73,8 +69,9 @@ public class CompactLinearFridge extends LinearFridge {
 		interrupt(EV_TARGET_TO);
 		// If we are cooling right now, begin warming next, and the other way,
 		// respectively.
-		double t_next = (load == q_warming ? t_min : t_max);
+		double t_next = active ? t_max : t_min;
+		double loadNext = active ? q_warming : q_cooling;
 		// Delay next phase when t_dest will be reached
-		waitDelay(EV_TARGET_TO, timespan, t_next);
+		waitDelay(EV_TARGET_TO, timespan, t_next, loadNext);
 	}
 }

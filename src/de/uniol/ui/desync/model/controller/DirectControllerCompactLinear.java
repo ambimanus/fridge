@@ -16,13 +16,13 @@ public class DirectControllerCompactLinear extends DirectAbstractController {
 		// no-op
 	}
 	
-	public void doLoadThermalStorage(Double t_preload, Double spread) {
-		waitDelay(EV_LOAD_THERMAL_STORAGE_NOW, t_preload
+	public void doLoadThermalStorage(Double tau_preload, Double spread) {
+		waitDelay(EV_LOAD_THERMAL_STORAGE_NOW, tau_preload
 				+ drawUniformRandom(0.0, spread));
 	}
 	
-	public void doUnloadThermalStorage(Double t_preload, Double spread) {
-		waitDelay(EV_UNLOAD_THERMAL_STORAGE_NOW, t_preload
+	public void doUnloadThermalStorage(Double tau_preload, Double spread) {
+		waitDelay(EV_UNLOAD_THERMAL_STORAGE_NOW, tau_preload
 				+ drawUniformRandom(0.0, spread));
 	}
 	

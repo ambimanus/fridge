@@ -16,7 +16,9 @@ public class IterativeFridge extends AbstractFridge {
 	
 	/** time between simulation steps (for equations, one unit == one hour) */
 	protected double tau = SIMULATION_CLOCK / 60.0;
-	
+
+	/** system intertia, calculated value */
+	protected double eps; // = Math.exp(-(tau * a) / m_c)
 	/** whether the cooling device is active */
 	protected boolean active = false;
 
