@@ -15,13 +15,13 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.labels.XYToolTipGenerator;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.plot.FastXYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRendererFast;
 import org.jfree.data.Range;
+import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.DefaultXYDataset;
-import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.FastXYDataset;
+import org.jfree.data.xy.FastXYSeries;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.RectangleInsets;
 
@@ -50,7 +50,7 @@ public class LineChartDialog extends Dialog {
 	}
 	
 	/** Underlying dataset */
-	protected DefaultXYDataset xy;
+	protected AbstractXYDataset xy;
 	/** title of this chart */
 	protected String title;
 	/** title of the x axis */
@@ -94,7 +94,8 @@ public class LineChartDialog extends Dialog {
 		this.tooltipValueUnits = tooltipValueUnits;
 		this.maxRange = maxRange;
 		this.minRange = minRange;
-		xy = new DefaultXYDataset();
+//		xy = new DefaultXYDataset();
+		xy = new FastXYDataset();
 	}
 
 	/**
@@ -103,7 +104,17 @@ public class LineChartDialog extends Dialog {
 	 * @param col
 	 */
 	public void addSeries(AbstractCollector col) {
-		xy.addSeries(col.getName(), col.getResults());
+		if (xy instanceof FastXYDataset) {
+			FastXYSeries series = new FastXYSeries(col.getName());
+			double[][] results = col.getResults();
+			for (int i = 0; i < results[0].length; i++) {
+				boolean notify = i == results.length - 1;
+				series.add(results[0][i], results[1][i], notify);
+			}
+			((FastXYDataset) xy).addSeries(series);
+		} else if (xy instanceof DefaultXYDataset) {
+			((DefaultXYDataset) xy).addSeries(col.getName(), col.getResults());
+		}
 	}
 	
 	/**
@@ -142,36 +153,35 @@ public class LineChartDialog extends Dialog {
 	 * @return the resulting chart object
 	 */
 	protected JFreeChart createChart() {
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(title, xTitle,
-				yTitle, xy, true, true, false);
+		JFreeChart chart = ChartFactory.createTimeSeriesChartFast(title,
+				xTitle, yTitle, xy, true, false, false);
 
 		chart.setBackgroundPaint(Color.white);
 
-		XYPlot plot = (XYPlot) chart.getPlot();
+		FastXYPlot plot = (FastXYPlot) chart.getPlot();
 		plot.setBackgroundPaint(Color.lightGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+		StandardXYItemRendererFast r = new StandardXYItemRendererFast(
+				StandardXYItemRendererFast.LINES, null, null);
+		plot.setRenderer(r);
 
-		XYItemRenderer r = plot.getRenderer();
-		if (r instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xyr = (XYLineAndShapeRenderer) r;
-			xyr.setBaseToolTipGenerator(new XYToolTipGenerator() {
-				public String generateToolTip(XYDataset dataset, int series,
-						int item) {
-					return nf.format(dataset.getXValue(series, item))
-							+ tooltipRangeUnits + ", "
-							+ nf2.format(dataset.getYValue(series, item))
-							+ tooltipValueUnits;
-				}
-			});
-			
-			for (int i : seriesWidths.keySet()) {
-				xyr.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
-			}
-			for (int i : seriesColors.keySet()) {
-				xyr.setSeriesPaint(i, seriesColors.get(i));
-			}
+//		r.setBaseToolTipGenerator(new XYToolTipGenerator() {
+//			public String generateToolTip(XYDataset dataset, int series,
+//					int item) {
+//				return nf.format(dataset.getXValue(series, item))
+//						+ tooltipRangeUnits + ", "
+//						+ nf2.format(dataset.getYValue(series, item))
+//						+ tooltipValueUnits;
+//			}
+//		});
+		
+		for (int i : seriesWidths.keySet()) {
+			r.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
+		}
+		for (int i : seriesColors.keySet()) {
+			r.setSeriesPaint(i, seriesColors.get(i));
 		}
 
 		DateAxis da = new DateAxis(xTitle);

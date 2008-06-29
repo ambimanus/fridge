@@ -8,13 +8,11 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYStepRendererFast;
 import org.jfree.data.Range;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.RectangleInsets;
 
 /**
@@ -45,36 +43,34 @@ public class StepChartDialog extends LineChartDialog {
 	}
 
 	protected JFreeChart createChart() {
-		JFreeChart chart = ChartFactory.createXYStepChart(title, xTitle,
-				yTitle, xy, PlotOrientation.VERTICAL, true, true, false);
+		JFreeChart chart = ChartFactory.createXYStepChartFast(title, xTitle,
+				yTitle, xy, PlotOrientation.VERTICAL, true, false, false);
 
 		chart.setBackgroundPaint(Color.white);
-
+		
 		XYPlot plot = (XYPlot) chart.getPlot();
 		plot.setBackgroundPaint(Color.lightGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-
-		XYItemRenderer r = plot.getRenderer();
-		if (r instanceof XYLineAndShapeRenderer) {
-			XYLineAndShapeRenderer xyr = (XYLineAndShapeRenderer) r;
-			xyr.setBaseToolTipGenerator(new XYToolTipGenerator() {
-				public String generateToolTip(XYDataset dataset, int series,
-						int item) {
-					return nf.format(dataset.getXValue(series, item))
-							+ tooltipRangeUnits + ", "
-							+ nf2.format(dataset.getYValue(series, item))
-							+ tooltipValueUnits;
-				}
-			});
-			
-			for (int i : seriesWidths.keySet()) {
-				xyr.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
-			}
-			for (int i : seriesColors.keySet()) {
-				xyr.setSeriesPaint(i, seriesColors.get(i));
-			}
+		plot.setRenderer(new XYStepRendererFast(null, null));
+		
+		XYItemRenderer xyr = plot.getRenderer();
+//		xyr.setBaseToolTipGenerator(new XYToolTipGenerator() {
+//			public String generateToolTip(XYDataset dataset, int series,
+//					int item) {
+//				return nf.format(dataset.getXValue(series, item))
+//						+ tooltipRangeUnits + ", "
+//						+ nf2.format(dataset.getYValue(series, item))
+//						+ tooltipValueUnits;
+//			}
+//		});
+		
+		for (int i : seriesWidths.keySet()) {
+			xyr.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
+		}
+		for (int i : seriesColors.keySet()) {
+			xyr.setSeriesPaint(i, seriesColors.get(i));
 		}
 
 		DateAxis da = new DateAxis(xTitle);
