@@ -1,5 +1,6 @@
 package de.uniol.ui.desync.model.fridges;
 
+
 /**
  * Linear implementation of a fridge. This model calculates temperature and load
  * values only on phase changes: First a desired temperature is defined. The
@@ -12,16 +13,9 @@ package de.uniol.ui.desync.model.fridges;
  * @author Chh
  */
 public class LinearFridge extends AbstractFridge {
-
-	/* event constants */
-	public final static String EV_BEGIN_WARMING = "BeginWarming";
-	public final static String EV_BEGIN_COOLING = "BeginCooling";
 	
 	/** timestamp at which the last event occured */
 	protected double lastActionTime = Double.NaN;
-	
-	/** whether the cooling device is active */
-	protected boolean active = false;
 
 	public LinearFridge() {
 		super("LinearFridge");
@@ -38,54 +32,6 @@ public class LinearFridge extends AbstractFridge {
 	public void doRun() {
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-		// Check if we were set active externally
-		if (isStartActive()) {
-			// Target to min temp
-			waitDelay(EV_BEGIN_COOLING, 0.0, t_min, q_cooling);
-		} else {
-			// Load is undefined, start in passive mode:
-			if (t_current < t_max) {
-				// Cool enough, start in warming phase immediately
-				waitDelay(EV_BEGIN_WARMING, 0.0, t_max, q_warming);
-			} else {
-				// Too warm, start cooling immediately
-				waitDelay(EV_BEGIN_COOLING, 0.0, t_min, q_cooling);
-			}
-		}
-	}
-	
-	public void doBeginCooling(Double t_dest, Double load) {
-		// Calculate current temperature based on current load and elapsed time
-		updateTemperature();
-		// Update load
-		double bak = this.load;
-		this.load = load;
-		// Announce load change
-		active = true;
-		firePropertyChange(PROP_LOAD, bak, this.load);
-		// Calcuate time to stay in cooling state to reach t_dest
-		double timespan = tau(t_current, t_dest);
-		// Remove any next scheduled warming event if present
-		interrupt(EV_BEGIN_WARMING);
-		// Delay next warming phase when cooling is finished
-		waitDelay(EV_BEGIN_WARMING, timespan, t_max, q_warming);
-	}
-
-	public void doBeginWarming(Double t_dest, Double load) {
-		// Calculate current temperature based on current load and elapsed time
-		updateTemperature();
-		// Update load
-		double bak = this.load;
-		this.load = load;
-		// Announce load change
-		active = false;
-		firePropertyChange(PROP_LOAD, bak, this.load);
-		// Calcuate time to stay in cooling state to reach t_dest
-		double timespan = tau(t_current, t_dest);
-		// Remove any next scheduled cooling event if present
-		interrupt(EV_BEGIN_COOLING);
-		// Delay next cooling phase when warming is finished
-		waitDelay(EV_BEGIN_COOLING, timespan, t_min, q_cooling);
 	}
 	
 	/*
@@ -110,14 +56,14 @@ public class LinearFridge extends AbstractFridge {
 	 */
 
 	/**
-	 * Calculate new t_current based on current load and elapsed time since
+	 * Calculate new t_current based on current load and elapsed time since last
 	 * call.
 	 */
-	protected void updateTemperature() {
+	public double updateTemperature() {
 		// Check simulation start phase
 		if (Double.isNaN(lastActionTime)) {
 			lastActionTime = getEventList().getSimTime();
-			return;
+			return t_current;
 		}
 		// Calculate proper tau (time between actions, one unit == one
 		// SIMULATION_STEP)
@@ -129,6 +75,8 @@ public class LinearFridge extends AbstractFridge {
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Update action timestamp
 		lastActionTime = getEventList().getSimTime();
+		// Return
+		return t_current;
 	}
 	
 //	public static double calculateTemperatureAfter(double elapsedTime,
@@ -161,8 +109,18 @@ public class LinearFridge extends AbstractFridge {
 		}
 		return ret;
 	}
-	
-	public boolean isActive() {
-		return active;
+
+	/**
+	 * @return the lastActionTime
+	 */
+	public double getLastActionTime() {
+		return lastActionTime;
+	}
+
+	/**
+	 * @param lastActionTime the lastActionTime to set
+	 */
+	public void setLastActionTime(double lastActionTime) {
+		this.lastActionTime = lastActionTime;
 	}
 }

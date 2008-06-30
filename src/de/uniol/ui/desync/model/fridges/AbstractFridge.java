@@ -1,5 +1,6 @@
 package de.uniol.ui.desync.model.fridges;
 
+import de.uniol.ui.desync.model.controller.AbstractController;
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
 
@@ -69,6 +70,10 @@ public abstract class AbstractFridge extends SimEntityBase {
 	protected double t_current = t_min;
 	/** load at current timestamp */
 	protected double load = Double.NaN;
+	
+	/* Components */
+	/** Controller which controls this device */
+	protected AbstractController controller = null;
 	
 	/**
 	 * Creates a new fridge entity with the given name. An instance counter will
@@ -253,7 +258,10 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 * @param load the load to set
 	 */
 	public void setLoad(double load) {
+		double bak = this.load;
 		this.load = load;
+		// Announce state change
+		firePropertyChange(IterativeFridge.PROP_LOAD, bak, this.load);
 	}
 	
 	/**
@@ -274,12 +282,28 @@ public abstract class AbstractFridge extends SimEntityBase {
 	/**
 	 * @return whether the cooling device is active
 	 */
-	public abstract boolean isActive();
+	public boolean isActive() {
+		return load > q_warming;
+	}
+
+	/**
+	 * @return the controller
+	 */
+	public AbstractController getController() {
+		return controller;
+	}
+
+	/**
+	 * @param controller the controller to set
+	 */
+	public void setController(AbstractController controller) {
+		this.controller = controller;
+	}
 
 	/*
 	 * Parameter variance util methods:
 	 */
-	
+
 	/**
 	 * Performs a distribution of the parameter values using random numbers
 	 * produced sequentially by the given variate.
@@ -470,6 +494,12 @@ public abstract class AbstractFridge extends SimEntityBase {
 	/*
 	 * Misc:
 	 */
+	
+	/**
+	 * Updates the internal field t_current, fires a property change event and
+	 * returns the new value.
+	 */
+	public abstract double updateTemperature();
 	
 	/**
 	 * Calculate time needed to reach temperature <code>t_dest</code>,

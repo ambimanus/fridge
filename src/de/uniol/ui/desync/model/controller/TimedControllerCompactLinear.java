@@ -1,18 +1,15 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
+import de.uniol.ui.desync.model.strategies.IStrategyTimed;
 
-public class TimedControllerCompactLinear extends TimedAbstractController {
-	
+public class TimedControllerCompactLinear extends BaseControllerCompactLinear
+		implements IStrategyTimed {
+
 	public final static String EV_APPLY_COOLING_PROGRAM = "ApplyCoolingProgram";
 	
 	public TimedControllerCompactLinear(CompactLinearFridge fridge) {
 		super(fridge);
-		setName("TimedStorageController for " + fridge.getName());
-	}
-	
-	public void doRun() {
-		// no-op
 	}
 
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
@@ -59,27 +56,25 @@ public class TimedControllerCompactLinear extends TimedAbstractController {
 		if (t_current > T_max_not) {
 			// Class red: Fridge will not reach T_max_act
 			// Cooldown till T_act
-			fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0.0,
-					CompactLinearFridge.calculateTemperatureAfter(tau_preload,
-							t_current, fridge, fridge.getQ_cooling()), fridge
-							.getQ_cooling());
+			waitDelay(EV_TARGET_TO, 0.0, CompactLinearFridge
+					.calculateTemperatureAfter(tau_preload, t_current, fridge,
+							fridge.getQ_cooling()), fridge.getQ_cooling());
 		} else if (t_current > T_mid_not) {
 			// Class orange: Fridge can reach T_max_act, but not T_min
 			// Cooldown till T_act
-			fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0.0,
-					CompactLinearFridge.calculateTemperatureAfter(tau_preload,
-							t_current, fridge, fridge.getQ_cooling()), fridge
-							.getQ_cooling());
+			waitDelay(EV_TARGET_TO, 0.0, CompactLinearFridge
+					.calculateTemperatureAfter(tau_preload, t_current, fridge,
+							fridge.getQ_cooling()), fridge.getQ_cooling());
 		} else if (t_current > T_min_not) {
 			// Class green: Fridge can reach T_min
 			// Cooldown to T_min
-			fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0.0, fridge
-					.getT_min(), fridge.getQ_cooling());
+			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_min(), fridge
+					.getQ_cooling());
 		} else {
 			// Class blue: Fridge does not need to cooldown any more
 			// Cooldown to T_min
-			fridge.waitDelay(CompactLinearFridge.EV_TARGET_TO, 0.0, fridge
-					.getT_min(), fridge.getQ_cooling());
+			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_min(), fridge
+					.getQ_cooling());
 		}
 	}
 }

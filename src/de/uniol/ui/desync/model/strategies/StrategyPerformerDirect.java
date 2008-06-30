@@ -1,9 +1,8 @@
 package de.uniol.ui.desync.model.strategies;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
-import de.uniol.ui.desync.model.controller.DirectAbstractController;
 
-public class DirectStrategy extends AbstractStrategy {
+public class StrategyPerformerDirect extends AbstractStrategyPerformer {
 
 	public final static String EV_NOTIFY = "Notify";
 
@@ -12,7 +11,7 @@ public class DirectStrategy extends AbstractStrategy {
 	private double spread;
 	private boolean doUnload;
 
-	public DirectStrategy(int eventListID, double t_notify, double tau_preload,
+	public StrategyPerformerDirect(int eventListID, double t_notify, double tau_preload,
 			double spread, boolean doUnload) {
 		super(eventListID, "Strategy; Direct Storage Control");
 		this.t_notify = t_notify;
@@ -22,12 +21,15 @@ public class DirectStrategy extends AbstractStrategy {
 	}
 
 	public void doApplyToController(AbstractController c) {
+		if (!(c instanceof IStrategyDirect)) {
+			throw new IllegalArgumentException("Wrong controller type: " + c);
+		}
 		waitDelay(EV_NOTIFY, t_notify, c);
 	}
 
 	public void doNotify(AbstractController c) {
-		String ev = doUnload ? DirectAbstractController.EV_UNLOAD_THERMAL_STORAGE
-				: DirectAbstractController.EV_LOAD_THERMAL_STORAGE;
+		String ev = doUnload ? IStrategyDirect.EV_UNLOAD_THERMAL_STORAGE
+				: IStrategyDirect.EV_LOAD_THERMAL_STORAGE;
 		c.waitDelay(ev, 0, tau_preload, spread);
 	}
 }

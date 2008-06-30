@@ -1,19 +1,16 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
+import de.uniol.ui.desync.model.strategies.IStrategyDirect;
 
-public class TimedControllerIterative extends DirectAbstractController {
+public class TimedControllerIterative extends BaseControllerIterative implements
+		IStrategyDirect {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
-	
+
 	public TimedControllerIterative(IterativeFridge fridge) {
 		super(fridge);
-		setName("DirectStorageController for " + fridge.getName());
-	}
-	
-	public void doRun() {
-		// no-op
 	}
 	
 	public void doLoadThermalStorage(Double t_preload, Double spread) {
@@ -27,10 +24,10 @@ public class TimedControllerIterative extends DirectAbstractController {
 	}
 	
 	public void doLoadThermalStorageNow() {
-		fridge.waitDelay(IterativeFridge.EV_BEGIN_COOLING, 0);
+		waitDelay(EV_BEGIN_COOLING, 0);
 	}
 	
 	public void doUnloadThermalStorageNow() {
-		fridge.waitDelay(IterativeFridge.EV_BEGIN_WARMING, 0);
+		waitDelay(EV_BEGIN_WARMING, 0);
 	}
 }

@@ -1,9 +1,8 @@
 package de.uniol.ui.desync.model.strategies;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
-import de.uniol.ui.desync.model.controller.TimedAbstractController;
 
-public class TimedStrategy extends AbstractStrategy {
+public class StrategyPerformerTimed extends AbstractStrategyPerformer {
 
 	public final static String EV_NOTIFY = "Notify";
 
@@ -11,7 +10,7 @@ public class TimedStrategy extends AbstractStrategy {
 	private double tau_preload;
 	private double tau_reduce;
 
-	public TimedStrategy(int eventListID, double t_notify, double tau_preload,
+	public StrategyPerformerTimed(int eventListID, double t_notify, double tau_preload,
 			double tau_reduce) {
 		super(eventListID, "Strategy; Timed Load Reduction");
 		this.t_notify = t_notify;
@@ -20,11 +19,14 @@ public class TimedStrategy extends AbstractStrategy {
 	}
 
 	public void doApplyToController(AbstractController c) {
+		if (!(c instanceof IStrategyTimed)) {
+			throw new IllegalArgumentException("Wrong controller type: " + c);
+		}
 		waitDelay(EV_NOTIFY, t_notify, c);
 	}
 
 	public void doNotify(AbstractController c) {
-		c.waitDelay(TimedAbstractController.EV_REDUCE_LOAD, 0, tau_preload,
+		c.waitDelay(IStrategyTimed.EV_REDUCE_LOAD, 0, tau_preload,
 				tau_reduce);
 	}
 }

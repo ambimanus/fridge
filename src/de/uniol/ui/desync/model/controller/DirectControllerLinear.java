@@ -1,19 +1,16 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.LinearFridge;
+import de.uniol.ui.desync.model.strategies.IStrategyDirect;
 
-public class DirectControllerLinear extends DirectAbstractController {
+public class DirectControllerLinear extends BaseControllerLinear implements
+		IStrategyDirect {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
-	
+
 	public DirectControllerLinear(LinearFridge fridge) {
 		super(fridge);
-		setName("DirectStorageController for " + fridge.getName());
-	}
-	
-	public void doRun() {
-		// no-op
 	}
 	
 	public void doLoadThermalStorage(Double tau_preload, Double spread) {
@@ -27,10 +24,10 @@ public class DirectControllerLinear extends DirectAbstractController {
 	}
 	
 	public void doLoadThermalStorageNow() {
-		fridge.waitDelay(LinearFridge.EV_BEGIN_COOLING, 0, fridge.getT_min());
+		waitDelay(EV_BEGIN_COOLING, 0, fridge.getT_min(), fridge.getQ_cooling());
 	}
 	
 	public void doUnloadThermalStorageNow() {
-		fridge.waitDelay(LinearFridge.EV_BEGIN_WARMING, 0, fridge.getT_max());
+		waitDelay(EV_BEGIN_WARMING, 0, fridge.getT_max(), fridge.getQ_warming());
 	}
 }

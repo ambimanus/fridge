@@ -15,6 +15,7 @@ public abstract class AbstractController extends SimEntityBase {
 
 	public AbstractController(AbstractFridge fridge) {
 		this.fridge = fridge;
+		setName(getClass().getSimpleName() + " for " + fridge.getName());
 		setEventListID(fridge.getEventListID());
 		if (random == null) {
 			random = new UniformVariate();
@@ -28,6 +29,13 @@ public abstract class AbstractController extends SimEntityBase {
 			lastHigh = high;
 		}
 		return random.generate();
+	}
+
+	/**
+	 * @return the fridge
+	 */
+	public AbstractFridge getFridge() {
+		return fridge;
 	}
 
 	public abstract void doRun();
