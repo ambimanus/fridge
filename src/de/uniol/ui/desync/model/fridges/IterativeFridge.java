@@ -24,10 +24,9 @@ public class IterativeFridge extends AbstractFridge {
 	 */
 
 	public void doRun() {
+		super.doRun();
 		// Calculate proper epsilon
 		eps = Math.exp(-(tau * a) / m_c);
-		// Announce initial state
-		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 	}
 	
 	/*

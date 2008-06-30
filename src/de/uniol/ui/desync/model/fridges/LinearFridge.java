@@ -26,15 +26,6 @@ public class LinearFridge extends AbstractFridge {
 	}
 	
 	/*
-	 * Events:
-	 */
-
-	public void doRun() {
-		// Announce initial state
-		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-	}
-	
-	/*
 	 * Overwritten to recalculate t_current, because this value is only
 	 * calculated at state switches in the linear model and therefore not up to
 	 * date in-between.

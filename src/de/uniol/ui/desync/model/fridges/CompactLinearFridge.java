@@ -15,13 +15,4 @@ public class CompactLinearFridge extends LinearFridge {
 	public CompactLinearFridge() {
 		super("CompactLinearFridge");
 	}
-	
-	/*
-	 * Events:
-	 */
-
-	public void doRun() {
-		// Announce initial state
-		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
-	}
 }

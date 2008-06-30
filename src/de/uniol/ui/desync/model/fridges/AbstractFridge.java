@@ -111,11 +111,10 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 * Events:
 	 */
 	
-	/**
-	 * This event is used to start the simulation. Implementers should chain
-	 * other events from here.
-	 */
-	public abstract void doRun();
+	public void doRun() {
+		// Announce initial state
+		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
+	}
 	
 	/*
 	 * Getters & Setters:
