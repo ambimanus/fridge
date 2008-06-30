@@ -24,10 +24,10 @@ public class DirectControllerIterative extends BaseControllerIterative
 	}
 	
 	public void doLoadThermalStorageNow() {
-		waitDelay(EV_BEGIN_COOLING, 0);
+		waitDelay(EV_BEGIN_COOLING, 0, fridge.getQ_cooling());
 	}
 	
 	public void doUnloadThermalStorageNow() {
-		waitDelay(EV_BEGIN_WARMING, 0);
+		waitDelay(EV_BEGIN_WARMING, 0, fridge.getQ_warming());
 	}
 }
