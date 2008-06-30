@@ -62,13 +62,12 @@ public class Main {
 	/** Length of simulation, 1 unit == 1 hour */
 	public final static double SIMULATION_LENGTH = 20.0;
 	/** Used model type */
-	public final static MODELS model = MODELS.COMPACT_LINEAR;
+	public final static MODELS model = MODELS.ITERATIVE;
 	/** Used strategy */
-	public final static STRATEGIES strategy = STRATEGIES.TIMED;
+	public final static STRATEGIES strategy = STRATEGIES.DIRECT;
 	
 	/* Strategy params: direct storage control */
 	public final static double direct_t_notify = 60.0;
-	public final static double direct_tau_preload = 60.0;
 	public final static double direct_spread = 30.0;
 	public final static boolean direct_doUnload = false;
 	
@@ -224,7 +223,7 @@ System.out.println("Elapsed time: " + end);
 		}
 		case DIRECT: {
 			return new StrategyPerformerDirect(eventListID, direct_t_notify,
-					direct_tau_preload, direct_spread, direct_doUnload);
+					direct_spread, direct_doUnload);
 		}
 		case TIMED: {
 			return new StrategyPerformerTimed(eventListID, timed_t_notify,

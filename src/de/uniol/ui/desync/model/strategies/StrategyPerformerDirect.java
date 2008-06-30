@@ -7,15 +7,13 @@ public class StrategyPerformerDirect extends AbstractStrategyPerformer {
 	public final static String EV_NOTIFY = "Notify";
 
 	private double t_notify;
-	private double tau_preload;
 	private double spread;
 	private boolean doUnload;
 
-	public StrategyPerformerDirect(int eventListID, double t_notify, double tau_preload,
+	public StrategyPerformerDirect(int eventListID, double t_notify,
 			double spread, boolean doUnload) {
 		super(eventListID, "Strategy; Direct Storage Control");
 		this.t_notify = t_notify;
-		this.tau_preload = tau_preload;
 		this.spread = spread;
 		this.doUnload = doUnload;
 	}
@@ -30,6 +28,6 @@ public class StrategyPerformerDirect extends AbstractStrategyPerformer {
 	public void doNotify(AbstractController c) {
 		String ev = doUnload ? IStrategyDirect.EV_UNLOAD_THERMAL_STORAGE
 				: IStrategyDirect.EV_LOAD_THERMAL_STORAGE;
-		c.waitDelay(ev, 0, tau_preload, spread);
+		c.waitDelay(ev, 0, spread);
 	}
 }

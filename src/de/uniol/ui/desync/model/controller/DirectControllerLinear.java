@@ -13,21 +13,13 @@ public class DirectControllerLinear extends BaseControllerLinear implements
 		super(fridge);
 	}
 	
-	public void doLoadThermalStorage(Double tau_preload, Double spread) {
-		waitDelay(EV_LOAD_THERMAL_STORAGE_NOW, tau_preload
-				+ drawUniformRandom(0.0, spread));
+	public void doLoadThermalStorage(Double spread) {
+		waitDelay(EV_BEGIN_COOLING, drawUniformRandom(0.0, spread), fridge
+				.getT_min(), fridge.getQ_cooling());
 	}
 	
-	public void doUnloadThermalStorage(Double tau_preload, Double spread) {
-		waitDelay(EV_UNLOAD_THERMAL_STORAGE_NOW, tau_preload
-				+ drawUniformRandom(0.0, spread));
-	}
-	
-	public void doLoadThermalStorageNow() {
-		waitDelay(EV_BEGIN_COOLING, 0, fridge.getT_min(), fridge.getQ_cooling());
-	}
-	
-	public void doUnloadThermalStorageNow() {
-		waitDelay(EV_BEGIN_WARMING, 0, fridge.getT_max(), fridge.getQ_warming());
+	public void doUnloadThermalStorage(Double spread) {
+		waitDelay(EV_BEGIN_WARMING, drawUniformRandom(0.0, spread), fridge
+				.getT_max(), fridge.getQ_warming());
 	}
 }

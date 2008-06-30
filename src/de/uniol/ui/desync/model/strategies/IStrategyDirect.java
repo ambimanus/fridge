@@ -4,8 +4,8 @@ public interface IStrategyDirect {
 
 	public final static String EV_LOAD_THERMAL_STORAGE = "LoadThermalStorage";
 	public final static String EV_UNLOAD_THERMAL_STORAGE = "UnloadThermalStorage";
-	
-	public abstract void doLoadThermalStorage(Double tau_preload, Double spread);
-	
-	public abstract void doUnloadThermalStorage(Double tau_preload, Double spread);
+
+	public abstract void doLoadThermalStorage(Double spread);
+
+	public abstract void doUnloadThermalStorage(Double spread);
 }
