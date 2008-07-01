@@ -29,7 +29,7 @@ public abstract class AbstractFridge extends SimEntityBase {
 	/** load in warming phase */
 	public final static double DEFAULT_q_warming = 0.0;
 	/** thermal mass */
-	public final static double DEFAULT_m_c = 15.97;
+	public final static double DEFAULT_m_c = 19.95;
 	/** efficiency */
 	public final static double DEFAULT_eta = 3.0;
 	/** minimal inner temperature */
