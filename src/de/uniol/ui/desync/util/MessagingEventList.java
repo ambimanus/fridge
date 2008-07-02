@@ -51,9 +51,14 @@ public class MessagingEventList extends EventList {
 	public static final boolean DEFAULT_FAST_INTERRUPTS = true;
 	
 	/**
-	 * id for property simulation time.
+	 * id for property {@link #simTime}
 	 */
 	public static final String PROP_SIMTIME = "simTime";
+	
+	/**
+	 * id for property {@link #stoppingSimulation}
+	 */
+	public static final String PROP_STOPPING = "stoppingSimulation";
 
 	/**
 	 * Holds the pending events.
@@ -219,9 +224,12 @@ public class MessagingEventList extends EventList {
 
 	public MessagingEventList(int id) {
 		super(0);
+		property = new PropertyChangeDispatcher(this, getClass());
 		eventList = Collections.synchronizedSortedSet(
                 new TreeSet<SimEvent>());
+		double simTimeBackup = simTime;
         simTime = 0.0;
+        property.firePropertyChange(PROP_SIMTIME, simTimeBackup, simTime);
         running = false;
         eventCounts = new LinkedHashMap<String, int[]>();
         reRun = Collections.synchronizedSortedSet(new TreeSet<SimEntity>());
@@ -231,7 +239,6 @@ public class MessagingEventList extends EventList {
         this.precision = 0.0; 
         setFastInterrupts(true);
         setOutputStream(System.out);
-		property = new PropertyChangeDispatcher(this, getClass());
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -464,7 +471,9 @@ public class MessagingEventList extends EventList {
 		clearEventList();
 		running = false;
 		currentSimEvent = null;
+		double simTimeBackup = simTime;
 		simTime = 0.0;
+        property.firePropertyChange(PROP_SIMTIME, simTimeBackup, simTime);
 		SimEvent.resetID();
 		synchronized (reRun) {
 			for (Iterator<SimEntity> i = reRun.iterator(); i.hasNext();) {
@@ -701,7 +710,9 @@ public class MessagingEventList extends EventList {
 			synchronized (eventList) {
 				if (stoppingSimulation) {
 					eventList.clear();
+					boolean stopBak = stoppingSimulation;
 					stoppingSimulation = false;
+					property.firePropertyChange(PROP_STOPPING, stopBak, stoppingSimulation);
 				}
 				if (eventList.isEmpty()) {
 					break;
@@ -846,7 +857,9 @@ public class MessagingEventList extends EventList {
 	 * and exit.
 	 */
 	public void stopSimulation() {
+		boolean stopBak = stoppingSimulation;
 		stoppingSimulation = true;
+		property.firePropertyChange(PROP_STOPPING, stopBak, stoppingSimulation);
 	}
 
 	/**
@@ -1148,7 +1161,9 @@ public class MessagingEventList extends EventList {
 		clearEventList();
 		running = false;
 		clearRerun();
+		double simTimeBackup = simTime;
 		simTime = 0.0;
+        property.firePropertyChange(PROP_SIMTIME, simTimeBackup, simTime);
 		SimEntityBase.coldReset();
 		SimEntityBaseProtected.coldReset();
 		ignoreOnDump.clear();

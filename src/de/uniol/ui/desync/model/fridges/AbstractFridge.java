@@ -1,8 +1,12 @@
 package de.uniol.ui.desync.model.fridges;
 
-import de.uniol.ui.desync.model.controller.AbstractController;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
+import de.uniol.ui.desync.model.controller.AbstractController;
+import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
  * This is the abstract base class for fridge entites. It containes the base
@@ -112,9 +116,25 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 */
 	
 	public void doRun() {
+		// Observe FEL for simulation stop
+		if (getEventList() instanceof MessagingEventList) {
+			((MessagingEventList) getEventList()).addPropertyChangeListener(
+					MessagingEventList.PROP_STOPPING,
+					new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							doStop();
+						}
+					});
+		}
 		// Announce initial state
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 	}
+	
+	/**
+	 * This method should allow the fridge to update its state for statistical
+	 * data collection a last time before the simulation stops.
+	 */
+	public abstract void doStop();
 	
 	/*
 	 * Getters & Setters:

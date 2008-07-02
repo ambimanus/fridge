@@ -29,6 +29,13 @@ public class IterativeFridge extends AbstractFridge {
 		eps = Math.exp(-(tau * a) / m_c);
 	}
 	
+	public void doStop() {
+		// No operation needed, because this implementation of fridge updates
+		// its state already each cycle and the STOP event will be fired with
+		// lowest priority and therefore be executed after all other pending
+		// events at this point in time.
+	}
+	
 	/*
 	 * Misc:
 	 */

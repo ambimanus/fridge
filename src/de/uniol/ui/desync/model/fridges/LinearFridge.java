@@ -26,6 +26,16 @@ public class LinearFridge extends AbstractFridge {
 	}
 	
 	/*
+	 * Events:
+	 */
+	
+	public void doStop() {
+		// Calculate and update current temperature a last time before the
+		// simulation stops.
+		updateTemperature();
+	}
+	
+	/*
 	 * Overwritten to recalculate t_current, because this value is only
 	 * calculated at state switches in the linear model and therefore not up to
 	 * date in-between.
