@@ -22,7 +22,6 @@ import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
-import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.strategies.AbstractStrategyPerformer;
@@ -58,13 +57,13 @@ public class Main {
 
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public final static int POPULATION_SIZE = 1000;
+	public final static int POPULATION_SIZE = 1;
 	/** Length of simulation, 1 unit == 1 hour */
-	public final static double SIMULATION_LENGTH = 20.0;
+	public final static double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
-	public final static MODELS model = MODELS.ITERATIVE;
+	public final static MODELS model = MODELS.COMPACT_LINEAR;
 	/** Used strategy */
-	public final static STRATEGIES strategy = STRATEGIES.DIRECT;
+	public final static STRATEGIES strategy = STRATEGIES.NONE;
 	
 	/* Strategy params: direct storage control */
 	public final static double direct_t_notify = 60.0;
@@ -87,7 +86,7 @@ public class Main {
 		final int list = Schedule.addNewEventList(MessagingEventList.class);
 		final MessagingEventList el = (MessagingEventList) Schedule
 				.getEventList(list);
-//		el.setVerbose(true);
+		el.setVerbose(true);
 
 		// Create fridges
 		ArrayList<AbstractFridge> fridges = createFridges(list);
@@ -98,7 +97,8 @@ public class Main {
 		
 		// Prepare simulation
 		Simulation sim = new Simulation(el, fridges);
-		sim.setCollectTemperature(model == MODELS.ITERATIVE);
+		sim.setCollectTemperature(model == MODELS.ITERATIVE
+				|| POPULATION_SIZE == 1);
 
 		// Simulate
 		double start = System.currentTimeMillis();
@@ -179,20 +179,18 @@ System.out.println("Elapsed time: " + end);
 				break;
 			}
 			case COMPACT_LINEAR: {
-				f = new CompactLinearFridge();
+				f = new LinearFridge();
 				switch (strategy) {
 				case NONE: {
-					c = new BaseControllerCompactLinear((CompactLinearFridge) f);
+					c = new BaseControllerCompactLinear((LinearFridge) f);
 					break;
 				}
 				case DIRECT: {
-					c = new DirectControllerCompactLinear(
-							(CompactLinearFridge) f);
+					c = new DirectControllerCompactLinear((LinearFridge) f);
 					break;
 				}
 				case TIMED: {
-					c = new TimedControllerCompactLinear(
-							(CompactLinearFridge) f);
+					c = new TimedControllerCompactLinear((LinearFridge) f);
 					break;
 				}
 				}
@@ -200,11 +198,11 @@ System.out.println("Elapsed time: " + end);
 			}
 			}
 			// Equally distribute m_c between MC_MIN and MC_MAX
-			f.generate_mC(thermalMassVariate);
+//			f.generate_mC(thermalMassVariate);
 			// Equally distribute t_current between t_min and t_max
-			f.generate_tCurrent(tCurrentVariate);
+//			f.generate_tCurrent(tCurrentVariate);
 			// Make (ACTIVE_AT_START_PROPABILITY*100)% of the fridges active
-			f.setStartActive(activityAtStartVariate.generate() > 0);
+//			f.setStartActive(activityAtStartVariate.generate() > 0);
 			// Assign proper FEL
 			f.setEventListID(list);
 			c.setEventListID(list);

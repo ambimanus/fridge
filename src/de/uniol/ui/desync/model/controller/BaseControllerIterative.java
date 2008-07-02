@@ -2,6 +2,13 @@ package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 
+/**
+ * Iterative implementation of a fridge controller. This model calculates
+ * temperature and load values on each simulated time step.
+ * 
+ * @author Chh
+ */
+
 public class BaseControllerIterative extends AbstractController {
 
 	/* event constants */

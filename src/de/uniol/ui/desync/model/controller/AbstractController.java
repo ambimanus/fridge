@@ -8,7 +8,7 @@ import de.uniol.ui.desync.model.fridges.AbstractFridge;
 public abstract class AbstractController extends SimEntityBase {
 
 	protected AbstractFridge fridge;
-	protected static RandomVariate random;
+	private static RandomVariate random;
 
 	private double lastLow = Double.NaN;
 	private double lastHigh = Double.NaN;

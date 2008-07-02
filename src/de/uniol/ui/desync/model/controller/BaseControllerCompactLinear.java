@@ -1,13 +1,22 @@
 package de.uniol.ui.desync.model.controller;
 
-import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
+import de.uniol.ui.desync.model.fridges.LinearFridge;
 
+/**
+ * Parameterized version of the linear model. This implementation uses only one
+ * event to model itself. This event schedules itself in predefined points in
+ * time and updates load and temperature values on each occurence. This model
+ * uses even less calculations than the linear version, while producing exactly
+ * similar results.
+ * 
+ * @author Chh
+ */
 public class BaseControllerCompactLinear extends AbstractController {
 
 	/* event constants */ 
 	public final static String EV_TARGET_TO = "TargetTo";
 	
-	public BaseControllerCompactLinear(CompactLinearFridge fridge) {
+	public BaseControllerCompactLinear(LinearFridge fridge) {
 		super(fridge);
 	}
 	
@@ -43,8 +52,7 @@ public class BaseControllerCompactLinear extends AbstractController {
 		// Calcuate time to reach t_dest
 		double timespan = fridge.tau(t_current, t_dest);
 		// Update action timestamp
-		((CompactLinearFridge) fridge).setLastActionTime(getEventList()
-				.getSimTime());
+		((LinearFridge) fridge).setLastActionTime(getEventList().getSimTime());
 		// Remove any next scheduled warming event if present
 		interrupt(EV_TARGET_TO);
 		// If we are cooling right now, begin warming next, and the other way,

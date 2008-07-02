@@ -2,6 +2,17 @@ package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 
+/**
+ * Linear implementation of a fridge controller. This model calculates
+ * temperature and load values only on phase changes: First a desired
+ * temperature is defined. The model then calculates the time needed to reach
+ * this temperature. An event is then scheduled at the calculated point in time.
+ * When this event is processed, it schedules another event to reach a newly
+ * defined target temperature. Using this paradigm, the model easily switches
+ * warming/cooling phases with very little calculations needed.
+ * 
+ * @author Chh
+ */
 public class BaseControllerLinear extends AbstractController {
 
 	/* event constants */

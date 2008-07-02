@@ -1,6 +1,6 @@
 package de.uniol.ui.desync.model.controller;
 
-import de.uniol.ui.desync.model.fridges.CompactLinearFridge;
+import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.strategies.IStrategyDirect;
 
 public class DirectControllerCompactLinear extends BaseControllerCompactLinear
@@ -9,7 +9,7 @@ public class DirectControllerCompactLinear extends BaseControllerCompactLinear
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
-	public DirectControllerCompactLinear(CompactLinearFridge fridge) {
+	public DirectControllerCompactLinear(LinearFridge fridge) {
 		super(fridge);
 	}
 	

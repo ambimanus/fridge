@@ -1,17 +1,5 @@
 package de.uniol.ui.desync.model.fridges;
 
-
-/**
- * Linear implementation of a fridge. This model calculates temperature and load
- * values only on phase changes: First a desired temperature is defined. The
- * model then calculates the time needed to reach this temperature. An event is
- * then scheduled at the calculated point in time. When this event is processed,
- * it schedules another event to reach a newly defined target temperature. Using
- * this paradigm, the model easily switches warming/cooling phases with very
- * little calculations needed.
- * 
- * @author Chh
- */
 public class LinearFridge extends AbstractFridge {
 	
 	/** timestamp at which the last event occured */
@@ -49,7 +37,7 @@ public class LinearFridge extends AbstractFridge {
 		double tau = (getEventList().getSimTime() - lastActionTime);
 		// Calculate current temperature based on temperature at last state
 		// switch and elapsed time since
-		return calculateTemperatureAfter(tau, t_current, this, load);
+		return calculateTemperatureAfter(tau, t_current, load);
 	}
 	
 	/*
@@ -71,7 +59,7 @@ public class LinearFridge extends AbstractFridge {
 		double tau = (getEventList().getSimTime() - lastActionTime);
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
-		t_current = calculateTemperatureAfter(tau, t_previous, this, load);
+		t_current = calculateTemperatureAfter(tau, t_previous, load);
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Update action timestamp
@@ -90,23 +78,21 @@ public class LinearFridge extends AbstractFridge {
 //				+ ((1 - eps) * (fridge.t_surround - (fridge.eta * (load / fridge.a))));
 //	}
 	
-	public static double calculateTemperatureAfter(double elapsedTime,
-			double previousTemperature, AbstractFridge fridge, double load) {
+	public double calculateTemperatureAfter(double elapsedTime,
+			double previousTemperature, double load) {
 		double ret;
-		if (load > fridge.getQ_warming()) {
-			if (Double.isNaN(fridge.tau_cooling)) {
-				fridge.tau_cooling = fridge.tau(fridge.getT_max(), fridge
-						.getT_min(), fridge.getQ_cooling());
+		if (load > getQ_warming()) {
+			if (Double.isNaN(tau_cooling)) {
+				tau_cooling = tau(getT_max(), getT_min(), getQ_cooling());
 			}
 			ret = previousTemperature
-					+ (((fridge.getT_min() - fridge.getT_max()) / fridge.tau_cooling) * elapsedTime);
+					+ (((getT_min() - getT_max()) / tau_cooling) * elapsedTime);
 		} else {
-			if (Double.isNaN(fridge.tau_warming)) {
-				fridge.tau_warming = fridge.tau(fridge.getT_min(), fridge
-						.getT_max(), fridge.getQ_warming());
+			if (Double.isNaN(tau_warming)) {
+				tau_warming = tau(getT_min(), getT_max(), getQ_warming());
 			}
 			ret = previousTemperature
-					+ (((fridge.getT_max() - fridge.getT_min()) / fridge.tau_warming) * elapsedTime);
+					+ (((getT_max() - getT_min()) / tau_warming) * elapsedTime);
 		}
 		return ret;
 	}

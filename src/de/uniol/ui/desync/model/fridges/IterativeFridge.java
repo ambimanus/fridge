@@ -1,12 +1,5 @@
 package de.uniol.ui.desync.model.fridges;
 
-
-/**
- * Iterative implementation of a fridge. This model calculates temperature and
- * load values on each simulated time step.
- * 
- * @author Chh
- */
 public class IterativeFridge extends AbstractFridge {
 	
 	/** time between simulation steps (for equations, one unit == one hour) */
