@@ -108,7 +108,7 @@ public class LineChartDialog extends Dialog {
 			FastXYSeries series = new FastXYSeries(col.getName());
 			double[][] results = col.getResults();
 			for (int i = 0; i < results[0].length; i++) {
-				boolean notify = i == results.length - 1;
+				boolean notify = i == results[0].length - 1;
 				series.add(results[0][i], results[1][i], notify);
 			}
 			((FastXYDataset) xy).addSeries(series);
@@ -166,16 +166,6 @@ public class LineChartDialog extends Dialog {
 		StandardXYItemRendererFast r = new StandardXYItemRendererFast(
 				StandardXYItemRendererFast.LINES, null, null);
 		plot.setRenderer(r);
-
-//		r.setBaseToolTipGenerator(new XYToolTipGenerator() {
-//			public String generateToolTip(XYDataset dataset, int series,
-//					int item) {
-//				return nf.format(dataset.getXValue(series, item))
-//						+ tooltipRangeUnits + ", "
-//						+ nf2.format(dataset.getYValue(series, item))
-//						+ tooltipValueUnits;
-//			}
-//		});
 		
 		for (int i : seriesWidths.keySet()) {
 			r.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
