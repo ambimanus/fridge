@@ -49,7 +49,7 @@ public class BaseControllerLinear extends AbstractController {
 		// Update load
 		fridge.setLoad(load);
 		// Calcuate time to stay in cooling state to reach t_dest
-		double timespan = fridge.tau(t_current, t_dest);
+		double timespan = ((LinearFridge)fridge).tau(t_current, t_dest);
 		// Remove any next scheduled warming event if present
 		interrupt(EV_BEGIN_WARMING);
 		// Delay next warming phase when cooling is finished
@@ -63,7 +63,7 @@ public class BaseControllerLinear extends AbstractController {
 		// Update load
 		fridge.setLoad(load);
 		// Calcuate time to stay in cooling state to reach t_dest
-		double timespan = fridge.tau(t_current, t_dest);
+		double timespan = ((LinearFridge)fridge).tau(t_current, t_dest);
 		// Remove any next scheduled cooling event if present
 		interrupt(EV_BEGIN_COOLING);
 		// Delay next cooling phase when warming is finished

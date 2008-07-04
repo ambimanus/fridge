@@ -538,42 +538,4 @@ public abstract class AbstractFridge extends SimEntityBase {
 		// uses minutes
 		return tau * 60.0;
 	}
-	
-	/**
-	 * Calculate time needed to reach temperature <code>t_dest</code>,
-	 * starting at temperature <code>t_from</code>. Calculation is based on
-	 * linear approximation by using precalculated tau_cooling or tau_warming.
-	 * <p>
-	 * Warning: tau_cooling and tau_warming are based on q_cooling and q_warming
-	 * respectively. So this method depends on these values, too. If another
-	 * load should be assumed, use method
-	 * <code>tau(double t_from, double t_dest, double load)</code>, which is
-	 * a little bit slower in calculation, but more precise and flexible.
-	 * 
-	 * @param t_from
-	 * @param t_dest
-	 * @return
-	 */
-	public double tau(double t_from, double t_dest) {
-		// Calculate range from t_min to t_max
-		double range = getT_max() - getT_min();
-		// Check direction: warming or cooling
-		if (t_from < t_dest) {
-			// Calculate tau_warming if not already done
-			if (Double.isNaN(tau_warming)) {
-				tau_warming = tau(getT_min(), getT_max(), getQ_warming());
-			}
-			// Calculate fraction of desired range by maximal range and return
-			// resulting proportion of tau_warming
-			return ((t_dest - t_from) / range) * tau_warming;
-		} else {
-			// Calculate tau_cooling if not already done
-			if (Double.isNaN(tau_cooling)) {
-				tau_cooling = tau(getT_max(), getT_min(), getQ_cooling());
-			}
-			// Calculate fraction of desired range by maximal range and return
-			// resulting proportion of tau_cooling
-			return -((t_dest - t_from) / range) * tau_cooling;
-		}
-	}
 }

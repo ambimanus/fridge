@@ -14,7 +14,8 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
 		// Time to warmup from T_min to T_max
-		double tau_warming = fridge.tau(fridge.getT_min(), fridge.getT_max());
+		double tau_warming = ((LinearFridge) fridge).tau(fridge.getT_min(),
+				fridge.getT_max());
 		if (tau_warming < tau_reduce) {
 			// We will not be able to survive tau_reduce, regardless of our
 			// current temperature
@@ -24,7 +25,8 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 			return;
 		}
 		// Time to cooldown from T_max to T_min
-		double tau_cooling = fridge.tau(fridge.getT_max(), fridge.getT_min());
+		double tau_cooling = ((LinearFridge) fridge).tau(fridge.getT_max(),
+				fridge.getT_min());
 		// Time to warmup from T_min to T_max_act (this allows us to calculate
 		// T_max_act)
 		double tau_T_min_to_T_max_act = tau_warming - tau_reduce;
@@ -33,8 +35,8 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 				tau_T_min_to_T_max_act, fridge.getT_min(), fridge
 						.getQ_warming());
 		// Time to cooldown from T_max to T_allowed_act
-		double tau_T_max_to_T_max_act = fridge.tau(fridge.getT_max(),
-				T_max_act);
+		double tau_T_max_to_T_max_act = ((LinearFridge) fridge).tau(fridge
+				.getT_max(), T_max_act);
 		// Time to cooldown from T_max to T_max_not (this allows us to calculate
 		// T_max_not)
 		double tau_T_max_to_T_max_not = tau_T_max_to_T_max_act - tau_preload;
