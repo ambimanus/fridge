@@ -8,8 +8,8 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 
 	public final static String EV_APPLY_COOLING_PROGRAM = "ApplyCoolingProgram";
 	
-	public TimedControllerCompactLinear(LinearFridge fridge) {
-		super(fridge);
+	public TimedControllerCompactLinear(LinearFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {

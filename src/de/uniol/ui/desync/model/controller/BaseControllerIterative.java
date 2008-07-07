@@ -17,8 +17,8 @@ public class BaseControllerIterative extends AbstractController {
 	public final static String EV_WARMING = "Warming";
 	public final static String EV_COOLING = "Cooling";
 	
-	public BaseControllerIterative(IterativeFridge fridge) {
-		super(fridge);
+	public BaseControllerIterative(IterativeFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doRun() {

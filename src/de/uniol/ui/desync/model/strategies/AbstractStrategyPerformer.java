@@ -1,14 +1,14 @@
 package de.uniol.ui.desync.model.strategies;
 
-import simkit.SimEntityBase;
+import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.controller.AbstractController;
 
-public abstract class AbstractStrategyPerformer extends SimEntityBase {
+public abstract class AbstractStrategyPerformer extends SimEntityClean {
 
 	public final static String EV_APPLY_TO_CONTROLLER = "ApplyToController";
 	
 	public AbstractStrategyPerformer(int eventListID, String name) {
-		setEventListID(eventListID);
+		super(eventListID);
 		setName(name);
 	}
 	

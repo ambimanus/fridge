@@ -9,8 +9,8 @@ public class DirectControllerCompactLinear extends BaseControllerCompactLinear
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
-	public DirectControllerCompactLinear(LinearFridge fridge) {
-		super(fridge);
+	public DirectControllerCompactLinear(LinearFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doLoadThermalStorage(Double spread) {

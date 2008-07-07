@@ -16,8 +16,8 @@ public class BaseControllerCompactLinear extends AbstractController {
 	/* event constants */ 
 	public final static String EV_TARGET_TO = "TargetTo";
 	
-	public BaseControllerCompactLinear(LinearFridge fridge) {
-		super(fridge);
+	public BaseControllerCompactLinear(LinearFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doRun() {
@@ -27,7 +27,7 @@ public class BaseControllerCompactLinear extends AbstractController {
 			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_min(), fridge
 					.getQ_cooling());
 		} else {
-			// Load is undefined, start in passive mode:
+			// Fridge was not set active, start in passive mode:
 			if (fridge.getT_current() < fridge.getT_max()) {
 				// Update load
 				fridge.setLoad(fridge.getQ_warming());

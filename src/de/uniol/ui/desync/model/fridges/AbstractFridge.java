@@ -3,8 +3,8 @@ package de.uniol.ui.desync.model.fridges;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
+import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.controller.AbstractController;
 import de.uniol.ui.desync.util.MessagingEventList;
 
@@ -15,7 +15,7 @@ import de.uniol.ui.desync.util.MessagingEventList;
  * 
  * @author Chh
  */
-public abstract class AbstractFridge extends SimEntityBase {
+public abstract class AbstractFridge extends SimEntityClean {
 
 	/** Runtime ID counter */
 	protected static int instance = 0;
@@ -85,8 +85,12 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 * 
 	 * @param nameBase
 	 */
-	public AbstractFridge(String nameBase) {
+	public AbstractFridge(String nameBase, int eventListID) {
+		super(eventListID);
 		setName(nameBase + instance++);
+		if (instance > 5000) {
+			System.out.println(getName());
+		}
 		// Init default values
 		initDefault();
 	}
@@ -263,7 +267,11 @@ public abstract class AbstractFridge extends SimEntityBase {
 	 * @param t_current the t_current to set
 	 */
 	public void setT_current(double t_current) {
+		double bak = this.t_current;
 		this.t_current = t_current;
+		// Announce state change
+		firePropertyChange(IterativeFridge.PROP_TEMPERATURE, bak,
+				this.t_current);
 	}
 
 	/**
@@ -537,5 +545,9 @@ public abstract class AbstractFridge extends SimEntityBase {
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes
 		return tau * 60.0;
+	}
+	
+	public static void resetInstanceCounter() {
+		AbstractFridge.instance = 0;
 	}
 }

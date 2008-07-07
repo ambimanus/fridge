@@ -9,8 +9,8 @@ public class TimedControllerIterative extends BaseControllerIterative implements
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 
-	public TimedControllerIterative(IterativeFridge fridge) {
-		super(fridge);
+	public TimedControllerIterative(IterativeFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doLoadThermalStorage(Double spread) {

@@ -5,12 +5,12 @@ public class LinearFridge extends AbstractFridge {
 	/** timestamp at which the last event occured */
 	protected double lastActionTime = Double.NaN;
 
-	public LinearFridge() {
-		super("LinearFridge");
+	public LinearFridge(int eventListID) {
+		this("LinearFridge", eventListID);
 	}
 	
-	protected LinearFridge(String name) {
-		super(name);
+	protected LinearFridge(String name, int eventListID) {
+		super(name, eventListID);
 	}
 	
 	/*

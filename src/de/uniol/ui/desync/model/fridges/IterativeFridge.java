@@ -8,8 +8,8 @@ public class IterativeFridge extends AbstractFridge {
 	/** system intertia, calculated value */
 	protected double eps; // = Math.exp(-(tau * a) / m_c)
 
-	public IterativeFridge() {
-		super("IterativeFridge");
+	public IterativeFridge(int eventListID) {
+		super("IterativeFridge", eventListID);
 	}
 	
 	/*

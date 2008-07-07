@@ -9,8 +9,8 @@ public class TimedControllerLinear extends BaseControllerLinear implements
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 
-	public TimedControllerLinear(LinearFridge fridge) {
-		super(fridge);
+	public TimedControllerLinear(LinearFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doLoadThermalStorage(Double spread) {

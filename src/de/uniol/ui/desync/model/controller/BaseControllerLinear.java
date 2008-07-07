@@ -19,8 +19,8 @@ public class BaseControllerLinear extends AbstractController {
 	public final static String EV_BEGIN_WARMING = "BeginWarming";
 	public final static String EV_BEGIN_COOLING = "BeginCooling";
 	
-	public BaseControllerLinear(LinearFridge fridge) {
-		super(fridge);
+	public BaseControllerLinear(LinearFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doRun() {

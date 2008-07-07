@@ -56,4 +56,7 @@ public abstract class AbstractCollector {
 	 *         time point!)
 	 */
 	public abstract double[] getObservation(int index);
+	
+	/** Clears the contained data */
+	public abstract void clear();
 }

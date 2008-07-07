@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import simkit.EventList;
 import simkit.SimEntity;
-
+import simkit.stat.SimpleStatsTimeVarying;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.ui.LineChartDialog;
@@ -213,5 +213,45 @@ public class Simulation {
 	 */
 	public void setCollectLoad(boolean collectLoad) {
 		this.collectLoad = collectLoad;
+	}
+	
+	/**
+	 * @return a time-weighted stats object if load was collected, null
+	 *         otherwise
+	 */
+	public SimpleStatsTimeVarying getLoadStats() {
+		if (collectLoad) {
+			return meanLoad.getTimeVaryingStats();
+		}
+		return null;
+	}
+	
+	/**
+	 * @return a time-weighted stats object if temperature was collected, null
+	 *         otherwise
+	 */
+	public SimpleStatsTimeVarying getTemperatureStats() {
+		if (collectTemperature) {
+			return meanTemp.getTimeVaryingStats();
+		}
+		return null;
+	}
+	
+	/**
+	 * Clears the collected statistic values.
+	 */
+	public void clearStats() {
+		if (collectTemperature) {
+			for (TimeseriesCollector col : temps) {
+				col.clear();
+			}
+			meanTemp.clear();
+		}
+		if (collectLoad) {
+			for (TimeseriesCollector col : loads) {
+				col.clear();
+			}
+			meanLoad.clear();
+		}
 	}
 }

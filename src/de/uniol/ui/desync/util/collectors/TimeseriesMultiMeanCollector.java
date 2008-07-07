@@ -8,6 +8,7 @@ import java.util.HashMap;
 import simkit.EventList;
 import simkit.SimEntity;
 import simkit.stat.SimpleStatsTally;
+import simkit.stat.SimpleStatsTimeVarying;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
@@ -24,6 +25,10 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	protected SimpleStatsTally sst;
 	/** defines whether a value has changed in the last interval */
 	protected boolean changed = false;
+	/** Stats to calculate time varying statistic values */
+	protected SimpleStatsTimeVarying sstv;
+	/** Timestamp of last oservation */
+	protected double oldSimTime;
 	
 	/** holds the timestamps (x-values) */
 	protected ArrayList<Double> times = new ArrayList<Double>();
@@ -42,11 +47,51 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 		super(name);
 		eventlist.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME, new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				nextInterval((Double) evt.getOldValue(), (Double) evt
-								.getNewValue());
+				nextInterval((Double) evt.getOldValue());
 			}
 		});
+		oldSimTime = eventlist.getSimTime();
 		sst = new SimpleStatsTally();
+		sstv = new SimpleStatsTimeVarying("Estimator Stats for 'Load'") {
+			/* (non-Javadoc)
+			 * @see simkit.stat.SimpleStatsTimeVarying#newObservation(double)
+			 */
+			@Override
+			public void newObservation(double x) {
+				// Code from AbstractSimpleStats#newObservation(double x)
+				count++;
+				if (x < minObs) { minObs = x; }
+		        if (x > maxObs) { maxObs = x; }
+				// Code from SimpleStatsTimeVarying#newObservation(double x)
+		        if (count == 1 ) {
+		            mean = diff;
+		            variance = 0.0;
+		        } else if (oldSimTime > lastTime) {
+		            double factor = 1.0 - (lastTime - getStartTime()) / (oldSimTime - this.getStartTime());
+		            mean += diff * factor;
+		            variance +=  factor * ( (1.0 - factor) * diff * diff - variance );
+		        }
+		        diff = x - mean;
+		        this.lastTime = oldSimTime;
+			}
+			/* (non-Javadoc)
+			 * @see simkit.stat.AbstractSimpleStats#toString()
+			 */
+			@Override
+			public String toString() {
+		        StringBuffer buf = new StringBuffer();
+		        buf.append(getName());
+		        buf.append(' ');
+		        buf.append('(');
+		        buf.append(this.getSamplingType());
+		        buf.append(")");
+		        buf.append(EOL);
+		        buf.append("\t# | min | max | mean | variance | std.dev" + EOL + '\t');
+		        return buf.toString() + getDataLine();
+		    }
+		};
+		sstv.setEventListID(eventlist.getID());
+		sstv.reset();
 	}
 	
 	/**
@@ -73,15 +118,17 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	 * is calculated and added to the data points.
 	 * 
 	 * @param oldSimtime
-	 * @param newSimtime
 	 */
-	protected void nextInterval(double oldSimtime, double newSimtime) {
+	protected void nextInterval(double oldSimTime) {
+		this.oldSimTime = oldSimTime;
 		if (changed) {
 			sst.reset();
 			for (SimEntity se : entities.keySet()) {
 				sst.newObservation(entities.get(se));
 			}
-			addObservation(oldSimtime, sst.getMean());
+			double mean = sst.getMean();
+			addObservation(oldSimTime, mean);
+			sstv.newObservation(mean);
 		}
 		changed = false;
 	}
@@ -112,5 +159,16 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 
 	public int getSize() {
 		return times.size();
+	}
+	
+	public SimpleStatsTimeVarying getTimeVaryingStats() {
+		return sstv;
+	}
+
+	public void clear() {
+		times.clear();
+		values.clear();
+		sst.reset();
+		sstv.reset();
 	}
 }

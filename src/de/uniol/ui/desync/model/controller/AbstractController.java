@@ -1,11 +1,11 @@
 package de.uniol.ui.desync.model.controller;
 
-import simkit.SimEntityBase;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
+import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
-public abstract class AbstractController extends SimEntityBase {
+public abstract class AbstractController extends SimEntityClean {
 
 	protected AbstractFridge fridge;
 	private static RandomVariate random;
@@ -13,7 +13,8 @@ public abstract class AbstractController extends SimEntityBase {
 	private double lastLow = Double.NaN;
 	private double lastHigh = Double.NaN;
 
-	public AbstractController(AbstractFridge fridge) {
+	public AbstractController(AbstractFridge fridge, int eventListID) {
+		super(eventListID);
 		this.fridge = fridge;
 		setName(getClass().getSimpleName() + " for " + fridge.getName());
 		setEventListID(fridge.getEventListID());

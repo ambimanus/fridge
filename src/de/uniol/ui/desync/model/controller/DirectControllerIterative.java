@@ -6,8 +6,8 @@ import de.uniol.ui.desync.model.strategies.IStrategyDirect;
 public class DirectControllerIterative extends BaseControllerIterative
 		implements IStrategyDirect {
 	
-	public DirectControllerIterative(IterativeFridge fridge) {
-		super(fridge);
+	public DirectControllerIterative(IterativeFridge fridge, int eventListID) {
+		super(fridge, eventListID);
 	}
 	
 	public void doLoadThermalStorage(Double spread) {

@@ -66,4 +66,9 @@ public class TimeseriesCollector extends AbstractCollector {
 	public int getSize() {
 		return times.size();
 	}
+
+	public void clear() {
+		times.clear();
+		values.clear();
+	}
 }

@@ -22,7 +22,6 @@ import simkit.Priority;
 import simkit.PropertyChangeDispatcher;
 import simkit.SimEntity;
 import simkit.SimEntityBase;
-import simkit.SimEntityBaseProtected;
 import simkit.SimEvent;
 import simkit.SimEventListener;
 import simkit.SimkitConcurrencyException;
@@ -1165,7 +1164,7 @@ public class MessagingEventList extends EventList {
 		simTime = 0.0;
         property.firePropertyChange(PROP_SIMTIME, simTimeBackup, simTime);
 		SimEntityBase.coldReset();
-		SimEntityBaseProtected.coldReset();
+//		SimEntityBaseProtected.coldReset();
 		ignoreOnDump.clear();
 		setDumpEventSources(false);
 		setUserDefinedStop();
