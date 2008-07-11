@@ -1,4 +1,4 @@
-package de.uniol.ui.desync.model.strategies;
+package de.uniol.ui.desync.model.signals;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
 
@@ -19,14 +19,14 @@ public class StrategyPerformerTimed extends AbstractStrategyPerformer {
 	}
 
 	public void doApplyToController(AbstractController c) {
-		if (!(c instanceof IStrategyTimed)) {
+		if (!(c instanceof Itlr)) {
 			throw new IllegalArgumentException("Wrong controller type: " + c);
 		}
 		waitDelay(EV_NOTIFY, t_notify, c);
 	}
 
 	public void doNotify(AbstractController c) {
-		c.waitDelay(IStrategyTimed.EV_REDUCE_LOAD, 0, tau_preload,
+		c.waitDelay(Itlr.EV_REDUCE_LOAD, 0, tau_preload,
 				tau_reduce);
 	}
 }

@@ -12,9 +12,6 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Configuration conf = new Configuration();
-		conf.showResults = true;
-		conf.variate_mc = false;
-		conf.POPULATION_SIZE = 30;
 		SimpleStatsTally sst = new SimpleStatsTally();
 		// Get FEL
 		final int list = Schedule.addNewEventList(MessagingEventList.class);

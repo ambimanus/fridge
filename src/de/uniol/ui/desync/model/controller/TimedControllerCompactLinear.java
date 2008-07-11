@@ -1,10 +1,10 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.LinearFridge;
-import de.uniol.ui.desync.model.strategies.IStrategyTimed;
+import de.uniol.ui.desync.model.signals.Itlr;
 
 public class TimedControllerCompactLinear extends BaseControllerCompactLinear
-		implements IStrategyTimed {
+		implements Itlr {
 
 	public final static String EV_APPLY_COOLING_PROGRAM = "ApplyCoolingProgram";
 	

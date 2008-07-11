@@ -1,6 +1,6 @@
-package de.uniol.ui.desync.model.strategies;
+package de.uniol.ui.desync.model.signals;
 
-public interface IStrategyDirect {
+public interface Idsc {
 
 	public final static String EV_LOAD_THERMAL_STORAGE = "LoadThermalStorage";
 	public final static String EV_UNLOAD_THERMAL_STORAGE = "UnloadThermalStorage";

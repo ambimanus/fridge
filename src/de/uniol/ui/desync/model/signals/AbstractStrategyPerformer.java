@@ -1,4 +1,4 @@
-package de.uniol.ui.desync.model.strategies;
+package de.uniol.ui.desync.model.signals;
 
 import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.controller.AbstractController;

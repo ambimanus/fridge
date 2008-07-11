@@ -3,7 +3,7 @@ package de.uniol.ui.desync.model;
 import java.util.ArrayList;
 
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
-import de.uniol.ui.desync.model.strategies.AbstractStrategyPerformer;
+import de.uniol.ui.desync.model.signals.AbstractStrategyPerformer;
 
 public class ControlCenter extends SimEntityClean {
 

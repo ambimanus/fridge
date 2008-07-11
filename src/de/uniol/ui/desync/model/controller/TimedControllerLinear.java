@@ -1,10 +1,10 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.LinearFridge;
-import de.uniol.ui.desync.model.strategies.IStrategyDirect;
+import de.uniol.ui.desync.model.signals.Idsc;
 
 public class TimedControllerLinear extends BaseControllerLinear implements
-		IStrategyDirect {
+		Idsc {
 
 	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
 	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";

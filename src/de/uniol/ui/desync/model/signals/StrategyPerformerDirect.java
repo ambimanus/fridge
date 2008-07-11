@@ -1,4 +1,4 @@
-package de.uniol.ui.desync.model.strategies;
+package de.uniol.ui.desync.model.signals;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
 
@@ -19,15 +19,15 @@ public class StrategyPerformerDirect extends AbstractStrategyPerformer {
 	}
 
 	public void doApplyToController(AbstractController c) {
-		if (!(c instanceof IStrategyDirect)) {
+		if (!(c instanceof Idsc)) {
 			throw new IllegalArgumentException("Wrong controller type: " + c);
 		}
 		waitDelay(EV_NOTIFY, t_notify, c);
 	}
 
 	public void doNotify(AbstractController c) {
-		String ev = doUnload ? IStrategyDirect.EV_UNLOAD_THERMAL_STORAGE
-				: IStrategyDirect.EV_LOAD_THERMAL_STORAGE;
+		String ev = doUnload ? Idsc.EV_UNLOAD_THERMAL_STORAGE
+				: Idsc.EV_LOAD_THERMAL_STORAGE;
 		c.waitDelay(ev, 0, spread);
 	}
 }

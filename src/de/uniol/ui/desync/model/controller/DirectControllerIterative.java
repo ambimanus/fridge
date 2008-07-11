@@ -1,10 +1,10 @@
 package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
-import de.uniol.ui.desync.model.strategies.IStrategyDirect;
+import de.uniol.ui.desync.model.signals.Idsc;
 
 public class DirectControllerIterative extends BaseControllerIterative
-		implements IStrategyDirect {
+		implements Idsc {
 	
 	public DirectControllerIterative(IterativeFridge fridge, int eventListID) {
 		super(fridge, eventListID);

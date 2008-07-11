@@ -1,6 +1,6 @@
-package de.uniol.ui.desync.model.strategies;
+package de.uniol.ui.desync.model.signals;
 
-public interface IStrategyTimed {
+public interface Itlr {
 
 	public final static String EV_REDUCE_LOAD = "ReduceLoad";
 

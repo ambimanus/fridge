@@ -23,9 +23,9 @@ import de.uniol.ui.desync.model.controller.TimedControllerLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
-import de.uniol.ui.desync.model.strategies.AbstractStrategyPerformer;
-import de.uniol.ui.desync.model.strategies.StrategyPerformerDirect;
-import de.uniol.ui.desync.model.strategies.StrategyPerformerTimed;
+import de.uniol.ui.desync.model.signals.AbstractStrategyPerformer;
+import de.uniol.ui.desync.model.signals.StrategyPerformerDirect;
+import de.uniol.ui.desync.model.signals.StrategyPerformerTimed;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
