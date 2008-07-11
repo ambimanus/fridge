@@ -42,14 +42,14 @@ public class BaseControllerIterative extends AbstractController {
 		// Update load
 		fridge.setLoad(load);
 		// Delay next state change
-		waitDelay(EV_COOLING, IterativeFridge.SIMULATION_CLOCK);
+		waitDelay(EV_COOLING, ((IterativeFridge)fridge).getTau());
 	}
 	
 	public void doBeginWarming(Double load) {
 		// Update load
 		fridge.setLoad(load);
 		// Delay next state change
-		waitDelay(EV_WARMING, IterativeFridge.SIMULATION_CLOCK);
+		waitDelay(EV_WARMING, ((IterativeFridge)fridge).getTau());
 	}
 
 	public void doCooling() {
@@ -61,7 +61,7 @@ public class BaseControllerIterative extends AbstractController {
 			waitDelay(EV_BEGIN_WARMING, 0.0, fridge.getQ_warming());
 		} else {
 			// Desired temperature not reached, continue cooling
-			waitDelay(EV_COOLING, IterativeFridge.SIMULATION_CLOCK);
+			waitDelay(EV_COOLING, ((IterativeFridge)fridge).getTau());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class BaseControllerIterative extends AbstractController {
 			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
 		} else {
 			// Still cool enough, continue warming
-			waitDelay(EV_WARMING, IterativeFridge.SIMULATION_CLOCK);
+			waitDelay(EV_WARMING, ((IterativeFridge)fridge).getTau());
 		}
 	}
 }

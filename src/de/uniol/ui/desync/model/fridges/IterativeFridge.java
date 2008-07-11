@@ -3,7 +3,7 @@ package de.uniol.ui.desync.model.fridges;
 public class IterativeFridge extends AbstractFridge {
 	
 	/** time between simulation steps (for equations, one unit == one hour) */
-	protected double tau = SIMULATION_CLOCK / 60.0;
+	protected double tau = 1.0;
 
 	/** system intertia, calculated value */
 	protected double eps; // = Math.exp(-(tau * a) / m_c)
@@ -19,7 +19,7 @@ public class IterativeFridge extends AbstractFridge {
 	public void doRun() {
 		super.doRun();
 		// Calculate proper epsilon
-		eps = Math.exp(-(tau * a) / m_c);
+		eps = Math.exp(-(tau / 60.0) * (a / m_c));
 	}
 	
 	public void doStop() {
@@ -36,7 +36,7 @@ public class IterativeFridge extends AbstractFridge {
 	public void initDefault() {
 		super.initDefault();
 		// Init tau
-		tau = IterativeFridge.SIMULATION_CLOCK / 60.0;
+		tau = 1.0;
 	}
 
 	/**
@@ -52,5 +52,19 @@ public class IterativeFridge extends AbstractFridge {
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Return
 		return t_current;
+	}
+
+	/**
+	 * @return the tau
+	 */
+	public double getTau() {
+		return tau;
+	}
+
+	/**
+	 * @param tau the tau to set
+	 */
+	public void setTau(double tau) {
+		this.tau = tau;
 	}
 }

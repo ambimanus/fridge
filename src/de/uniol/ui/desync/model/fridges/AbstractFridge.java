@@ -23,7 +23,6 @@ public abstract class AbstractFridge extends SimEntityClean {
 	/* constants */
 	public final static String PROP_TEMPERATURE = "temperature";
 	public final static String PROP_LOAD = "load";
-	public final static double SIMULATION_CLOCK = 1.0;
 	/** surrounding temperature */
 	public final static double DEFAULT_t_surround = 20.0;
 	/** insulation */
