@@ -23,9 +23,9 @@ import de.uniol.ui.desync.model.controller.TimedControllerLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
-import de.uniol.ui.desync.model.signals.AbstractStrategyPerformer;
-import de.uniol.ui.desync.model.signals.StrategyPerformerDirect;
-import de.uniol.ui.desync.model.signals.StrategyPerformerTimed;
+import de.uniol.ui.desync.model.signals.AbstractSignalPerformer;
+import de.uniol.ui.desync.model.signals.SignalPerformerDirect;
+import de.uniol.ui.desync.model.signals.SignalPerformerTimed;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
@@ -204,18 +204,18 @@ public class Experiment {
 		return fridges;
 	}
 
-	private AbstractStrategyPerformer createStrategy(int eventListID) {
+	private AbstractSignalPerformer createStrategy(int eventListID) {
 		switch (conf.strategy) {
 		case NONE: {
 			return null;
 		}
 		case DIRECT: {
-			return new StrategyPerformerDirect(eventListID,
+			return new SignalPerformerDirect(eventListID,
 					conf.direct_t_notify, conf.direct_spread,
 					conf.direct_doUnload);
 		}
 		case TIMED: {
-			return new StrategyPerformerTimed(eventListID, conf.timed_t_notify,
+			return new SignalPerformerTimed(eventListID, conf.timed_t_notify,
 					conf.timed_tau_activ, conf.timed_tau_reduce);
 		}
 		}

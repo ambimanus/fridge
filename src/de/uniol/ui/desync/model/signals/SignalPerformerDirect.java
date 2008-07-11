@@ -2,7 +2,7 @@ package de.uniol.ui.desync.model.signals;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
 
-public class StrategyPerformerDirect extends AbstractStrategyPerformer {
+public class SignalPerformerDirect extends AbstractSignalPerformer {
 
 	public final static String EV_NOTIFY = "Notify";
 
@@ -10,9 +10,9 @@ public class StrategyPerformerDirect extends AbstractStrategyPerformer {
 	private double spread;
 	private boolean doUnload;
 
-	public StrategyPerformerDirect(int eventListID, double t_notify,
+	public SignalPerformerDirect(int eventListID, double t_notify,
 			double spread, boolean doUnload) {
-		super(eventListID, "Strategy; Direct Storage Control");
+		super(eventListID, "Signal: Direct Storage Control");
 		this.t_notify = t_notify;
 		this.spread = spread;
 		this.doUnload = doUnload;
