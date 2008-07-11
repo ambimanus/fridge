@@ -68,20 +68,10 @@ public class LinearFridge extends AbstractFridge {
 		return t_current;
 	}
 	
-//	public static double calculateTemperatureAfter(double elapsedTime,
-//			double previousTemperature, AbstractFridge fridge, double load) {
-//		// Calculate proper epsilon
-//		double eps = Math.exp(-(elapsedTime * fridge.a) / fridge.m_c);
-//		// Calculate temperature based on given load, elapsed time and
-//		// previous temperature at (current time - elapsed time)
-//		return (eps * previousTemperature)
-//				+ ((1 - eps) * (fridge.t_surround - (fridge.eta * (load / fridge.a))));
-//	}
-	
 	public double calculateTemperatureAfter(double elapsedTime,
 			double previousTemperature, double load) {
 		double ret;
-		if (load > getQ_warming()) {
+		if (isActive()) {
 			if (Double.isNaN(tau_cooling)) {
 				tau_cooling = tau(getT_max(), getT_min(), getQ_cooling());
 			}
