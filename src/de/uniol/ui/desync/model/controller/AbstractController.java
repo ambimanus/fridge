@@ -38,4 +38,6 @@ public abstract class AbstractController extends SimEntityClean {
 	public AbstractFridge getFridge() {
 		return fridge;
 	}
+
+	public abstract void doRun();
 }

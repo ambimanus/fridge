@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
-import simkit.SimEvent;
 import simkit.random.RandomVariate;
 import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.controller.AbstractController;
@@ -121,11 +120,6 @@ public abstract class AbstractFridge extends SimEntityClean {
 	/*
 	 * Events:
 	 */
-
-	public void handleEvent(SimEvent event) {
-		// We have no events to be processed here, throw an error
-		error(event);
-	}
 	
 	public void doRun() {
 		// Observe FEL for simulation stop

@@ -1,6 +1,5 @@
 package de.uniol.ui.desync.model.controller;
 
-import simkit.SimEvent;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.signals.Itlr;
 
@@ -9,15 +8,6 @@ public class TimedControllerIterative extends BaseControllerIterative implements
 	
 	public TimedControllerIterative(IterativeFridge fridge, int eventListID) {
 		super(fridge, eventListID);
-	}
-	
-	public void handleEvent(SimEvent event) {
-		if (EV_REDUCE_LOAD.equals(event.getEventName())) {
-			doReduceLoad((Double) event.getParameters()[0], (Double) event
-					.getParameters()[0]);
-		} else {
-			super.handleEvent(event);
-		}
 	}
 	
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {

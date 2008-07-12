@@ -24,7 +24,7 @@ public class Configuration {
 	/** Seed for mc variation generator */
 	public long variate_mc_seed = LKSeeds.ZRNG[54];
 	/** Perform variation of T_current ? */
-	public boolean variate_Tcurrent = true;
+	public boolean variate_Tcurrent = false;
 	/** Seed for Tcurrent variation generator */
 	public long variate_Tcurrent_seed = LKSeeds.ZRNG[35];
 	/** The propability a fridge is set active at simulation start */
@@ -32,13 +32,13 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 5000;
+	public int POPULATION_SIZE = 1;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
-	public MODELS model = MODELS.COMPACT_LINEAR;
+	public MODELS model = MODELS.ITERATIVE;
 	/** Used strategy */
-	public STRATEGIES strategy = STRATEGIES.NONE;
+	public STRATEGIES strategy = STRATEGIES.TIMED;
 	/** Show results? */
 	public boolean showResults = true;
 	

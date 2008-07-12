@@ -1,6 +1,5 @@
 package de.uniol.ui.desync.model.controller;
 
-import simkit.SimEvent;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 
 /**
@@ -19,15 +18,6 @@ public class BaseControllerCompactLinear extends AbstractController {
 	
 	public BaseControllerCompactLinear(LinearFridge fridge, int eventListID) {
 		super(fridge, eventListID);
-	}
-
-	public void handleEvent(SimEvent event) {
-		if (EV_TARGET_TO.equals(event.getEventName())) {
-			doTargetTo((Double) event.getParameters()[0], (Double) event
-					.getParameters()[1]);
-		} else {
-			error(event);
-		}
 	}
 	
 	public void doRun() {

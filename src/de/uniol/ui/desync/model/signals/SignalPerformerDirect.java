@@ -1,6 +1,5 @@
 package de.uniol.ui.desync.model.signals;
 
-import simkit.SimEvent;
 import de.uniol.ui.desync.model.controller.AbstractController;
 
 public class SignalPerformerDirect extends AbstractSignalPerformer {
@@ -17,16 +16,6 @@ public class SignalPerformerDirect extends AbstractSignalPerformer {
 		this.t_notify = t_notify;
 		this.spread = spread;
 		this.doUnload = doUnload;
-	}
-
-	public void handleEvent(SimEvent event) {
-		if (EV_APPLY_TO_CONTROLLER.equals(event.getEventName())) {
-			doApplyToController((AbstractController) event.getParameters()[0]);
-		} else if (EV_NOTIFY.equals(event.getEventName())) {
-			doNotify((AbstractController) event.getParameters()[0]);
-		} else {
-			error(event);
-		}
 	}
 
 	public void doApplyToController(AbstractController c) {

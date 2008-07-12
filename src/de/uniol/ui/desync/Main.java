@@ -3,11 +3,12 @@ package de.uniol.ui.desync;
 import simkit.Schedule;
 import simkit.random.LKSeeds;
 import simkit.stat.SimpleStatsTally;
+import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 public class Main {
 
-	private static int runs = 5;
+	private static int runs = 1;
 	
 	public static void main(String[] args) {
 		Configuration conf = new Configuration();
@@ -19,8 +20,7 @@ public class Main {
 		Experiment exp = new Experiment(conf);
 		for (int i = 1; i <= runs; i++) {
 			conf.variate_mc_seed = LKSeeds.ZRNG[i];
-			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
-			conf.showResults = i == runs;
+			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[runs + i];
 			
 			exp.run(el);
 			
@@ -33,6 +33,7 @@ public class Main {
 			el.reset();
 			el.coldReset();
 			exp.clear();
+			SimEntityClean.coldReset();
 			System.gc();
 		}
 		System.out.println("\nOverall stats:");
