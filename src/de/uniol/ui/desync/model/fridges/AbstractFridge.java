@@ -2,6 +2,7 @@ package de.uniol.ui.desync.model.fridges;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 
 import simkit.random.RandomVariate;
 import de.uniol.ui.desync.model.SimEntityClean;
@@ -63,10 +64,10 @@ public abstract class AbstractFridge extends SimEntityClean {
 	protected double t_previous = Double.NaN;
 	/** whether this device starts in state 'cooling' */
 	protected boolean startActive = false;
-	/** time to cooldown from t_max to t_min */
-	protected double tau_cooling = Double.NaN;
-	/** time to warmup from t_min to t_max */
-	protected double tau_warming = Double.NaN;
+	/** Lookup table for tau_cooling calculations */
+	protected HashMap<Double, Double> loadsToTauCooling = new HashMap<Double, Double>();
+	/** Lookup table for tau_warming calculations */
+	protected HashMap<Double, Double> loadsToTauWarming = new HashMap<Double, Double>();
 
 	/* state variables */
 	/** inner temperature at current timestamp */
@@ -109,6 +110,8 @@ public abstract class AbstractFridge extends SimEntityClean {
 		t_max = DEFAULT_t_max;
 		// Init aux vars
 		t_previous = Double.NaN;
+		loadsToTauCooling.clear();
+		loadsToTauWarming.clear();
 		// Init state vars
 		t_current = t_min;
 		load = Double.NaN;
@@ -526,6 +529,19 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * returns the new value.
 	 */
 	public abstract double updateTemperature();
+	
+	/**
+	 * Calculates the temperature how it would be after the given elapsed time
+	 * from now on, based on the specified starting temperature and (constant)
+	 * load.
+	 * 
+	 * @param elapsedTime
+	 * @param previousTemperature
+	 * @param load
+	 * @return
+	 */
+	public abstract double calculateTemperatureAfter(double elapsedTime,
+			double previousTemperature, double load);
 	
 	/**
 	 * Calculate time needed to reach temperature <code>t_dest</code>,

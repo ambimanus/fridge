@@ -1,5 +1,6 @@
 package de.uniol.ui.desync.model.fridges;
 
+
 public class LinearFridge extends AbstractFridge {
 	
 	/** timestamp at which the last event occured */
@@ -72,17 +73,21 @@ public class LinearFridge extends AbstractFridge {
 			double previousTemperature, double load) {
 		double ret;
 		if (isActive()) {
-			if (Double.isNaN(tau_cooling)) {
-				tau_cooling = tau(getT_max(), getT_min(), getQ_cooling());
+			Double t_c = loadsToTauCooling.get(load);
+			if (t_c == null) {
+				t_c = tau(getT_max(), getT_min(), load);
+				loadsToTauCooling.put(load, t_c);
 			}
 			ret = previousTemperature
-					+ (((getT_min() - getT_max()) / tau_cooling) * elapsedTime);
+					+ (((getT_min() - getT_max()) / t_c) * elapsedTime);
 		} else {
-			if (Double.isNaN(tau_warming)) {
-				tau_warming = tau(getT_min(), getT_max(), getQ_warming());
+			Double t_w = loadsToTauWarming.get(load);
+			if (t_w == null) {
+				t_w = tau(getT_min(), getT_max(), load);
+				loadsToTauWarming.put(load, t_w);
 			}
 			ret = previousTemperature
-					+ (((getT_max() - getT_min()) / tau_warming) * elapsedTime);
+					+ (((getT_max() - getT_min()) / t_w) * elapsedTime);
 		}
 		return ret;
 	}
@@ -122,20 +127,24 @@ public class LinearFridge extends AbstractFridge {
 		// Check direction: warming or cooling
 		if (t_from < t_dest) {
 			// Calculate tau_warming if not already done
-			if (Double.isNaN(tau_warming)) {
-				tau_warming = tau(getT_min(), getT_max(), getQ_warming());
+			Double t_w = loadsToTauWarming.get(getQ_warming());
+			if (t_w == null) {
+				t_w = tau(getT_min(), getT_max(), getQ_warming());
+				loadsToTauWarming.put(getQ_warming(), t_w);
 			}
 			// Calculate fraction of desired range by maximal range and return
 			// resulting proportion of tau_warming
-			return ((t_dest - t_from) / range) * tau_warming;
+			return ((t_dest - t_from) / range) * t_w;
 		} else {
 			// Calculate tau_cooling if not already done
-			if (Double.isNaN(tau_cooling)) {
-				tau_cooling = tau(getT_max(), getT_min(), getQ_cooling());
+			Double t_c = loadsToTauCooling.get(getQ_cooling());
+			if (t_c == null) {
+				t_c = tau(getT_max(), getT_min(), getQ_cooling());
+				loadsToTauCooling.put(getQ_cooling(), t_c);
 			}
 			// Calculate fraction of desired range by maximal range and return
 			// resulting proportion of tau_cooling
-			return -((t_dest - t_from) / range) * tau_cooling;
+			return -((t_dest - t_from) / range) * t_c;
 		}
 	}
 }
