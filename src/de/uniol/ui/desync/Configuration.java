@@ -38,7 +38,7 @@ public class Configuration {
 	/** Used model type */
 	public MODELS model = MODELS.ITERATIVE;
 	/** Used strategy */
-	public STRATEGIES strategy = STRATEGIES.NONE;
+	public STRATEGIES strategy = STRATEGIES.TIMED;
 	/** Show results? */
 	public boolean showResults = true;
 	
@@ -49,6 +49,6 @@ public class Configuration {
 	
 	/* Strategy params: timed load reduction */
 	public double timed_t_notify = 60.0;
-	public double timed_tau_activ = 20.0;
-	public double timed_tau_reduce = 30.0;
+	public double timed_tau_activ = 10.0;
+	public double timed_tau_reduce = 120.0;
 }
