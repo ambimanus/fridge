@@ -1,16 +1,24 @@
 package de.uniol.ui.desync.model.controller;
 
+import simkit.SimEvent;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.signals.Idsc;
 
 public class DirectControllerCompactLinear extends BaseControllerCompactLinear
 		implements Idsc {
-
-	protected final static String EV_LOAD_THERMAL_STORAGE_NOW = "LoadThermalStorageNow";
-	protected final static String EV_UNLOAD_THERMAL_STORAGE_NOW = "UnloadThermalStorageNow";
 	
 	public DirectControllerCompactLinear(LinearFridge fridge, int eventListID) {
 		super(fridge, eventListID);
+	}
+	
+	public void handleEvent(SimEvent event) {
+		if (EV_LOAD_THERMAL_STORAGE.equals(event.getEventName())) {
+			doLoadThermalStorage((Double) event.getParameters()[0]);
+		} else if (EV_UNLOAD_THERMAL_STORAGE.equals(event.getEventName())) {
+			doUnloadThermalStorage((Double) event.getParameters()[0]);
+		} else {
+			super.handleEvent(event);
+		}
 	}
 	
 	public void doLoadThermalStorage(Double spread) {

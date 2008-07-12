@@ -1,5 +1,6 @@
 package de.uniol.ui.desync.model.controller;
 
+import simkit.SimEvent;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 
 /**
@@ -19,6 +20,20 @@ public class BaseControllerIterative extends AbstractController {
 	
 	public BaseControllerIterative(IterativeFridge fridge, int eventListID) {
 		super(fridge, eventListID);
+	}
+
+	public void handleEvent(SimEvent event) {
+		if (EV_BEGIN_COOLING.equals(event.getEventName())) {
+			doBeginCooling((Double) event.getParameters()[0]);
+		} else if (EV_BEGIN_WARMING.equals(event.getEventName())) {
+			doBeginWarming((Double) event.getParameters()[0]);
+		} else if (EV_COOLING.equals(event.getEventName())) {
+			doCooling();
+		} else if (EV_WARMING.equals(event.getEventName())) {
+			doWarming();
+		} else {
+			error(event);
+		}
 	}
 	
 	public void doRun() {

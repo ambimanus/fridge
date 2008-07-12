@@ -38,7 +38,7 @@ public class Experiment {
 
 	/** Static instance counter */
 	private static int instances = 0;
-	/** Static run counter */
+	/** Run counter */
 	private int runs = 0;
 	/** Name of this experiment */
 	private String name;

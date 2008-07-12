@@ -12,5 +12,9 @@ public abstract class AbstractSignalPerformer extends SimEntityClean {
 		setName(name);
 	}
 	
+	public void doRun() {
+		// no-op
+	}
+	
 	public abstract void doApplyToController(AbstractController c);
 }
