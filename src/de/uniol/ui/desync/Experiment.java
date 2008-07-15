@@ -1,6 +1,5 @@
 package de.uniol.ui.desync;
 
-import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import simkit.random.BernoulliVariate;
@@ -73,8 +72,8 @@ public class Experiment {
 
 		// Prepare simulation
 		simulation = new Simulation(el, fridges);
-		simulation.setCollectTemperature(conf.model == Configuration.MODELS.ITERATIVE
-				|| conf.POPULATION_SIZE == 1);
+		simulation.setCollectAllTemperature(conf.POPULATION_SIZE < 10);
+		simulation.setCollectAllLoad(conf.POPULATION_SIZE < 10);
 
 		// Simulate
 		double start = System.currentTimeMillis();
@@ -88,8 +87,7 @@ public class Experiment {
 
 		// Create charts
 		if (conf.showResults) {
-			simulation.showResults(conf.POPULATION_SIZE < 10, conf.POPULATION_SIZE > 1
-					&& conf.POPULATION_SIZE < 10, SystemColor.BLACK);
+			simulation.showResults();
 		}
 		
 		// Cleanup
@@ -269,9 +267,7 @@ public class Experiment {
 	
 	public void showLastResults() {
 		if (simulation != null) {
-			simulation.showResults(conf.POPULATION_SIZE < 10,
-					conf.POPULATION_SIZE > 1 && conf.POPULATION_SIZE < 10,
-					SystemColor.BLACK);
+			simulation.showResults();
 		}
 	}
 }

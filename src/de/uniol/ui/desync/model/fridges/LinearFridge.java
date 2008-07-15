@@ -1,10 +1,21 @@
 package de.uniol.ui.desync.model.fridges;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import de.uniol.ui.desync.util.MessagingEventList;
+
 
 public class LinearFridge extends AbstractFridge {
 	
 	/** timestamp at which the last event occured */
 	protected double lastActionTime = Double.NaN;
+	/** defines whether to calculate temperatures */
+	protected boolean announceTemperatures = true;
+	/** interval in minutes in which the temperature will be announced */
+	protected double announceInterval = 1.0;
+	/** the listener which will be notified about simtime changes */
+	protected PropertyChangeListener timeListener = null;
 
 	public LinearFridge(int eventListID) {
 		this("LinearFridge", eventListID);
@@ -17,6 +28,32 @@ public class LinearFridge extends AbstractFridge {
 	/*
 	 * Events:
 	 */
+	
+	public void doRun() {
+		super.doRun();
+		if (isAnnounceTemperatures()
+				&& getEventList() instanceof MessagingEventList) {
+			if (timeListener == null) {
+				timeListener = new PropertyChangeListener() {
+					private double lastAnnounce = Double.NaN;
+
+					public void propertyChange(PropertyChangeEvent evt) {
+						Double time = (Double) evt.getNewValue();
+						if (Double.isNaN(lastAnnounce)
+								|| time >= lastAnnounce + announceInterval) {
+							lastAnnounce = time;
+							double newTemp = getT_current();
+							LinearFridge f = LinearFridge.this;
+							f.firePropertyChange(PROP_TEMPERATURE, newTemp);
+						}
+					}
+				};
+			}
+			MessagingEventList el = (MessagingEventList) getEventList();
+			el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
+					timeListener);
+		}
+	}
 	
 	public void doStop() {
 		// Calculate and update current temperature a last time before the
@@ -91,20 +128,6 @@ public class LinearFridge extends AbstractFridge {
 		}
 		return ret;
 	}
-
-	/**
-	 * @return the lastActionTime
-	 */
-	public double getLastActionTime() {
-		return lastActionTime;
-	}
-
-	/**
-	 * @param lastActionTime the lastActionTime to set
-	 */
-	public void setLastActionTime(double lastActionTime) {
-		this.lastActionTime = lastActionTime;
-	}
 	
 	/**
 	 * Calculate time needed to reach temperature <code>t_dest</code>,
@@ -146,5 +169,51 @@ public class LinearFridge extends AbstractFridge {
 			// resulting proportion of tau_cooling
 			return -((t_dest - t_from) / range) * t_c;
 		}
+	}
+
+	/**
+	 * @return the lastActionTime
+	 */
+	public double getLastActionTime() {
+		return lastActionTime;
+	}
+
+	/**
+	 * @param lastActionTime the lastActionTime to set
+	 */
+	public void setLastActionTime(double lastActionTime) {
+		this.lastActionTime = lastActionTime;
+	}
+
+	/**
+	 * @return the announceTemperatures
+	 */
+	public boolean isAnnounceTemperatures() {
+		return this.announceTemperatures;
+	}
+
+	/**
+	 * @param announceTemperatures the announceTemperatures to set
+	 */
+	public void setAnnounceTemperatures(boolean announceTemperatures) {
+		this.announceTemperatures = announceTemperatures;
+		if (!isAnnounceTemperatures() && timeListener != null) {
+			MessagingEventList el = (MessagingEventList) getEventList();
+			el.removePropertyChangeListener(PROP_TEMPERATURE, timeListener);
+		}
+	}
+
+	/**
+	 * @return the announceInterval
+	 */
+	public double getAnnounceInterval() {
+		return announceInterval;
+	}
+
+	/**
+	 * @param announceInterval the announceInterval to set
+	 */
+	public void setAnnounceInterval(double announceInterval) {
+		this.announceInterval = announceInterval;
 	}
 }

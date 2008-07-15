@@ -22,29 +22,29 @@ public class Configuration {
 	/** Perform variation of m_c ? */
 	public boolean variate_mc = false;
 	/** Seed for mc variation generator */
-	public long variate_mc_seed = LKSeeds.ZRNG[54];
+	public long variate_mc_seed = LKSeeds.ZRNG[1];
 	/** Perform variation of T_current ? */
-	public boolean variate_Tcurrent = false;
+	public boolean variate_Tcurrent = true;
 	/** Seed for Tcurrent variation generator */
-	public long variate_Tcurrent_seed = LKSeeds.ZRNG[35];
+	public long variate_Tcurrent_seed = LKSeeds.ZRNG[99];
 	/** The propability a fridge is set active at simulation start */
-	public double ACTIVE_AT_START_PROPABILITY = 0.0;
+	public double ACTIVE_AT_START_PROPABILITY = 0.22;
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 1;
+	public int POPULATION_SIZE = 5000;
 	/** Length of simulation, 1 unit == 1 hour */
-	public double SIMULATION_LENGTH = 10.0;
+	public double SIMULATION_LENGTH = 5.0;
 	/** Used model type */
-	public MODELS model = MODELS.ITERATIVE;
+	public MODELS model = MODELS.COMPACT_LINEAR;
 	/** Used strategy */
-	public STRATEGIES strategy = STRATEGIES.TIMED;
+	public STRATEGIES strategy = STRATEGIES.DIRECT;
 	/** Show results? */
 	public boolean showResults = true;
 	
 	/* Strategy params: direct storage control */
-	public double direct_t_notify = 60.0;
-	public double direct_spread = 30.0;
+	public double direct_t_notify = 30.0;
+	public double direct_spread = 10.0;
 	public boolean direct_doUnload = false;
 	
 	/* Strategy params: timed load reduction */

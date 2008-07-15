@@ -19,6 +19,8 @@ import de.uniol.ui.desync.util.MessagingEventList;
  */
 public class TimeseriesMultiMeanCollector extends AbstractCollector {
 
+	/** underlying FEL */
+	protected MessagingEventList eventlist;
 	/** Observed entities */
 	protected HashMap<SimEntity, Double> entities = new HashMap<SimEntity, Double>();
 	/** Tally to calculate mean */
@@ -29,6 +31,8 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	protected SimpleStatsTimeVarying sstv;
 	/** Timestamp of last oservation */
 	protected double oldSimTime;
+	/** the actual listener */
+	protected PropertyChangeListener listener;
 	
 	/** holds the timestamps (x-values) */
 	protected ArrayList<Double> times = new ArrayList<Double>();
@@ -45,11 +49,21 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	 */
 	public TimeseriesMultiMeanCollector(MessagingEventList eventlist, String name) {
 		super(name);
+		this.eventlist = eventlist;
 		eventlist.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME, new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				nextInterval((Double) evt.getOldValue());
 			}
 		});
+		// Observe FEL for simulation stop
+		PropertyChangeListener stopListener = new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				nextInterval(TimeseriesMultiMeanCollector.this.eventlist
+						.getSimTime());
+			}
+		};
+		eventlist.addPropertyChangeListener(MessagingEventList.PROP_STOPPING,
+				stopListener);
 		oldSimTime = eventlist.getSimTime();
 		sst = new SimpleStatsTally();
 		sstv = new SimpleStatsTimeVarying("Estimator Stats for 'Load'") {
@@ -103,13 +117,16 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	 */
 	public void addEntity(SimEntity entity, String property) {
 		entities.put(entity, Double.NaN);
-		entity.addPropertyChangeListener(property, new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				SimEntity entity = (SimEntity) evt.getSource();
-				entities.put(entity, (Double) evt.getNewValue());
-				changed = true;
-			}
-		});
+		if (listener == null) {
+			listener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					SimEntity entity = (SimEntity) evt.getSource();
+					entities.put(entity, (Double) evt.getNewValue());
+					changed = true;
+				}
+			};
+		}
+		entity.addPropertyChangeListener(property, listener);
 	}
 	
 	/**
@@ -124,7 +141,8 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 		if (changed) {
 			sst.reset();
 			for (SimEntity se : entities.keySet()) {
-				sst.newObservation(entities.get(se));
+				double val = entities.get(se);
+				sst.newObservation(val);
 			}
 			double mean = sst.getMean();
 			addObservation(oldSimTime, mean);

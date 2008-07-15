@@ -20,7 +20,7 @@ public class Main {
 		Experiment exp = new Experiment(conf);
 		for (int i = 1; i <= runs; i++) {
 			conf.variate_mc_seed = LKSeeds.ZRNG[i];
-			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[runs + i];
+			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
 			
 			exp.run(el);
 			

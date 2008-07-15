@@ -1,6 +1,7 @@
 package de.uniol.ui.desync.model;
 
 import java.awt.Color;
+import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -42,10 +43,16 @@ public class Simulation {
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
 	
-	/** defines whether to collect temperature changes */
-	private boolean collectTemperature = false;
-	/** defines whether to collect load changes */
-	private boolean collectLoad = true;
+	/** defines whether to collect mean temperature changes */
+	private boolean collectMeanTemperature = true;
+	/** defines whether to collect mean load changes */
+	private boolean collectMeanLoad = true;
+	/** defines whether to collect all temperature changes */
+	private boolean collectAllTemperature = false;
+	/** defines whether to collect all load changes */
+	private boolean collectAllLoad = false;
+	/** the color which will be used to highlight the mean curves */
+	private Color highlightColor = SystemColor.BLACK;
 
 	/**
 	 * Creates a new simulation using the specified {@link EventList} and the
@@ -63,22 +70,26 @@ public class Simulation {
 	 * If desired, provide the entities with statistical collectors.
 	 */
 	private void initStatistics() {
-		if (collectTemperature) {
+		if (collectMeanTemperature) {
 			meanTemp = new TimeseriesMultiMeanCollector(el, "mean temperature");
 		}
-		if (collectLoad) {
+		if (collectMeanLoad) {
 			meanLoad = new TimeseriesMultiMeanCollector(el, "mean load");
 		}
 		for (AbstractFridge f : fridges) {
-			if (collectTemperature) {
+			if (collectMeanTemperature) {
 				meanTemp.addEntity(f, AbstractFridge.PROP_TEMPERATURE);
+			}
+			if (collectAllTemperature) {
 				TimeseriesCollector t = new TimeseriesCollector(
 						"Temperature of " + f.getName(), f,
 						IterativeFridge.PROP_TEMPERATURE);
 				temps.add(t);
 			}
-			if (collectLoad) {
+			if (collectMeanLoad) {
 				meanLoad.addEntity(f, AbstractFridge.PROP_LOAD);
+			}
+			if (collectAllLoad) {
 				TimeseriesCollector l = new TimeseriesCollector("Load of "
 						+ f.getName(), f, AbstractFridge.PROP_LOAD);
 				loads.add(l);
@@ -118,34 +129,31 @@ public class Simulation {
 	 * @param highlightFirst
 	 * @param firstColor
 	 */
-	public void showResults(boolean showAll, boolean highlightFirst,
-			Color firstColor) {
+	public void showResults() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		shell.setText("Simulation results");
 		int numberOfCharts = 0;
-		if (collectTemperature) {
+		if (collectMeanTemperature || collectAllTemperature) {
 			// Temperature chart
 			LineChartDialog lcd = new LineChartDialog(shell,
 					"Temperature progress", "Time (h)", "Temperature (°C)",
 					"min", "°C", 3.0, 8.0);
-			if (temps.size() > 1) {
+			if (collectMeanTemperature) {
 				lcd.addSeries(meanTemp);
+				lcd.setSeriesColor(0, highlightColor);
 			}
-			if (firstColor != null) {
-				lcd.setSeriesColor(0, firstColor);
-			}
-			if (highlightFirst) {
-				lcd.setSeriesWidth(0, 2.0f);
-			}
-			if (showAll) {
+			if (collectAllTemperature) {
 				lcd.addAllSeries(temps);
+			}
+			if (collectMeanTemperature && collectAllTemperature) {
+				lcd.setSeriesWidth(0, 2.0f);
 			}
 			lcd.create();
 			numberOfCharts++;
 		}
-		if (collectLoad) {
+		if (collectMeanLoad || collectAllLoad) {
 			// Add load observations at finish time
 			if (meanLoad.getSize() != 0) {
 				meanLoad.addObservation(el.getStopTime(), meanLoad
@@ -160,17 +168,15 @@ public class Simulation {
 			// Load chart
 			StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 					"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
-			if (loads.size() > 1) {
+			if (collectMeanLoad) {
 				scd.addSeries(meanLoad);
+				scd.setSeriesColor(0, highlightColor);
 			}
-			if (firstColor != null) {
-				scd.setSeriesColor(0, firstColor);
-			}
-			if (highlightFirst) {
-				scd.setSeriesWidth(0, 2.0f);
-			}
-			if (showAll) {
+			if (collectAllLoad) {
 				scd.addAllSeries(loads);
+			}
+			if (collectMeanLoad && collectAllLoad) {
+				scd.setSeriesWidth(0, 2.0f);
 			}
 			scd.create();
 			numberOfCharts++;
@@ -188,39 +194,81 @@ public class Simulation {
 	/**
 	 * @return whether temperature values are being collected
 	 */
-	public boolean isCollectTemperature() {
-		return collectTemperature;
+	public boolean isCollectMeanTemperature() {
+		return collectMeanTemperature;
 	}
 
 	/**
 	 * Sets whether temperature values are being collected
 	 * @param collectTemperature
 	 */
-	public void setCollectTemperature(boolean collectTemperature) {
-		this.collectTemperature = collectTemperature;
+	public void setCollectMeanTemperature(boolean collectTemperature) {
+		this.collectMeanTemperature = collectTemperature;
 	}
 
 	/**
 	 * @return whether load values are being collected
 	 */
-	public boolean isCollectLoad() {
-		return collectLoad;
+	public boolean isCollectMeanLoad() {
+		return collectMeanLoad;
 	}
 
 	/**
 	 * Sets whether load values are being collected
 	 * @param collectLoad
 	 */
-	public void setCollectLoad(boolean collectLoad) {
-		this.collectLoad = collectLoad;
+	public void setCollectMeanLoad(boolean collectLoad) {
+		this.collectMeanLoad = collectLoad;
 	}
 	
+	/**
+	 * @return the collectAllTemperature
+	 */
+	public boolean isCollectAllTemperature() {
+		return collectAllTemperature;
+	}
+
+	/**
+	 * @param collectAllTemperature the collectAllTemperature to set
+	 */
+	public void setCollectAllTemperature(boolean collectAllTemperature) {
+		this.collectAllTemperature = collectAllTemperature;
+	}
+
+	/**
+	 * @return the collectAllLoad
+	 */
+	public boolean isCollectAllLoad() {
+		return collectAllLoad;
+	}
+
+	/**
+	 * @param collectAllLoad the collectAllLoad to set
+	 */
+	public void setCollectAllLoad(boolean collectAllLoad) {
+		this.collectAllLoad = collectAllLoad;
+	}
+
+	/**
+	 * @return the highlightColor
+	 */
+	public Color getHighlightColor() {
+		return highlightColor;
+	}
+
+	/**
+	 * @param highlightColor the highlightColor to set
+	 */
+	public void setHighlightColor(Color highlightColor) {
+		this.highlightColor = highlightColor;
+	}
+
 	/**
 	 * @return a time-weighted stats object if load was collected, null
 	 *         otherwise
 	 */
 	public SimpleStatsTimeVarying getLoadStats() {
-		if (collectLoad) {
+		if (collectMeanLoad) {
 			return meanLoad.getTimeVaryingStats();
 		}
 		return null;
@@ -231,7 +279,7 @@ public class Simulation {
 	 *         otherwise
 	 */
 	public SimpleStatsTimeVarying getTemperatureStats() {
-		if (collectTemperature) {
+		if (collectMeanTemperature) {
 			return meanTemp.getTimeVaryingStats();
 		}
 		return null;
@@ -241,16 +289,16 @@ public class Simulation {
 	 * Clears the collected statistic values.
 	 */
 	public void clearStats() {
-		if (collectTemperature) {
-			for (TimeseriesCollector col : temps) {
-				col.clear();
-			}
+		for (TimeseriesCollector col : temps) {
+			col.clear();
+		}
+		if (meanTemp != null) {
 			meanTemp.clear();
 		}
-		if (collectLoad) {
-			for (TimeseriesCollector col : loads) {
-				col.clear();
-			}
+		for (TimeseriesCollector col : loads) {
+			col.clear();
+		}
+		if (meanLoad != null) {
 			meanLoad.clear();
 		}
 	}
