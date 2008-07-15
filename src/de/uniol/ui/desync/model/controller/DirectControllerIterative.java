@@ -19,4 +19,28 @@ public class DirectControllerIterative extends BaseControllerIterative
 		waitDelay(EV_BEGIN_WARMING, drawUniformRandom(0.0, spread), fridge
 				.getQ_warming());
 	}
+
+	/* (non-Javadoc)
+	 * @see de.uniol.ui.desync.model.controller.BaseControllerIterative#doBeginCooling(java.lang.Double)
+	 */
+	@Override
+	public void doBeginCooling(Double load) {
+		// First perform cancelling edges
+		interruptAll(EV_COOLING);
+		interruptAll(EV_WARMING);
+		// Then immediately perform requested operation
+		super.doBeginCooling(load);
+	}
+
+	/* (non-Javadoc)
+	 * @see de.uniol.ui.desync.model.controller.BaseControllerIterative#doBeginWarming(java.lang.Double)
+	 */
+	@Override
+	public void doBeginWarming(Double load) {
+		// First perform cancelling edges
+		interruptAll(EV_COOLING);
+		interruptAll(EV_WARMING);
+		// Then immediately perform requested operation
+		super.doBeginWarming(load);
+	}
 }
