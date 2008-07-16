@@ -19,6 +19,7 @@ import de.uniol.ui.desync.model.controller.DirectControllerLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
+import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
@@ -72,8 +73,8 @@ public class Experiment {
 
 		// Prepare simulation
 		simulation = new Simulation(el, fridges);
-		simulation.setCollectAllTemperature(conf.POPULATION_SIZE < 10);
-		simulation.setCollectAllLoad(conf.POPULATION_SIZE < 10);
+//simulation.setCollectMeanLoad(false);
+//simulation.setCollectMeanTemperature(false);
 
 		// Simulate
 		double start = System.currentTimeMillis();
@@ -170,7 +171,9 @@ public class Experiment {
 					break;
 				}
 				case DIRECT: {
-					c = new DirectControllerCompactLinear((LinearFridge) f, list);
+//					c = new DirectControllerCompactLinear((LinearFridge) f, list);
+					c = new StatefulDirectCompactLinear((LinearFridge) f, list);
+//conf.strategy = Configuration.STRATEGIES.NONE;
 					break;
 				}
 				case TIMED: {
@@ -199,6 +202,7 @@ public class Experiment {
 			// Store created fridge
 			fridges.add(f);
 		}
+//conf.strategy = Configuration.STRATEGIES.DIRECT;
 		return fridges;
 	}
 
