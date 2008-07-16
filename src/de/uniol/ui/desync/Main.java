@@ -23,11 +23,16 @@ public class Main {
 			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
 			
 			exp.run(el);
+			System.out.print(exp.getName() + " - " + exp.getSimulationTime()
+					+ "s");
 			
-			double mean = exp.getLoadStats().getMean();
-			System.out.println(exp.getName() + " - " + exp.getSimulationTime()
-					+ "s - mean load = " + mean);
-			sst.newObservation(mean);
+			if (exp.getLoadStats() != null) {
+				double mean = exp.getLoadStats().getMean();
+				System.out.println(" - mean load = " + mean);
+				sst.newObservation(mean);
+			} else {
+				System.out.println();
+			}
 			
 			// Cleanup
 			el.reset();
