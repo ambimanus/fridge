@@ -64,6 +64,10 @@ public class Simulation {
 	public Simulation(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
+		if (fridges.size() > 1 && fridges.size() < 10) {
+			collectAllLoad = true;
+			collectAllTemperature = true;
+		}
 	}
 
 	/**
@@ -142,7 +146,6 @@ public class Simulation {
 					"min", "°C", 3.0, 8.0);
 			if (collectMeanTemperature) {
 				lcd.addSeries(meanTemp);
-				lcd.setSeriesColor(0, highlightColor);
 			}
 			if (collectAllTemperature) {
 				lcd.addAllSeries(temps);
@@ -150,33 +153,41 @@ public class Simulation {
 			if (collectMeanTemperature && collectAllTemperature) {
 				lcd.setSeriesWidth(0, 2.0f);
 			}
+//lcd.setSeriesWidth(0, 2.0f);
+			if (collectMeanTemperature || temps.size() == 1) {
+				lcd.setSeriesColor(0, highlightColor);
+			}
 			lcd.create();
 			numberOfCharts++;
 		}
 		if (collectMeanLoad || collectAllLoad) {
-			// Add load observations at finish time
-			if (meanLoad.getSize() != 0) {
-				meanLoad.addObservation(el.getStopTime(), meanLoad
-						.getObservation(meanLoad.getSize() - 1)[1]);
-			}
-			for (AbstractCollector col : loads) {
-				if (col.getSize() != 0) {
-					col.addObservation(el.getStopTime(), col.getObservation(col
-							.getSize() - 1)[1]);
-				}
-			}
 			// Load chart
 			StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 					"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
 			if (collectMeanLoad) {
+				// Add load observations at finish time
+				meanLoad.addObservation(el.getStopTime(), meanLoad
+						.getObservation(meanLoad.getSize() - 1)[1]);
+				// Add series
 				scd.addSeries(meanLoad);
-				scd.setSeriesColor(0, highlightColor);
 			}
 			if (collectAllLoad) {
+				// Add load observations at finish time
+				for (AbstractCollector col : loads) {
+					if (col.getSize() != 0) {
+						col.addObservation(el.getStopTime(), col.getObservation(col
+								.getSize() - 1)[1]);
+					}
+				}
+				// Add series
 				scd.addAllSeries(loads);
 			}
 			if (collectMeanLoad && collectAllLoad) {
 				scd.setSeriesWidth(0, 2.0f);
+			}
+//scd.setSeriesWidth(0, 2.0f);
+			if (collectMeanLoad || loads.size() == 1) {
+				scd.setSeriesColor(0, highlightColor);
 			}
 			scd.create();
 			numberOfCharts++;
