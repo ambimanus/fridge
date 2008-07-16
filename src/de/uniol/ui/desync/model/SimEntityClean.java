@@ -27,6 +27,7 @@ import simkit.util.LinkedHashMap2;
  *  @version $Id: SimEntityBase.java 1041 2007-09-28 18:09:27Z ahbuss $
  *
  **/
+@SuppressWarnings("unchecked")
 public abstract class SimEntityClean extends BasicSimEntity {
     
 /**
