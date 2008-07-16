@@ -53,8 +53,6 @@ public class BaseControllerCompactLinear extends AbstractController {
 		double timespan = ((LinearFridge)fridge).tau(t_current, t_dest);
 		// Update action timestamp
 		((LinearFridge) fridge).setLastActionTime(getEventList().getSimTime());
-		// Remove any next scheduled warming event if present
-		interrupt(EV_TARGET_TO);
 		// If we are cooling right now, begin warming next, and the other way,
 		// respectively.
 		double t_next = fridge.isActive() ? fridge.getT_max() : fridge
