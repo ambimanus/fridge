@@ -9,6 +9,7 @@ import simkit.EventList;
 import simkit.SimEntity;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
+import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
@@ -121,7 +122,23 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 			listener = new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
 					SimEntity entity = (SimEntity) evt.getSource();
-					entities.put(entity, (Double) evt.getNewValue());
+					double val = (Double) evt.getNewValue();
+					entities.put(entity, val);
+					/*
+					 * The following snippet checks for errors in the model. It
+					 * prints an error message whenever a temperature value
+					 * outside its allowed bounds [t_min, t_max] is detected.
+					 */
+					if (AbstractFridge.PROP_TEMPERATURE.equals(evt
+							.getPropertyName())) {
+						AbstractFridge f = (AbstractFridge) evt.getSource();
+						float t = (float) val;
+						if (t < f.getT_min() || t > f.getT_max()) {
+							System.err.println(eventlist.getSimTime()
+									+ " ERROR - temperature out of range: "
+									+ f.getName() + ", t=" + t);
+						}
+					}
 					changed = true;
 				}
 			};
