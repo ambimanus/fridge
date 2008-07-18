@@ -32,23 +32,23 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 2;
+	public int POPULATION_SIZE = 5000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
 	public MODELS model = MODELS.COMPACT_LINEAR;
 	/** Used strategy */
-	public STRATEGIES strategy = STRATEGIES.DIRECT;
+	public STRATEGIES strategy = STRATEGIES.TIMED;
 	/** Show results? */
 	public boolean showResults = true;
 	
 	/* Strategy params: direct storage control */
 	public double direct_t_notify = 90.0;
-	public double direct_spread = 0.0;
+	public double direct_spread = 10.0;
 	public boolean direct_doUnload = false;
 	
 	/* Strategy params: timed load reduction */
-	public double timed_t_notify = 60.0;
-	public double timed_tau_activ = 10.0;
+	public double timed_t_notify = 90.0;
+	public double timed_tau_activ = 30.0;
 	public double timed_tau_reduce = 120.0;
 }
