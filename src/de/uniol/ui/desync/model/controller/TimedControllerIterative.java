@@ -6,11 +6,13 @@ import de.uniol.ui.desync.model.signals.Itlr;
 public class TimedControllerIterative extends BaseControllerIterative implements
 		Itlr {
 	
+	public final static String EV_DELAY_WARMING = "DelayWarming";
+	
 	public TimedControllerIterative(IterativeFridge fridge, int eventListID) {
 		super(fridge, eventListID);
 	}
 	
-	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
+	protected classes classifyFridge(Double tau_preload, Double tau_reduce) {
 		IterativeFridge f = (IterativeFridge) fridge;
 		// Time to warmup from T_min to T_max
 		double tau_warming = f
@@ -18,10 +20,7 @@ public class TimedControllerIterative extends BaseControllerIterative implements
 		if (tau_warming < tau_reduce) {
 			// We will not be able to survive tau_reduce, regardless of our
 			// current temperature
-			// TODO
-			System.err.println("Cannot survive reduce interval: " + tau_reduce
-					+ " > " + tau_warming);
-			return;
+//			return classes.BLACK;
 		}
 		// Time to cooldown from T_max to T_min
 		double tau_cooling = f
@@ -48,27 +47,57 @@ public class TimedControllerIterative extends BaseControllerIterative implements
 		double T_min_not = f.calculateTemperatureAfter(tau_T_min_to_T_max_act
 				- tau_preload, f.getT_min(), f.getQ_warming());
 
-		// Classify f to apply proper cooling program
 		double t_current = f.getT_current();
 		if (t_current > T_max_not) {
 			// Class red: Fridge will not reach T_max_act
-			// Cooldown till T_act
-			waitDelay(EV_BEGIN_COOLING, 0.0, f.getQ_cooling());
-			waitDelay(EV_BEGIN_WARMING, tau_preload, f.getQ_warming());
+			return classes.RED;
 		} else if (t_current > T_mid_not) {
 			// Class orange: Fridge can reach T_max_act, but not T_min
-			// Cooldown till T_act
-			waitDelay(EV_BEGIN_COOLING, 0.0, f.getQ_cooling());
-			waitDelay(EV_BEGIN_WARMING, tau_preload, f.getQ_warming());
+			return classes.ORANGE;
 		} else if (t_current > T_min_not) {
 			// Class green: Fridge can reach T_min
-			// Cooldown to T_min
-			waitDelay(EV_BEGIN_COOLING, 0.0, f.getQ_cooling());
+			return classes.GREEN;
 		} else {
 			// Class blue: Fridge does not need to cooldown any more
-			// Cooldown to T_min
-			waitDelay(EV_BEGIN_COOLING, 0.0, f.getQ_cooling());
+			return classes.BLUE;
 		}
+	}
+	
+	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
+		// Classify f to apply proper cooling program
+		classes c = classifyFridge(tau_preload, tau_reduce);
+		switch (c) {
+		case BLACK: {
+			// TODO
+			break;
+		}
+		case RED: {
+			// Cooldown till t_act
+			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
+			waitDelay(EV_DELAY_WARMING, tau_preload, fridge.getQ_warming());
+			break;
+		}
+		case ORANGE: {
+			// Cooldown till t_act
+			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
+			waitDelay(EV_DELAY_WARMING, tau_preload, fridge.getQ_warming());
+			break;
+		}
+		case GREEN: {
+			// Cooldown to T_min
+			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
+			break;
+		}
+		case BLUE: {
+			// Cooldown to T_min
+			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
+			break;
+		}
+		}
+	}
+	
+	public void doDelayWarming(Double load) {
+		waitDelay(EV_BEGIN_WARMING, 0.0, load);
 	}
 
 	/* (non-Javadoc)
