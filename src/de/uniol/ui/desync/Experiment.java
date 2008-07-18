@@ -75,6 +75,7 @@ public class Experiment {
 		simulation = new Simulation(el, fridges);
 //simulation.setCollectMeanLoad(false);
 //simulation.setCollectMeanTemperature(false);
+// TODO
 
 		// Simulate
 		double start = System.currentTimeMillis();
@@ -171,9 +172,10 @@ public class Experiment {
 					break;
 				}
 				case DIRECT: {
-//					c = new DirectControllerCompactLinear((LinearFridge) f, list);
-					c = new StatefulDirectCompactLinear((LinearFridge) f, list);
+					c = new DirectControllerCompactLinear((LinearFridge) f, list);
+//					c = new StatefulDirectCompactLinear((LinearFridge) f, list);
 //conf.strategy = Configuration.STRATEGIES.NONE;
+// TODO
 					break;
 				}
 				case TIMED: {
@@ -203,6 +205,7 @@ public class Experiment {
 			fridges.add(f);
 		}
 //conf.strategy = Configuration.STRATEGIES.DIRECT;
+// TODO
 		return fridges;
 	}
 
