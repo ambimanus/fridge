@@ -154,6 +154,7 @@ public class Simulation {
 				lcd.setSeriesWidth(0, 2.0f);
 			}
 //lcd.setSeriesWidth(0, 2.0f);
+// TODO
 			if (collectMeanTemperature || temps.size() == 1) {
 				lcd.setSeriesColor(0, highlightColor);
 			}
@@ -186,6 +187,7 @@ public class Simulation {
 				scd.setSeriesWidth(0, 2.0f);
 			}
 //scd.setSeriesWidth(0, 2.0f);
+// TODO
 			if (collectMeanLoad || loads.size() == 1) {
 				scd.setSeriesColor(0, highlightColor);
 			}
