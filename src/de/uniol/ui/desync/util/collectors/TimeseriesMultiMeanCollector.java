@@ -146,6 +146,9 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 		entity.addPropertyChangeListener(property, listener);
 	}
 	
+	private boolean zero = false;
+	private double start;
+	
 	/**
 	 * Called when the simTime of the event list proceeds. If values in the
 	 * observed entities had changed since the last inverall, a new mean value
@@ -162,6 +165,17 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 				sst.newObservation(val);
 			}
 			double mean = sst.getMean();
+if (!zero && mean == 0.0) {
+	System.out.println("start=" + oldSimTime);
+	start = oldSimTime;
+	zero = true;
+}
+if (zero && mean > 0.0) {
+	System.out.println("end=" + oldSimTime);
+	System.out.println("\tdur=" + (oldSimTime - start));
+	zero = false;
+}
+// TODO
 			addObservation(oldSimTime, mean);
 			sstv.newObservation(mean);
 		}
