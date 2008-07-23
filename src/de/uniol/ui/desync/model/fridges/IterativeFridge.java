@@ -63,7 +63,7 @@ public class IterativeFridge extends AbstractFridge {
 					+ ((1 - eps) * (t_surround - (eta * (load / a))));
 		}
 		// Range check
-		if (ret < getT_min() || ret > getT_max()) {
+		if (ret + 0.05 < getT_min() || ret - 0.05 > getT_max()) {
 			System.err.println(getEventList().getSimTime()
 					+ " ERROR - out of range: " + getName()
 					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime

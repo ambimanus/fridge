@@ -117,7 +117,7 @@ public class LinearFridge extends AbstractFridge {
 					+ (((getT_max() - getT_min()) / tauWarming(load)) * elapsedTime);
 		}
 		// Range check
-		if (ret < getT_min() || ret > getT_max()) {
+		if (ret + 0.05 < getT_min() || ret - 0.05 > getT_max()) {
 			System.err.println(getEventList().getSimTime()
 					+ " ERROR - out of range: " + getName()
 					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime
