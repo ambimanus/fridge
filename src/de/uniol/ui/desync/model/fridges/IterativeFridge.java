@@ -58,12 +58,15 @@ public class IterativeFridge extends AbstractFridge {
 		// Virtually simulate 'elapsedTime' time steps further from now on to
 		// calculate the temperature how it would be
 		double ret = previousTemperature;
+		double bak = previousTemperature;
 		for (double i = tau; i <= elapsedTime; i += tau) {
+			bak = ret;
 			ret = (eps * ret)
 					+ ((1 - eps) * (t_surround - (eta * (load / a))));
 		}
 		// Range check
-		if (ret + 0.1 < getT_min() || ret - 0.1 > getT_max()) {
+		if ((isActive() && ret < getT_min())
+				|| (!isActive() && bak > getT_max())) {
 			System.err.println(getEventList().getSimTime()
 					+ " ERROR - out of range: " + getName()
 					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime
