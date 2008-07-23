@@ -36,6 +36,17 @@ public class BaseControllerIterative extends AbstractController {
 				waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getQ_cooling());
 			}
 		}
+//		// The following snippet tests the long run temperature calculation.
+//		State s = new State(fridge.getT_min(), fridge.getQ_warming(), false);
+//		NumberFormat nf = NumberFormat.getInstance();
+//		nf.setMinimumFractionDigits(0);
+//		nf.setMaximumFractionDigits(0);
+//		nf.setMinimumIntegerDigits(3);
+//		nf.setMaximumIntegerDigits(3);
+//		for (double i = 0.0; i < 600.0; i += 10.0) {
+//			System.out.println(nf.format(i) + " - "
+//					+ fridge.calculateStateAfterLongRun(s, i));
+//		}
 	}
 	
 	public void doBeginCooling(Double load) {

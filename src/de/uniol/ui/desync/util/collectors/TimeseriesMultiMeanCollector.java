@@ -124,21 +124,22 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 					SimEntity entity = (SimEntity) evt.getSource();
 					double val = (Double) evt.getNewValue();
 					entities.put(entity, val);
-					/*
-					 * The following snippet checks for errors in the model. It
-					 * prints an error message whenever a temperature value
-					 * outside its allowed bounds [t_min, t_max] is detected.
-					 */
-					if (AbstractFridge.PROP_TEMPERATURE.equals(evt
-							.getPropertyName())) {
-						AbstractFridge f = (AbstractFridge) evt.getSource();
-						float t = (float) val;
-						if (t < f.getT_min() || t > f.getT_max()) {
-							System.err.println(eventlist.getSimTime()
-									+ " ERROR - temperature out of range: "
-									+ f.getName() + ", t=" + t);
-						}
-					}
+//					/*
+//					 * The following snippet checks for errors in the model. It
+//					 * prints an error message whenever a temperature value
+//					 * outside its allowed bounds [t_min, t_max] is detected.
+//					 */
+//					if (AbstractFridge.PROP_TEMPERATURE.equals(evt
+//							.getPropertyName())) {
+//						AbstractFridge f = (AbstractFridge) evt.getSource();
+//						float t = (float) val;
+//						if (t < f.getT_min() || t > f.getT_max()) {
+//							System.err.println(eventlist.getSimTime()
+//									+ " ERROR - temperature out of range: "
+//									+ f.getName() + ", t=" + t);
+//						}
+//					}
+// TODO error checking
 					changed = true;
 				}
 			};
@@ -165,17 +166,17 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 				sst.newObservation(val);
 			}
 			double mean = sst.getMean();
-if (!zero && mean == 0.0) {
-	System.out.println("start=" + oldSimTime);
-	start = oldSimTime;
-	zero = true;
-}
-if (zero && mean > 0.0) {
-	System.out.println("end=" + oldSimTime);
-	System.out.println("\tdur=" + (oldSimTime - start));
-	zero = false;
-}
-// TODO
+//if (!zero && mean == 0.0) {
+//	System.out.println("start=" + oldSimTime);
+//	start = oldSimTime;
+//	zero = true;
+//}
+//if (zero && mean > 0.0) {
+//	System.out.println("end=" + oldSimTime);
+//	System.out.println("\tdur=" + (oldSimTime - start));
+//	zero = false;
+//}
+// TODO q=0 logging
 			addObservation(oldSimTime, mean);
 			sstv.newObservation(mean);
 		}

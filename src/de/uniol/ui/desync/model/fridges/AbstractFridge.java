@@ -529,11 +529,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * returns the new value.
 	 */
 	public abstract double updateTemperature();
-	
+
 	/**
 	 * Calculates the temperature how it would be after the given elapsed time
-	 * from now on, based on the specified starting temperature and (constant)
-	 * load.
+	 * from now on, based on the specified starting temperature and <u>constant</u>
+	 * load. <b>No phase changes will be considered!</b>
 	 * 
 	 * @param elapsedTime
 	 * @param previousTemperature
@@ -542,6 +542,81 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 */
 	public abstract double calculateTemperatureAfter(double elapsedTime,
 			double previousTemperature, double load);
+
+	/**
+	 * Calculates the state of the fridge how it would be after the given
+	 * timespan from now on. The timespan may include phase changes. The default
+	 * <code>q_cooling</code> and <code>q_warming</code> values will be used for
+	 * calculations of following phases. The parameter <code>current</code>
+	 * determines the state of the device at the current point of time.
+	 * 
+	 * @param timespan
+	 * @param current
+	 * @return
+	 */
+	public State calculateStateAfterLongRun(State current, double timespan) {
+		// Calculate base timespans
+		double tau_phaseChange = tau(current.t_current,
+				current.active ? getT_min() : getT_max(), current.q_current);
+		double tau_cooling = tauCooling(getQ_cooling());
+		double tau_warming = tauWarming(getQ_warming());
+		State ret = new State();
+		if (timespan <= tau_phaseChange) {
+			// No phase change occurs in the given timespan.
+			ret.active = current.active;
+			ret.q_current = current.q_current;
+			ret.t_current = calculateTemperatureAfter(timespan,
+					current.t_current, current.q_current);
+		} else {
+			// At least one phase change will occur in given timespan.
+			// ts = remaining timespan after first phase change
+			double ts = timespan - tau_phaseChange;
+			// c = amount of complete full cycles (tw+tc) in ts
+			int c = (int) Math.floor(ts / (tau_warming + tau_cooling));
+			// remainder = remaining time in ts after last complete full cycle
+			double remainder = ts - ((tau_warming + tau_cooling) * (double) c);
+			// Check type of the phase after timespan and determine resulting
+			// state
+			if (current.active) {
+				// We started with cooling, so the first *full* phase began with
+				// warming.
+				if (remainder < tau_warming) {
+					// The remainder cannot contain a whole warming phase, so we
+					// will still be warming after the timespan.
+					ret.active = false;
+					ret.q_current = getQ_warming();
+					ret.t_current = calculateTemperatureAfter(remainder,
+							getT_min(), getQ_warming());
+				} else {
+					// The remainder contains a whole warming phase, so we will
+					// be cooling after the timespan.
+					ret.active = true;
+					ret.q_current = getQ_cooling();
+					ret.t_current = calculateTemperatureAfter(remainder
+							- tau_warming, getT_max(), getQ_cooling());
+				}
+			} else {
+				// We started with warming, so the first *full* phase began with
+				// cooling.
+				if (remainder < tau_cooling) {
+					// The remainder cannot contain a whole cooling phase, so we
+					// will still be cooling after the timespan.
+					ret.active = true;
+					ret.q_current = getQ_cooling();
+					ret.t_current = calculateTemperatureAfter(remainder,
+							getT_max(), getQ_cooling());
+				} else {
+					// The remainder contains a whole cooling phase, so we will
+					// be warming after the timespan.
+					ret.active = false;
+					ret.q_current = getQ_warming();
+					ret.t_current = calculateTemperatureAfter(remainder
+							- tau_cooling, getT_min(), getQ_warming());
+				}
+			}
+		}
+		return ret;
+	}
 	
 	/**
 	 * Calculate time needed to reach temperature <code>t_dest</code>,
@@ -560,6 +635,40 @@ public abstract class AbstractFridge extends SimEntityClean {
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes
 		return tau * 60.0;
+	}
+
+	/**
+	 * Calculates the tau_cooling based on the given load. Stores the result
+	 * internally to refer to it in the future and prevent redundant
+	 * calculations.
+	 * 
+	 * @param load
+	 * @return
+	 */
+	public double tauCooling(double load) {
+		Double t_c = loadsToTauCooling.get(load);
+		if (t_c == null) {
+			t_c = tau(getT_max(), getT_min(), load);
+			loadsToTauCooling.put(load, t_c);
+		}
+		return t_c;
+	}
+
+	/**
+	 * Calculates the tau_warming based on the given load. Stores the result
+	 * internally to refer to it in the future and prevent redundant
+	 * calculations.
+	 * 
+	 * @param load
+	 * @return
+	 */
+	public double tauWarming(double load) {
+		Double t_w = loadsToTauWarming.get(load);
+		if (t_w == null) {
+			t_w = tau(getT_min(), getT_max(), load);
+			loadsToTauWarming.put(load, t_w);
+		}
+		return t_w;
 	}
 	
 	public static void resetInstanceCounter() {

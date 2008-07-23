@@ -110,21 +110,19 @@ public class LinearFridge extends AbstractFridge {
 			double previousTemperature, double load) {
 		double ret;
 		if (isActive()) {
-			Double t_c = loadsToTauCooling.get(load);
-			if (t_c == null) {
-				t_c = tau(getT_max(), getT_min(), load);
-				loadsToTauCooling.put(load, t_c);
-			}
 			ret = previousTemperature
-					+ (((getT_min() - getT_max()) / t_c) * elapsedTime);
+					+ (((getT_min() - getT_max()) / tauCooling(load)) * elapsedTime);
 		} else {
-			Double t_w = loadsToTauWarming.get(load);
-			if (t_w == null) {
-				t_w = tau(getT_min(), getT_max(), load);
-				loadsToTauWarming.put(load, t_w);
-			}
 			ret = previousTemperature
-					+ (((getT_max() - getT_min()) / t_w) * elapsedTime);
+					+ (((getT_max() - getT_min()) / tauWarming(load)) * elapsedTime);
+		}
+		// Range check
+		if (ret < getT_min() || ret > getT_max()) {
+			System.err.println(getEventList().getSimTime()
+					+ " ERROR - out of range: " + getName()
+					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime
+					+ ", previousTemperature=" + previousTemperature
+					+ ", load=" + load + ") = " + ret);
 		}
 		return ret;
 	}
