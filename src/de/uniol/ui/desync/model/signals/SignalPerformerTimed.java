@@ -20,7 +20,8 @@ public class SignalPerformerTimed extends AbstractSignalPerformer {
 
 	public void doApplyToController(AbstractController c) {
 		if (!(c instanceof Itlr)) {
-			System.err.println("Wrong controller type: " + c.getName());
+			System.err.println("Wrong controller type for signal TIMED: \""
+					+ c.getName() + '"');
 			return;
 //			throw new IllegalArgumentException("Wrong controller type: "
 //					+ c.getName());

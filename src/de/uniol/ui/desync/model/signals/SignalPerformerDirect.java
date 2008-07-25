@@ -20,7 +20,8 @@ public class SignalPerformerDirect extends AbstractSignalPerformer {
 
 	public void doApplyToController(AbstractController c) {
 		if (!(c instanceof Idsc)) {
-			System.err.println("Wrong controller type: " + c.getName());
+			System.err.println("Wrong controller type for signal DIRECT: '"
+					+ c.getName() + '\'');
 			return;
 //			throw new IllegalArgumentException("Wrong controller type: "
 //					+ c.getName());
