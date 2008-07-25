@@ -16,6 +16,8 @@ public class LinearFridge extends AbstractFridge {
 	protected double announceInterval = 1.0;
 	/** the listener which will be notified about simtime changes */
 	protected PropertyChangeListener timeListener = null;
+	/** error check tolerance for timelistener */
+	protected static double tolerance = 0.0001;
 
 	public LinearFridge(int eventListID) {
 		this("LinearFridge", eventListID);
@@ -36,6 +38,7 @@ public class LinearFridge extends AbstractFridge {
 			if (timeListener == null) {
 				timeListener = new PropertyChangeListener() {
 					private double lastAnnounce = Double.NaN;
+					private double previousTemperature = Double.NaN;
 
 					public void propertyChange(PropertyChangeEvent evt) {
 						Double time = (Double) evt.getNewValue();
@@ -45,6 +48,19 @@ public class LinearFridge extends AbstractFridge {
 							double newTemp = getT_current();
 							LinearFridge f = LinearFridge.this;
 							f.firePropertyChange(PROP_TEMPERATURE, newTemp);
+							// Range check
+							if (newTemp < getT_min() - tolerance
+									|| newTemp > getT_max() + tolerance) {
+								System.err
+										.println(getEventList().getSimTime()
+												+ " ERROR - out of range: "
+												+ getName()
+												+ ".updateTemperature(previousTemperature="
+												+ previousTemperature
+												+ ", load=" + load + ") = "
+												+ newTemp);
+							}
+							previousTemperature = newTemp;
 						}
 					}
 				};
@@ -116,14 +132,6 @@ public class LinearFridge extends AbstractFridge {
 			ret = previousTemperature
 					+ (((getT_max() - getT_min()) / tauWarming(load)) * elapsedTime);
 		}
-		// Range check
-		if (ret < getT_min() || ret > getT_max()) {
-			System.err.println(getEventList().getSimTime()
-					+ " ERROR - out of range: " + getName()
-					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime
-					+ ", previousTemperature=" + previousTemperature
-					+ ", load=" + load + ") = " + ret);
-		}
 		return ret;
 	}
 	
@@ -142,26 +150,26 @@ public class LinearFridge extends AbstractFridge {
 	 * @param t_dest
 	 * @return
 	 */
-	public double tau(double t_from, double t_dest) {
+	public double tau(double t_from, double t_dest, double load) {
 		// Calculate range from t_min to t_max
 		double range = getT_max() - getT_min();
 		// Check direction: warming or cooling
 		if (t_from < t_dest) {
 			// Calculate tau_warming if not already done
-			Double t_w = loadsToTauWarming.get(getQ_warming());
+			Double t_w = loadsToTauWarming.get(load);
 			if (t_w == null) {
-				t_w = tau(getT_min(), getT_max(), getQ_warming());
-				loadsToTauWarming.put(getQ_warming(), t_w);
+				t_w = super.tau(getT_min(), getT_max(), load);
+				loadsToTauWarming.put(load, t_w);
 			}
 			// Calculate fraction of desired range by maximal range and return
 			// resulting proportion of tau_warming
 			return ((t_dest - t_from) / range) * t_w;
 		} else {
 			// Calculate tau_cooling if not already done
-			Double t_c = loadsToTauCooling.get(getQ_cooling());
+			Double t_c = loadsToTauCooling.get(load);
 			if (t_c == null) {
-				t_c = tau(getT_max(), getT_min(), getQ_cooling());
-				loadsToTauCooling.put(getQ_cooling(), t_c);
+				t_c = super.tau(getT_max(), getT_min(), load);
+				loadsToTauCooling.put(load, t_c);
 			}
 			// Calculate fraction of desired range by maximal range and return
 			// resulting proportion of tau_cooling

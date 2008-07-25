@@ -50,7 +50,7 @@ public class BaseControllerCompactLinear extends AbstractController {
 		// Update load
 		fridge.setLoad(load);
 		// Calcuate time to reach t_dest
-		double timespan = ((LinearFridge)fridge).tau(t_current, t_dest);
+		double timespan = fridge.tau(t_current, t_dest, load);
 		// Update action timestamp
 		((LinearFridge) fridge).setLastActionTime(getEventList().getSimTime());
 		// If we are cooling right now, begin warming next, and the other way,

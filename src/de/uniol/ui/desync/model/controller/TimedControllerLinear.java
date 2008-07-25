@@ -13,14 +13,16 @@ public class TimedControllerLinear extends BaseControllerLinear implements
 	protected classes classifyFridge(Double tau_preload, Double tau_reduce) {
 		LinearFridge f = (LinearFridge) fridge;
 		// Time to warmup from T_min to T_max
-		double tau_warming = f.tau(f.getT_min(), f.getT_max());
+		double tau_warming = f
+				.tau(f.getT_min(), f.getT_max(), f.getQ_warming());
 		if (tau_warming < tau_reduce) {
 			// We will not be able to survive tau_reduce, regardless of our
 			// current temperature
 //			return classes.BLACK;
 		}
 		// Time to cooldown from T_max to T_min
-		double tau_cooling = f.tau(f.getT_max(), f.getT_min());
+		double tau_cooling = f
+				.tau(f.getT_max(), f.getT_min(), f.getQ_cooling());
 		// Time to warmup from T_min to T_max_act (this allows us to calculate
 		// T_max_act)
 		double tau_T_min_to_T_max_act = tau_warming - tau_reduce;
@@ -28,7 +30,8 @@ public class TimedControllerLinear extends BaseControllerLinear implements
 		double T_max_act = f.calculateTemperatureAfter(tau_T_min_to_T_max_act,
 				f.getT_min(), f.getQ_warming());
 		// Time to cooldown from T_max to T_allowed_act
-		double tau_T_max_to_T_max_act = f.tau(f.getT_max(), T_max_act);
+		double tau_T_max_to_T_max_act = f.tau(f.getT_max(), T_max_act, f
+				.getQ_cooling());
 		// Time to cooldown from T_max to T_max_not (this allows us to calculate
 		// T_max_not)
 		double tau_T_max_to_T_max_not = tau_T_max_to_T_max_act - tau_preload;

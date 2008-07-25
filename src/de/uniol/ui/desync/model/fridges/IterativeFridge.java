@@ -49,6 +49,14 @@ public class IterativeFridge extends AbstractFridge {
 		t_current = calculateTemperatureAfter(tau, t_current, load);
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
+		// Range check
+		if ((isActive() && t_previous < getT_min())
+				|| (!isActive() && t_previous > getT_max())) {
+			System.err.println(getEventList().getSimTime()
+					+ " ERROR - out of range: " + getName()
+					+ ".updateTemperature(previousTemperature=" + t_previous
+					+ ", load=" + load + ") = " + t_current);
+		}
 		// Return
 		return t_current;
 	}
@@ -58,20 +66,9 @@ public class IterativeFridge extends AbstractFridge {
 		// Virtually simulate 'elapsedTime' time steps further from now on to
 		// calculate the temperature how it would be
 		double ret = previousTemperature;
-		double bak = previousTemperature;
 		for (double i = tau; i <= elapsedTime; i += tau) {
-			bak = ret;
 			ret = (eps * ret)
 					+ ((1 - eps) * (t_surround - (eta * (load / a))));
-		}
-		// Range check
-		if ((isActive() && bak < getT_min())
-				|| (!isActive() && bak > getT_max())) {
-			System.err.println(getEventList().getSimTime()
-					+ " ERROR - out of range: " + getName()
-					+ ".calculateTemperatureAfter(elapsedTime=" + elapsedTime
-					+ ", previousTemperature=" + previousTemperature
-					+ ", load=" + load + ") = " + ret);
 		}
 		return ret;
 	}

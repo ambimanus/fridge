@@ -3,13 +3,11 @@ package de.uniol.ui.desync.model.controller.extended;
 import de.uniol.ui.desync.model.controller.DirectControllerCompactLinear;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 
-public class StatefulDirectCompactLinear extends DirectControllerCompactLinear {
+public class StatefulDirectCompactLinear extends DirectControllerCompactLinear
+		implements IStateful {
 
-	public final static String EV_RESTORE_STATE = "RestoreState";
-	
-	private double temp = Double.NaN;
-	private boolean active;
-	private boolean doUnload = false;
+	protected boolean active;
+	protected boolean doUnload = false;
 	
 	public StatefulDirectCompactLinear(LinearFridge fridge, int eventListID) {
 		super(fridge, eventListID);
@@ -26,17 +24,32 @@ public class StatefulDirectCompactLinear extends DirectControllerCompactLinear {
 	}
 
 	public void doDeleteAndTargetTo(Double t_dest, Double load) {
-		this.temp = fridge.getT_current();
 		this.active = fridge.isActive();
 		if (!doUnload && !active) {
-			double time = ((LinearFridge) fridge).tau(temp, fridge.getT_min());
-			double t_crossing = fridge.getT_min() + fridge.getT_max() - temp;
-			time += ((LinearFridge) fridge).tau(fridge.getT_min(), t_crossing);
+			double temp = fridge.getT_current();
+			// T_crossing = temperature where regular and modified will cross
+			// the first time
+			double T_crossing = fridge.getT_min() + fridge.getT_max() - temp;
+			// timespan to this first crossing = time to cool down to T_min ...
+			double time = fridge.tau(temp, fridge.getT_min(), fridge
+					.getQ_cooling())
+					// ... + time to warm up to T_crossing
+					+ fridge.tau(fridge.getT_min(), T_crossing, fridge
+							.getQ_warming());
+			// schedule RESTORE_STATE at this future point in time
 			waitDelay(EV_RESTORE_STATE, time);
 		} else if (doUnload && active) {
-			double time = ((LinearFridge) fridge).tau(temp, fridge.getT_max());
-			double t_crossing = fridge.getT_min() + fridge.getT_max() - temp;
-			time += ((LinearFridge) fridge).tau(fridge.getT_max(), t_crossing);
+			double temp = fridge.getT_current();
+			// T_crossing = temperature where regular and modified will cross
+			// the first time
+			double T_crossing = fridge.getT_min() + fridge.getT_max() - temp;
+			// timespan to this first crossing = time to warm up to T_max ...
+			double time = fridge.tau(temp, fridge.getT_max(), fridge
+					.getQ_warming())
+					// ... + time to cool down to T_crossing
+					+ fridge.tau(fridge.getT_max(), T_crossing, fridge
+							.getQ_cooling());
+			// schedule RESTORE_STATE at this future point in time
 			waitDelay(EV_RESTORE_STATE, time);
 		}
 		super.doDeleteAndTargetTo(t_dest, load);
