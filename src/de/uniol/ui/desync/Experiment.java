@@ -19,7 +19,6 @@ import de.uniol.ui.desync.model.controller.DirectControllerLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
-import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
@@ -180,6 +179,9 @@ public class Experiment {
 				}
 				case TIMED: {
 					c = new TimedControllerCompactLinear((LinearFridge) f, list);
+//					c = new StatefulTimedCompactLinear((LinearFridge) f, list);
+//conf.strategy = Configuration.STRATEGIES.NONE;
+// TODO
 					break;
 				}
 				}
@@ -204,7 +206,7 @@ public class Experiment {
 			// Store created fridge
 			fridges.add(f);
 		}
-//conf.strategy = Configuration.STRATEGIES.DIRECT;
+//conf.strategy = Configuration.STRATEGIES.TIMED;
 // TODO
 		return fridges;
 	}

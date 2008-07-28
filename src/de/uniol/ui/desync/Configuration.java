@@ -32,7 +32,7 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 5000;
+	public int POPULATION_SIZE = 1000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
@@ -49,6 +49,6 @@ public class Configuration {
 	
 	/* Strategy params: timed load reduction */
 	public double timed_t_notify = 90.0;
-	public double timed_tau_activ = 30.0;
-	public double timed_tau_reduce = 120.0;
+	public double timed_tau_activ = 29.0;
+	public double timed_tau_reduce = 100.0;
 }
