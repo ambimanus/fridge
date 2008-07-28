@@ -46,7 +46,7 @@ public class IterativeFridge extends AbstractFridge {
 	public double updateTemperature() {
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
-		t_current = calculateTemperatureAfter(tau, t_current, load);
+		t_current = calculateTemperatureAfter(isActive(), tau, t_current, load);
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Range check
@@ -61,7 +61,7 @@ public class IterativeFridge extends AbstractFridge {
 		return t_current;
 	}
 	
-	public double calculateTemperatureAfter(double elapsedTime,
+	public double calculateTemperatureAfter(boolean active, double elapsedTime,
 			double previousTemperature, double load) {
 		// Virtually simulate 'elapsedTime' time steps further from now on to
 		// calculate the temperature how it would be

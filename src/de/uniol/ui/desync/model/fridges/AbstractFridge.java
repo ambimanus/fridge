@@ -532,16 +532,19 @@ public abstract class AbstractFridge extends SimEntityClean {
 
 	/**
 	 * Calculates the temperature how it would be after the given elapsed time
-	 * from now on, based on the specified starting temperature and <u>constant</u>
-	 * load. <b>No phase changes will be considered!</b>
+	 * from now on, based on the specified starting temperature and
+	 * <u>constant</u> load. The parameter <code>active</code> specifies the
+	 * phase of this device. <b>No phase changes will be considered!</b>
 	 * 
+	 * @param active
 	 * @param elapsedTime
 	 * @param previousTemperature
 	 * @param load
+	 * 
 	 * @return
 	 */
-	public abstract double calculateTemperatureAfter(double elapsedTime,
-			double previousTemperature, double load);
+	public abstract double calculateTemperatureAfter(boolean active,
+			double elapsedTime, double previousTemperature, double load);
 
 	/**
 	 * Calculates the state of the fridge how it would be after the given
@@ -556,17 +559,17 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 */
 	public State calculateStateAfterLongRun(State current, double timespan) {
 		// Calculate base timespans
-		double tau_phaseChange = tau(current.t_current,
-				current.active ? getT_min() : getT_max(), current.q_current);
+		double tau_phaseChange = tau(current.t,
+				current.active ? getT_min() : getT_max(), current.q);
 		double tau_cooling = tauCooling(getQ_cooling());
 		double tau_warming = tauWarming(getQ_warming());
 		State ret = new State();
 		if (timespan <= tau_phaseChange) {
 			// No phase change occurs in the given timespan.
 			ret.active = current.active;
-			ret.q_current = current.q_current;
-			ret.t_current = calculateTemperatureAfter(timespan,
-					current.t_current, current.q_current);
+			ret.q = current.q;
+			ret.t = calculateTemperatureAfter(current.active, timespan,
+					current.t, current.q);
 		} else {
 			// At least one phase change will occur in given timespan.
 			// ts = remaining timespan after first phase change
@@ -584,15 +587,15 @@ public abstract class AbstractFridge extends SimEntityClean {
 					// The remainder cannot contain a whole warming phase, so we
 					// will still be warming after the timespan.
 					ret.active = false;
-					ret.q_current = getQ_warming();
-					ret.t_current = calculateTemperatureAfter(remainder,
+					ret.q = getQ_warming();
+					ret.t = calculateTemperatureAfter(false, remainder,
 							getT_min(), getQ_warming());
 				} else {
 					// The remainder contains a whole warming phase, so we will
 					// be cooling after the timespan.
 					ret.active = true;
-					ret.q_current = getQ_cooling();
-					ret.t_current = calculateTemperatureAfter(remainder
+					ret.q = getQ_cooling();
+					ret.t = calculateTemperatureAfter(true, remainder
 							- tau_warming, getT_max(), getQ_cooling());
 				}
 			} else {
@@ -602,15 +605,15 @@ public abstract class AbstractFridge extends SimEntityClean {
 					// The remainder cannot contain a whole cooling phase, so we
 					// will still be cooling after the timespan.
 					ret.active = true;
-					ret.q_current = getQ_cooling();
-					ret.t_current = calculateTemperatureAfter(remainder,
+					ret.q = getQ_cooling();
+					ret.t = calculateTemperatureAfter(true, remainder,
 							getT_max(), getQ_cooling());
 				} else {
 					// The remainder contains a whole cooling phase, so we will
 					// be warming after the timespan.
 					ret.active = false;
-					ret.q_current = getQ_warming();
-					ret.t_current = calculateTemperatureAfter(remainder
+					ret.q = getQ_warming();
+					ret.t = calculateTemperatureAfter(false, remainder
 							- tau_cooling, getT_min(), getQ_warming());
 				}
 			}
