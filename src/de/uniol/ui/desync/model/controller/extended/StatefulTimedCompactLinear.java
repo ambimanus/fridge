@@ -8,8 +8,10 @@ import de.uniol.ui.desync.util.Geometry;
 public class StatefulTimedCompactLinear extends
 		TimedControllerCompactLinear implements IStateful {
 
+	protected final static String EV_CALCULATE_ACTION = "CalculateAction";
 	protected final static String EV_CALCULATE_STATE = "CalculateState";
 	
+	protected State originalState;
 	protected State regularState;
 	protected State desiredState;
 
@@ -18,17 +20,33 @@ public class StatefulTimedCompactLinear extends
 		super(fridge, eventListID);
 	}
 
-	/*
-	 * Stateful mod of regular timed controller. WARNING: This mod assumes that
-	 * the default load values q_cooling and q_warming have been used.
-	 */
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
 		super.doReduceLoad(tau_preload, tau_reduce);
-		// Calculate and memorize state of regular fridge after reduce interval
-		regularState = fridge.calculateStateAfterLongRun(new State(fridge),
-				tau_preload + tau_reduce);
-		// Schedule state comparison after reduce interval
-		waitDelay(EV_CALCULATE_STATE, tau_preload + tau_reduce);
+		// Memorize current (original) state of the fridge
+		originalState = new State(fridge);
+		// Schedule calculation of state restoration plan at t_activ
+		waitDelay(EV_CALCULATE_ACTION, tau_preload, tau_reduce);
+	}
+	
+	public void doCalculateAction(Double tau_reduce) {
+		// Calculate the optimal point in time when to restore the regular state
+		double warmingEnd = fridge.tau(fridge.getT_current(),
+				fridge.getT_max(), fridge.getQ_warming());
+		if (warmingEnd < tau_reduce) {
+			// If we have to cooldown before the end of the reduce interval,
+			// schedule the state restoration at that point
+			waitDelay(EV_CALCULATE_STATE, warmingEnd);
+			// Calculate and memorize state of regular fridge at that point
+			regularState = fridge.calculateStateAfterLongRun(originalState,
+					warmingEnd);
+		} else {
+			// If we can survive tau_reduce, schedule the state restoration
+			// immediately after the reduce interval
+			waitDelay(EV_CALCULATE_STATE, tau_reduce);
+			// Calculate and memorize state of regular fridge at that point
+			regularState = fridge.calculateStateAfterLongRun(originalState,
+					tau_reduce);
+		}
 	}
 	
 	public void doCalculateState() {
