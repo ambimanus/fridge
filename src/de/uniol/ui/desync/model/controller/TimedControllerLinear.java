@@ -1,5 +1,9 @@
 package de.uniol.ui.desync.model.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import de.uniol.ui.desync.model.controller.TimedClassifier.classes;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.signals.Itlr;
 
@@ -9,90 +13,110 @@ public class TimedControllerLinear extends BaseControllerLinear implements
 	public TimedControllerLinear(LinearFridge fridge, int eventListID) {
 		super(fridge, eventListID);
 	}
-	
-	protected classes classifyFridge(Double tau_preload, Double tau_reduce) {
-		LinearFridge f = (LinearFridge) fridge;
-		// Time to warmup from T_min to T_max
-		double tau_warming = f.tauWarming(f.getQ_warming());
-		if (tau_warming < tau_reduce) {
-			// We will not be able to survive tau_reduce, regardless of our
-			// current temperature
-//			return classes.BLACK;
-		}
-		// Time to cooldown from T_max to T_min
-		double tau_cooling = f.tauCooling(f.getQ_cooling());
-		// Time to warmup from T_min to T_max_act (this allows us to calculate
-		// T_max_act)
-		double tau_T_min_to_T_max_act = tau_warming - tau_reduce;
-		// Maximal temperature after tau_preload to extactly fit into tau_reduce
-		double T_max_act = f.calculateTemperatureAfter(tau_T_min_to_T_max_act,
-				f.getT_min(), f.getQ_warming());
-		// Time to cooldown from T_max to T_allowed_act
-		double tau_T_max_to_T_max_act = f.tau(f.getT_max(), T_max_act, f
-				.getQ_cooling());
-		// Time to cooldown from T_max to T_max_not (this allows us to calculate
-		// T_max_not)
-		double tau_T_max_to_T_max_not = tau_T_max_to_T_max_act - tau_preload;
-		// Maximal temperature at T_notify to reach T_max_act
-		double T_max_not = f.calculateTemperatureAfter(tau_T_max_to_T_max_not,
-				f.getT_max(), f.getQ_cooling());
-		// Maximal temperature at T_notify to reach T_min after tau_preload
-		double T_mid_not = f.calculateTemperatureAfter(tau_cooling
-				- tau_preload, f.getT_max(), f.getQ_cooling());
-		// Maximal temperature at T_notify to survive tau_reduce without preload
-		double T_min_not = f.calculateTemperatureAfter(tau_T_min_to_T_max_act
-				- tau_preload, f.getT_min(), f.getQ_warming());
-
-		double t_current = f.getT_current();
-		if (t_current > T_max_not) {
-			// Class red: Fridge will not reach T_max_act
-			return classes.RED;
-		} else if (t_current > T_mid_not) {
-			// Class orange: Fridge can reach T_max_act, but not T_min
-			return classes.ORANGE;
-		} else if (t_current > T_min_not) {
-			// Class green: Fridge can reach T_min
-			return classes.GREEN;
-		} else {
-			// Class blue: Fridge does not need to cooldown any more
-			return classes.BLUE;
-		}
-	}
 
 	public void doReduceLoad(Double tau_preload, Double tau_reduce) {
-		// Cancel pending cooling program
-		interruptAll(EV_BEGIN_COOLING);
-		interruptAll(EV_BEGIN_WARMING);
 		// Classify f to apply proper cooling program
-		classes c = classifyFridge(tau_preload, tau_reduce);
+		double now = getEventList().getSimTime();
+		TimedClassifier tc = new TimedClassifier(fridge);
+		classes c = tc.classifyFridge(now, tau_preload, tau_reduce);
 		switch (c) {
 		case BLACK: {
-			// TODO
+			System.err.println(getName()
+					+ ": class BLACK, this should not happen.");
+			break;
+		}
+		case BROWN: {
+			// Find first field starting in the future (except the red one)
+			ArrayList<Double> fields = new ArrayList<Double>();
+			fields.add(tc.getTA());
+			fields.add(tc.getTB());
+			fields.add(tc.getTC());
+			fields.add(tc.getTD());
+			Collections.sort(fields);
+			int i = 0;
+			double firstField = fields.get(i);
+			while (firstField <= now && i < 2) {
+				i++;
+				firstField = fields.get(i);
+			}
+			double delay = firstField - now;
+			if (delay > 0.0 && delay < tau_preload) {
+				// If a field has been found, which begins in future time, and
+				// before tAct, schedule this method again at that point in
+				// time.
+				waitDelay(EV_REDUCE_LOAD, delay, tau_preload - delay,
+						tau_reduce);
+			} else {
+				// The fields GREEN, BLUE and ORANGE started in the past, so the
+				// best would be to immediately start cooling as much as
+				// possible.
+				double t_current = fridge.getT_current();
+				if (fridge.tau(t_current, fridge.getT_min(), fridge
+						.getQ_cooling()) <= tau_preload) {
+					// Enough time to cool to t_min:
+					// Cancel pending cooling program
+					interruptAll(EV_BEGIN_COOLING);
+					interruptAll(EV_BEGIN_WARMING);
+					// Cooldown to T_min
+					waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getT_min(), fridge
+							.getQ_cooling());
+				} else {
+					// Not enough time to cool to t_min. Check if it's okay to
+					// cool till t_act:
+					double t_dest = fridge.calculateTemperatureAfter(true,
+							tau_preload, t_current, fridge.getQ_cooling());
+					if (t_dest >= fridge.getT_min()) {
+						// Cancel pending cooling program
+						interruptAll(EV_BEGIN_COOLING);
+						interruptAll(EV_BEGIN_WARMING);
+						// Cooldown till t_act
+						waitDelay(EV_BEGIN_COOLING, 0.0, t_dest, fridge
+								.getQ_cooling());
+					} else {
+						// Nothing can be done here, just go on with regular
+						// cooling program.
+						System.err.println(getName()
+								+ " - cannot apply a cooling program.");
+					}
+				}
+			}
 			break;
 		}
 		case RED: {
+			// Cancel pending cooling program
+			interruptAll(EV_BEGIN_COOLING);
+			interruptAll(EV_BEGIN_WARMING);
 			// Cooldown till t_act
 			double t_current = fridge.getT_current();
 			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.calculateTemperatureAfter(
-					tau_preload, t_current, fridge.getQ_cooling()), fridge
-					.getQ_cooling());
+					true, tau_preload, t_current, fridge.getQ_cooling()),
+					fridge.getQ_cooling());
 			break;
 		}
 		case ORANGE: {
+			// Cancel pending cooling program
+			interruptAll(EV_BEGIN_COOLING);
+			interruptAll(EV_BEGIN_WARMING);
 			// Cooldown till t_act
 			double t_current = fridge.getT_current();
 			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.calculateTemperatureAfter(
-					tau_preload, t_current, fridge.getQ_cooling()), fridge
-					.getQ_cooling());
+					true, tau_preload, t_current, fridge.getQ_cooling()),
+					fridge.getQ_cooling());
 			break;
 		}
 		case GREEN: {
+			// Cancel pending cooling program
+			interruptAll(EV_BEGIN_COOLING);
+			interruptAll(EV_BEGIN_WARMING);
 			// Cooldown to T_min
 			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getT_min(), fridge
 					.getQ_cooling());
 			break;
 		}
 		case BLUE: {
+			// Cancel pending cooling program
+			interruptAll(EV_BEGIN_COOLING);
+			interruptAll(EV_BEGIN_WARMING);
 			// Cooldown to T_min
 			waitDelay(EV_BEGIN_COOLING, 0.0, fridge.getT_min(), fridge
 					.getQ_cooling());
