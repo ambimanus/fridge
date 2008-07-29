@@ -16,8 +16,12 @@ import de.uniol.ui.desync.model.controller.BaseControllerLinear;
 import de.uniol.ui.desync.model.controller.DirectControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.DirectControllerIterative;
 import de.uniol.ui.desync.model.controller.DirectControllerLinear;
+import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
+import de.uniol.ui.desync.model.controller.extended.RandomizedDirectCompactLinear;
+import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinearFullWidth;
+import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinearHalfWidth;
 import de.uniol.ui.desync.model.controller.extended.StatefulTimedCompactLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
@@ -171,15 +175,46 @@ public class Experiment {
 					break;
 				}
 				case DIRECT: {
-					c = new DirectControllerCompactLinear((LinearFridge) f, list);
-//					c = new StatefulDirectCompactLinear((LinearFridge) f, list);
+					switch(conf.damping) {
+					case NONE: {
+						c = new DirectControllerCompactLinear((LinearFridge) f, list);
+						break;
+					}
+					case RANDOM: {
+						c = new RandomizedDirectCompactLinear((LinearFridge) f, list);
+						break;
+					}
+					case STATEFUL_HALF: {
+						c = new StatefulDirectCompactLinearHalfWidth(
+								(LinearFridge) f, list);
+						break;
+					}
+					case STATEFUL_FULL: {
+						c = new StatefulDirectCompactLinearFullWidth(
+								(LinearFridge) f, list);
+						break;
+					}
+					}
 //conf.strategy = Configuration.STRATEGIES.NONE;
 // TODO
 					break;
 				}
 				case TIMED: {
-//					c = new TimedControllerCompactLinear((LinearFridge) f, list);
-					c = new StatefulTimedCompactLinear((LinearFridge) f, list);
+					switch(conf.damping) {
+					case NONE: {
+						c = new TimedControllerCompactLinear((LinearFridge) f, list);
+						break;
+					}
+					case RANDOM: {
+//						c = new RandomizedTimedCompactLinear((LinearFridge) f, list);
+						break;
+					}
+					case STATEFUL_HALF:
+					case STATEFUL_FULL: {
+						c = new StatefulTimedCompactLinear((LinearFridge) f, list);
+						break;
+					}
+					}
 //conf.strategy = Configuration.STRATEGIES.NONE;
 // TODO
 					break;
@@ -207,6 +242,7 @@ public class Experiment {
 			fridges.add(f);
 		}
 //conf.strategy = Configuration.STRATEGIES.TIMED;
+//conf.strategy = Configuration.STRATEGIES.DIRECT;
 // TODO
 		return fridges;
 	}

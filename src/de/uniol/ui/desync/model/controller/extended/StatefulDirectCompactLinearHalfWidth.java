@@ -3,13 +3,13 @@ package de.uniol.ui.desync.model.controller.extended;
 import de.uniol.ui.desync.model.controller.DirectControllerCompactLinear;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 
-public class StatefulDirectCompactLinear extends DirectControllerCompactLinear
+public class StatefulDirectCompactLinearHalfWidth extends DirectControllerCompactLinear
 		implements IStateful {
 
 	protected boolean active;
 	protected boolean doUnload = false;
 	
-	public StatefulDirectCompactLinear(LinearFridge fridge, int eventListID) {
+	public StatefulDirectCompactLinearHalfWidth(LinearFridge fridge, int eventListID) {
 		super(fridge, eventListID);
 	}
 

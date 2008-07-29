@@ -9,9 +9,13 @@ public class Configuration {
 	public static enum MODELS {
 		ITERATIVE, LINEAR, COMPACT_LINEAR
 	}
-	/** Available strategies*/
+	/** Available strategies */
 	public static enum STRATEGIES {
 		NONE, DIRECT, TIMED
+	}
+	/** Available damping strategies */
+	public static enum DAMPINGS {
+		NONE, RANDOM, STATEFUL_HALF, STATEFUL_FULL
 	}
 
 	/* Population params */
@@ -39,6 +43,8 @@ public class Configuration {
 	public MODELS model = MODELS.COMPACT_LINEAR;
 	/** Used strategy */
 	public STRATEGIES strategy = STRATEGIES.TIMED;
+	/** Used damping */
+	public DAMPINGS damping = DAMPINGS.NONE;
 	/** Show results? */
 	public boolean showResults = true;
 	
@@ -49,6 +55,6 @@ public class Configuration {
 	
 	/* Strategy params: timed load reduction */
 	public double timed_t_notify = 90.0;
-	public double timed_tau_activ = 29.0;
-	public double timed_tau_reduce = 100.0;
+	public double timed_tau_activ = 30.0;
+	public double timed_tau_reduce = 120.0;
 }
