@@ -20,6 +20,7 @@ import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.TimedControllerIterative;
 import de.uniol.ui.desync.model.controller.TimedControllerLinear;
 import de.uniol.ui.desync.model.controller.extended.RandomizedDirectCompactLinear;
+import de.uniol.ui.desync.model.controller.extended.RandomizedTimedCompactLinear;
 import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinearFullWidth;
 import de.uniol.ui.desync.model.controller.extended.StatefulDirectCompactLinearHalfWidth;
 import de.uniol.ui.desync.model.controller.extended.StatefulTimedCompactLinear;
@@ -206,7 +207,7 @@ public class Experiment {
 						break;
 					}
 					case RANDOM: {
-//						c = new RandomizedTimedCompactLinear((LinearFridge) f, list);
+						c = new RandomizedTimedCompactLinear((LinearFridge) f, list);
 						break;
 					}
 					case STATEFUL_HALF:
