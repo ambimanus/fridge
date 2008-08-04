@@ -5,15 +5,15 @@ import de.uniol.ui.desync.model.fridges.AbstractFridge;
 public class TimedClassifier {
 
 	public static enum classes {
-		BLACK, RED, ORANGE, GREEN, BLUE, BROWN
+		Z, A, B, B1, C, C1, D
 	}
 	
 	protected AbstractFridge f;
-	
-	protected double tC = Double.NaN;
-	protected double tD = Double.NaN;
-	protected double tB = Double.NaN;
+
 	protected double tA = Double.NaN;
+	protected double tB = Double.NaN;
+	protected double tC = Double.NaN;
+	protected double tC1 = Double.NaN;
 	
 	public TimedClassifier(AbstractFridge f) {
 		this.f = f;
@@ -26,40 +26,45 @@ public class TimedClassifier {
 		double tauC = f.tauCooling(f.getQ_cooling());
 		double tauW = f.tauWarming(f.getQ_warming());
 		tC = tAct + tau_reduce - tauW - tauC;
-		tD = tAct + tau_reduce - tauW;
+		tC1 = tAct + tau_reduce - tauW;
 		tB = tAct - tauC;
-		double TMaxAct = sCD(tAct);
+		double TMaxAct = sCC1(tAct);
 		double ac = ((f.getT_min() - f.getT_max()) / f.tauCooling(f
 				.getQ_cooling()));
 		tA = tAct - ((TMaxAct - f.getT_max()) / ac);
 		double Tt = f.getT_current();
-		double sEC = sEC(t);
-		double sCD = sCD(t);
+		double sDC = sDC(t);
+		double sCC1 = sCC1(t);
 		double sCB = sCB(t);
 		double sBA = sBA(t);
 		// Classify fridge
-		if (Tt < sEC) {
-			// Class brown: too much time till tAct
-			return classes.BROWN;
-		} else if (Tt >= sEC && Tt > sCD && Tt <= sCB) {
-			// Class green: Fridge can reach T_min
-			return classes.GREEN;
-		} else if (Tt <= sCD) {
-			// Class blue: Fridge does not need to cooldown any more
-			return classes.BLUE;
-		} else if (Tt > sCB && Tt <= sBA) {
-			// Class orange: Fridge can reach T_max_act, but not T_min
-			return classes.ORANGE;
-		} else if (Tt > sBA) {
-			// Class red: Fridge will not reach T_max_act
-			return classes.RED;
+		if (Tt > sBA) {
+			// Class A: Fridge will not reach T_max_act
+			return classes.A;
+		} else if (Tt > sCB && Tt <= sBA && Tt > sCC1) {
+			// Class B: Fridge can reach T_max_act, but not T_min
+			return classes.B;
+		} else if (Tt <= sCC1 && Tt > sCB) {
+			// Class B1: Fridge does not need to cooldown any more, but is able
+			// to reach Tmin
+			return classes.B1;
+		} else if (Tt >= sDC && Tt > sCC1 && Tt <= sCB) {
+			// Class C: Fridge can reach T_min
+			return classes.C;
+		} else if (Tt <= sCC1 && Tt <= sCB) {
+			// Class C1: Fridge does not need to cooldown any more, but cannot
+			// reach Tmin
+			return classes.C1;
+		} else if (Tt < sDC) {
+			// Class E: too much time till tAct
+			return classes.D;
 		} else {
-			// Class black: Should not happen!!
-			return classes.BLACK;
+			// Class Z: Should not happen!!
+			return classes.Z;
 		}
 	}
 	
-	protected double sEC(double t) {
+	protected double sDC(double t) {
 		if (f == null || Double.isNaN(tC)) {
 			return Double.NaN;
 		}
@@ -68,13 +73,13 @@ public class TimedClassifier {
 						.getQ_cooling())) * (t - tC));
 	}
 	
-	protected double sCD(double t) {
+	protected double sCC1(double t) {
 		if (f == null || Double.isNaN(tC)) {
 			return Double.NaN;
 		}
 		return f.getT_min()
 				+ (((f.getT_max() - f.getT_min()) / f.tauWarming(f
-						.getQ_warming())) * (t - tD));
+						.getQ_warming())) * (t - tC1));
 	}
 	
 	protected double sCB(double t) {
@@ -95,19 +100,19 @@ public class TimedClassifier {
 						.getQ_cooling())) * (t - tA));
 	}
 
-	public double getTC() {
-		return tC;
-	}
-
-	public double getTD() {
-		return tD;
+	public double getTA() {
+		return tA;
 	}
 
 	public double getTB() {
 		return tB;
 	}
 
-	public double getTA() {
-		return tA;
+	public double getTC() {
+		return tC;
+	}
+
+	public double getTC1() {
+		return tC1;
 	}
 }

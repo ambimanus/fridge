@@ -161,16 +161,4 @@ public class StatefulTimedCompactLinear extends
 		waitDelay(EV_TARGET_TO, 0.0, desiredState.active ? fridge.getT_min()
 				: fridge.getT_max(), desiredState.q);
 	}
-
-	/**
-	 * Helper class which represents a line segment.
-	 * 
-	 * @author Chh
-	 */
-	protected class Line {
-		public double x1;
-		public double y1;
-		public double x2;
-		public double y2;
-	}
 }
