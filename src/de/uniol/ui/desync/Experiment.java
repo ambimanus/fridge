@@ -70,7 +70,7 @@ public class Experiment {
 		
 		// Create fridges
 		ArrayList<AbstractFridge> fridges = createFridges(el.getID());
-		if (conf.strategy != Configuration.STRATEGIES.NONE) {
+		if (conf.strategy != Configuration.SIGNAL.NONE) {
 			// Create ControlCenter and Strategy
 			new ControlCenter(el.getID(), fridges, createStrategy(el.getID()));
 		}
@@ -139,11 +139,11 @@ public class Experiment {
 					c = new BaseControllerIterative((IterativeFridge) f, list);
 					break;
 				}
-				case DIRECT: {
+				case DSC: {
 					c = new DirectControllerIterative((IterativeFridge) f, list);
 					break;
 				}
-				case TIMED: {
+				case TLR: {
 					c = new TimedControllerIterative((IterativeFridge) f, list);
 					break;
 				}
@@ -157,11 +157,11 @@ public class Experiment {
 					c = new BaseControllerLinear((LinearFridge) f, list);
 					break;
 				}
-				case DIRECT: {
+				case DSC: {
 					c = new DirectControllerLinear((LinearFridge) f, list);
 					break;
 				}
-				case TIMED: {
+				case TLR: {
 					c = new TimedControllerLinear((LinearFridge) f, list);
 					break;
 				}
@@ -175,7 +175,7 @@ public class Experiment {
 					c = new BaseControllerCompactLinear((LinearFridge) f, list);
 					break;
 				}
-				case DIRECT: {
+				case DSC: {
 					switch(conf.damping) {
 					case NONE: {
 						c = new DirectControllerCompactLinear((LinearFridge) f, list);
@@ -196,11 +196,11 @@ public class Experiment {
 						break;
 					}
 					}
-//conf.strategy = Configuration.STRATEGIES.NONE;
+//conf.strategy = Configuration.SIGNAL.NONE;
 // TODO
 					break;
 				}
-				case TIMED: {
+				case TLR: {
 					switch(conf.damping) {
 					case NONE: {
 						c = new TimedControllerCompactLinear((LinearFridge) f, list);
@@ -216,7 +216,7 @@ public class Experiment {
 						break;
 					}
 					}
-//conf.strategy = Configuration.STRATEGIES.NONE;
+//conf.strategy = Configuration.SIGNAL.NONE;
 // TODO
 					break;
 				}
@@ -253,12 +253,12 @@ public class Experiment {
 		case NONE: {
 			return null;
 		}
-		case DIRECT: {
+		case DSC: {
 			return new SignalPerformerDirect(eventListID,
 					conf.direct_t_notify, conf.direct_spread,
 					conf.direct_doUnload);
 		}
-		case TIMED: {
+		case TLR: {
 			return new SignalPerformerTimed(eventListID, conf.timed_t_notify,
 					conf.timed_tau_activ, conf.timed_tau_reduce);
 		}

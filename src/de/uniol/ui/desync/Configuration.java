@@ -6,15 +6,15 @@ public class Configuration {
 
 	/* Constants */
 	/** Available model types */
-	public static enum MODELS {
+	public static enum MODEL {
 		ITERATIVE, LINEAR, COMPACT_LINEAR
 	}
 	/** Available strategies */
-	public static enum STRATEGIES {
-		NONE, DIRECT, TIMED
+	public static enum SIGNAL {
+		NONE, DSC, TLR
 	}
 	/** Available damping strategies */
-	public static enum DAMPINGS {
+	public static enum DAMPING {
 		NONE, RANDOM, STATEFUL_HALF, STATEFUL_FULL
 	}
 
@@ -36,15 +36,15 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 5000;
+	public int POPULATION_SIZE = 1000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
-	public MODELS model = MODELS.COMPACT_LINEAR;
+	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public STRATEGIES strategy = STRATEGIES.TIMED;
+	public SIGNAL strategy = SIGNAL.TLR;
 	/** Used damping */
-	public DAMPINGS damping = DAMPINGS.RANDOM;
+	public DAMPING damping = DAMPING.NONE;
 	/** Show results? */
 	public boolean showResults = true;
 	
@@ -55,6 +55,6 @@ public class Configuration {
 	
 	/* Strategy params: timed load reduction */
 	public double timed_t_notify = 90.0;
-	public double timed_tau_activ = 30.0;
-	public double timed_tau_reduce = 120.0;
+	public double timed_tau_activ = 10.0;
+	public double timed_tau_reduce = 30.0;
 }
