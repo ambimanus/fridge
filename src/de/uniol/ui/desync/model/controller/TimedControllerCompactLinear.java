@@ -30,21 +30,15 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		case A:
 		case B1:
 		case B: {
-			// Cancel pending cooling program
-			interruptAll(EV_TARGET_TO);
-			// Cooldown till t_act
-			double t_current = fridge.getT_current();
-			waitDelay(EV_TARGET_TO, 0.0, fridge.calculateTemperatureAfter(true,
-					tau_preload, t_current, fridge.getQ_cooling()), fridge
+			waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge
+					.calculateTemperatureAfter(true, tau_preload, fridge
+							.getT_current(), fridge.getQ_cooling()), fridge
 					.getQ_cooling());
 			break;
 		}
 		case C1:
 		case C: {
-			// Cancel pending cooling program
-			interruptAll(EV_TARGET_TO);
-			// Cooldown to T_min
-			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_min(), fridge
+			waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge.getT_min(), fridge
 					.getQ_cooling());
 			break;
 		}
@@ -96,12 +90,9 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		case A:
 		case B1:
 		case B: {
-			// Cancel pending cooling program
-			interruptAll(EV_TARGET_TO);
-			// Cooldown till t_act
-			double t_current = fridge.getT_current();
-			waitDelay(EV_TARGET_TO, 0.0, fridge.calculateTemperatureAfter(true,
-					tau_preload, t_current, fridge.getQ_cooling()), fridge
+			waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge
+					.calculateTemperatureAfter(true, tau_preload, fridge
+							.getT_current(), fridge.getQ_cooling()), fridge
 					.getQ_cooling());
 			break;
 		}
@@ -141,13 +132,10 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 							tau_reduce);
 				} else {
 					// If the intersection is 'now', switch to cooling.
-					// Cancel pending cooling program
-					interruptAll(EV_TARGET_TO);
-					// Cooldown till t_act
-					double t_current = fridge.getT_current();
-					waitDelay(EV_TARGET_TO, 0.0, fridge
+					waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge
 							.calculateTemperatureAfter(true, tau_preload,
-									t_current, fridge.getQ_cooling()), fridge
+									fridge.getT_current(), fridge
+											.getQ_cooling()), fridge
 							.getQ_cooling());
 				}
 			} else {
@@ -172,7 +160,7 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		// Check if we're able to survive tau_reduce and T_max-act is
 		// in range [Tmin,Tmax]
 		if (tau_reduce > tauW) {
-			// We cannot survive tau_reduce, and T_max-act is < Tmin.
+			// We cannot survive tau_reduce, so T_max-act is < Tmin.
 			// The best result will be got if we reach Tmin at t_act.
 			int ret = intersectSCB(tau_preload, tau_reduce);
 			if (ret != 0) {
@@ -299,12 +287,9 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 			if (TCurrent > TAllowed) {
 				// We are too warm and cannot reach Tmin. Start cooling
 				// immediately till tAct.
-				// Cancel pending cooling program
-				interruptAll(EV_TARGET_TO);
-				// Cooldown till t_act
-				waitDelay(EV_TARGET_TO, 0.0, fridge.calculateTemperatureAfter(
-						true, tau_preload, TCurrent, fridge.getQ_cooling()),
-						fridge.getQ_cooling());
+				waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge
+						.calculateTemperatureAfter(true, tau_preload, TCurrent,
+								fridge.getQ_cooling()), fridge.getQ_cooling());
 				return 0;
 			} else {
 				// Calculate intersection of current curve and sCB
@@ -451,11 +436,8 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 			if (TCurrent < TAllowed) {
 				// We are too cold. This not really a problem, but we can
 				// switch to 'warming' to reduce the overcooling.
-				// Cancel pending cooling program
-				interruptAll(EV_TARGET_TO);
-				// Warmup now
-				waitDelay(EV_TARGET_TO, 0.0, fridge.getT_max(), fridge
-						.getQ_warming());
+				waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge
+						.getT_max(), fridge.getQ_warming());
 				return 0;
 			} else {
 				// Find intersection with sCC1
