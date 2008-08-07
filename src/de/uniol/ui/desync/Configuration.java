@@ -55,6 +55,6 @@ public class Configuration {
 	
 	/* Strategy params: timed load reduction */
 	public double timed_t_notify = 90.0;
-	public double timed_tau_activ = 10.0;
-	public double timed_tau_reduce = 30.0;
+	public double timed_tau_activ = 30.0;
+	public double timed_tau_reduce = 120.0;
 }
