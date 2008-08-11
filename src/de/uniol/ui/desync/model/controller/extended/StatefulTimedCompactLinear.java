@@ -155,10 +155,8 @@ public class StatefulTimedCompactLinear extends
 	}
 
 	public void doRestoreState() {
-		// Cancel pending cooling program
-		interruptAll(EV_TARGET_TO);
 		// Apply calculated state
-		waitDelay(EV_TARGET_TO, 0.0, desiredState.active ? fridge.getT_min()
-				: fridge.getT_max(), desiredState.q);
+		waitDelay(EV_DEL_AND_TARGET_TO, 0.0, desiredState.active ? fridge
+				.getT_min() : fridge.getT_max(), desiredState.q);
 	}
 }
