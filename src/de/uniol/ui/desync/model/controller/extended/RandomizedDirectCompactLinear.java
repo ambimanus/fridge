@@ -25,12 +25,10 @@ public class RandomizedDirectCompactLinear extends
 		// temperature after a full phase. Now randomize further behaviour, so
 		// that we switch to cooling with a propability of 22%.
 		if (drawBernoulli(PROPABILITY) == 1.0) {
-			interruptAll(EV_TARGET_TO);
-			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_min(), fridge
+			waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge.getT_min(), fridge
 					.getQ_cooling());
 		} else {
-			interruptAll(EV_TARGET_TO);
-			waitDelay(EV_TARGET_TO, 0.0, fridge.getT_max(), fridge
+			waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge.getT_max(), fridge
 					.getQ_warming());
 		}
 	}
