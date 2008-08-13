@@ -242,8 +242,8 @@ public class Experiment {
 			// Store created fridge
 			fridges.add(f);
 		}
-//conf.strategy = Configuration.STRATEGIES.TIMED;
-//conf.strategy = Configuration.STRATEGIES.DIRECT;
+//conf.strategy = Configuration.SIGNAL.TLR;
+//conf.strategy = Configuration.SIGNAL.DSC;
 // TODO
 		return fridges;
 	}
