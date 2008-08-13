@@ -25,10 +25,10 @@ public class StatefulTimedCompactLinear extends
 		// Memorize current (original) state of the fridge
 		originalState = new State(fridge);
 		// Schedule calculation of state restoration plan at t_activ
-		waitDelay(EV_CALCULATE_ACTION, tau_preload, tau_reduce);
+		waitDelay(EV_CALCULATE_ACTION, tau_preload, tau_preload, tau_reduce);
 	}
 	
-	public void doCalculateAction(Double tau_reduce) {
+	public void doCalculateAction(Double tau_preload, Double tau_reduce) {
 		// Calculate the optimal point in time when to restore the regular state
 		double warmingEnd = fridge.tau(fridge.getT_current(),
 				fridge.getT_max(), fridge.getQ_warming());
@@ -38,14 +38,14 @@ public class StatefulTimedCompactLinear extends
 			waitDelay(EV_CALCULATE_STATE, warmingEnd);
 			// Calculate and memorize state of regular fridge at that point
 			regularState = fridge.calculateStateAfterLongRun(originalState,
-					warmingEnd);
+					tau_preload + warmingEnd);
 		} else {
 			// If we can survive tau_reduce, schedule the state restoration
 			// immediately after the reduce interval
 			waitDelay(EV_CALCULATE_STATE, tau_reduce);
 			// Calculate and memorize state of regular fridge at that point
 			regularState = fridge.calculateStateAfterLongRun(originalState,
-					tau_reduce);
+					tau_preload + tau_reduce);
 		}
 	}
 	
