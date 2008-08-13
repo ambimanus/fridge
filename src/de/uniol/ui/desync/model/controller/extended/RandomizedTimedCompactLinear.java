@@ -26,7 +26,7 @@ public class RandomizedTimedCompactLinear extends
 	}
 
 	public void doRandomizeAction() {
-		interruptAll(EV_TARGET_TO);
-		waitDelay(EV_TARGET_TO, 0.0, fridge.getT_max(), fridge.getQ_warming());
+		waitDelay(EV_DEL_AND_TARGET_TO, 0.0, fridge.getT_max(), fridge
+				.getQ_warming());
 	}
 }
