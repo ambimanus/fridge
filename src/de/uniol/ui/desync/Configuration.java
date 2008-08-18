@@ -44,7 +44,7 @@ public class Configuration {
 	/** Used strategy */
 	public SIGNAL strategy = SIGNAL.TLR;
 	/** Used damping */
-	public DAMPING damping = DAMPING.STATEFUL_FULL;
+	public DAMPING damping = DAMPING.RANDOM;
 	/** Show results? */
 	public boolean showResults = true;
 	
