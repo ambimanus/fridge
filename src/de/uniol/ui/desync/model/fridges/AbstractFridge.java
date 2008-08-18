@@ -88,9 +88,6 @@ public abstract class AbstractFridge extends SimEntityClean {
 	public AbstractFridge(String nameBase, int eventListID) {
 		super(eventListID);
 		setName(nameBase + instance++);
-		if (instance > 5000) {
-			System.out.println(getName());
-		}
 		// Init default values
 		initDefault();
 	}
