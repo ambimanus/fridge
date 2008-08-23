@@ -36,15 +36,15 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 1000;
+	public int POPULATION_SIZE = 5000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
 	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public SIGNAL strategy = SIGNAL.TLR;
+	public SIGNAL strategy = SIGNAL.NONE;
 	/** Used damping */
-	public DAMPING damping = DAMPING.STATEFUL_FULL;
+	public DAMPING damping = DAMPING.NONE;
 	
 	/** Show progress? */
 	public boolean showProgress = true;
