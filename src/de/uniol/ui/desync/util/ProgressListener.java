@@ -15,6 +15,8 @@ public abstract class ProgressListener implements PropertyChangeListener {
 	private double simulationLength;
 	/** auxiliary variable - holds result from last change */
 	private double percBackup = 0.0;
+	/** current progress */
+	protected Integer progress = 0;
 	
 	/**
 	 * Creates a new progress listener with the given target value.
@@ -36,9 +38,20 @@ public abstract class ProgressListener implements PropertyChangeListener {
 	}
 	
 	/**
+	 * @return the current progress
+	 */
+	public int getProgress() {
+		synchronized (progress) {
+			return progress;
+		}
+	}
+	
+	/**
 	 * This method is called each time the calculated progress changes.
 	 * 
 	 * @param progress
 	 */
 	protected abstract void progressChanged(int progress);
+	
+	
 }

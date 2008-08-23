@@ -36,7 +36,7 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 5000;
+	public int POPULATION_SIZE = 1000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
@@ -44,9 +44,12 @@ public class Configuration {
 	/** Used strategy */
 	public SIGNAL strategy = SIGNAL.TLR;
 	/** Used damping */
-	public DAMPING damping = DAMPING.RANDOM;
+	public DAMPING damping = DAMPING.STATEFUL_FULL;
+	
+	/** Show progress? */
+	public boolean showProgress = true;
 	/** Show results? */
-	public boolean showResults = true;
+	public boolean showResults = false;
 	
 	/* Strategy params: direct storage control */
 	public double direct_t_notify = 90.0;

@@ -9,7 +9,6 @@ import simkit.EventList;
 import simkit.SimEntity;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
-import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 /**
@@ -188,6 +187,14 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 		values.add(value);
 	}
 	
+	public ArrayList<Double> getTimes() {
+		return times;
+	}
+
+	public ArrayList<Double> getValues() {
+		return values;
+	}
+
 	public double[][] getResults() {
 		double[] t = new double[times.size()];
 		double[] v = new double[values.size()];

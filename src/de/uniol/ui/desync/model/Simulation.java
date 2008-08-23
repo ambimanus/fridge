@@ -38,8 +38,8 @@ public class Simulation {
 	private ArrayList<? extends AbstractFridge> fridges;
 
 	/* Statistics collectors */
-	private static ArrayList<TimeseriesCollector> temps = new ArrayList<TimeseriesCollector>();
-	private static ArrayList<TimeseriesCollector> loads = new ArrayList<TimeseriesCollector>();
+	private ArrayList<TimeseriesCollector> temps = new ArrayList<TimeseriesCollector>();
+	private ArrayList<TimeseriesCollector> loads = new ArrayList<TimeseriesCollector>();
 	private TimeseriesMultiMeanCollector meanTemp;
 	private TimeseriesMultiMeanCollector meanLoad;
 	
@@ -102,28 +102,64 @@ public class Simulation {
 	}
 
 	/**
-	 * Perform the simulation until the simTime reaches <code>end</code>. A
-	 * Progressbar will be shown until the simulation finishes.
+	 * Perform the simulation until the simTime reaches <code>end</code>. If
+	 * showProgress is true, a Progressbar will be shown until the simulation
+	 * finishes. Else, information about the progress will be printed to the
+	 * console. In either case this method blocks until the simulation has
+	 * finished.
 	 * 
 	 * @param end
 	 */
-	public void simulate(double end) {
+	public void simulate(double end, boolean showProgress) {
 		initStatistics();
-		final ProgressComposite pc = new ProgressComposite();
 		el.stopAtTime(end);
 		el.reset();
-		el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
-				new ProgressListener(end) {
-					protected void progressChanged(int progress) {
-						pc.setProgress(progress);
-					}
-				});
-		new Thread() {
-			public void run() {
-				el.startSimulation();
+		if (showProgress) {
+			final ProgressComposite pc = new ProgressComposite();
+			el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
+					new ProgressListener(end) {
+						protected void progressChanged(int progress) {
+							pc.setProgress(progress);
+						}
+					});
+			new Thread() {
+				public void run() {
+					el.startSimulation();
+				}
+			}.start();
+			pc.open();
+		} else {
+			ProgressListener pl = null;
+			el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
+					pl = new ProgressListener(end) {
+						private int lastProgress = 0;
+						protected void progressChanged(int progress) {
+							if (progress > lastProgress + 9) {
+								System.out.println("Progress: "
+										+ (progress / 10 * 10) + "%");
+								lastProgress = progress;
+							}
+							if (progress >= 100 && lastProgress < 100) {
+								System.out.println("Progress: 100%");
+								lastProgress = 100;
+							}
+							synchronized (this.progress) {
+								this.progress = progress;
+							}
+						}
+					});
+			new Thread() {
+				public void run() {
+					el.startSimulation();
+				}
+			}.start();
+			while (pl.getProgress() < 100) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
 			}
-		}.start();
-		pc.open();
+		}
 	}
 
 	/**
@@ -294,6 +330,42 @@ public class Simulation {
 	public SimpleStatsTimeVarying getTemperatureStats() {
 		if (collectMeanTemperature) {
 			return meanTemp.getTimeVaryingStats();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the meanTemp
+	 */
+	public TimeseriesMultiMeanCollector getMeanTemp() {
+		return meanTemp;
+	}
+
+	/**
+	 * @return the meanLoad
+	 */
+	public TimeseriesMultiMeanCollector getMeanLoad() {
+		return meanLoad;
+	}
+
+	/**
+	 * @return the time weighted load result values if load was collected, null
+	 *         otherwise
+	 */
+	public double[][] getLoadResults() {
+		if (collectMeanLoad) {
+			return meanLoad.getResults();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the time weighted temperature result values if temperature was
+	 *         collected, null otherwise
+	 */
+	public double[][] getTemperatureResults() {
+		if (collectMeanTemperature) {
+			return meanTemp.getResults();
 		}
 		return null;
 	}

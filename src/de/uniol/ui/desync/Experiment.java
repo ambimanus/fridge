@@ -31,6 +31,7 @@ import de.uniol.ui.desync.model.signals.AbstractSignalPerformer;
 import de.uniol.ui.desync.model.signals.SignalPerformerDirect;
 import de.uniol.ui.desync.model.signals.SignalPerformerTimed;
 import de.uniol.ui.desync.util.MessagingEventList;
+import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 /**
  * This class is the main class of this simulation. It creates all entities and
@@ -83,12 +84,7 @@ public class Experiment {
 
 		// Simulate
 		double start = System.currentTimeMillis();
-		simulation.simulate(conf.SIMULATION_LENGTH * 60.0);
-		while (el.isRunning()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {}
-		}
+		simulation.simulate(conf.SIMULATION_LENGTH * 60.0, conf.showProgress);
 		simulationTime = (System.currentTimeMillis() - start) / 1000.0;
 
 		// Create charts
@@ -284,6 +280,48 @@ public class Experiment {
 	public SimpleStatsTimeVarying getTemperatureStats() {
 		if (simulation != null) {
 			return simulation.getTemperatureStats();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the meanTemp
+	 */
+	public TimeseriesMultiMeanCollector getMeanTemp() {
+		if (simulation != null) {
+			return simulation.getMeanTemp();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the meanLoad
+	 */
+	public TimeseriesMultiMeanCollector getMeanLoad() {
+		if (simulation != null) {
+			return simulation.getMeanLoad();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the time weighted load result values if load was collected, null
+	 *         otherwise
+	 */
+	public double[][] getLoadResults() {
+		if (simulation != null) {
+			return simulation.getLoadResults();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the time weighted temperature result values if temperature was
+	 *         collected, null otherwise
+	 */
+	public double[][] getTemperatureResults() {
+		if (simulation != null) {
+			return simulation.getTemperatureResults();
 		}
 		return null;
 	}

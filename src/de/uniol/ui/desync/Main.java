@@ -9,6 +9,8 @@ import de.uniol.ui.desync.util.MessagingEventList;
 public class Main {
 
 	private static int runs = 1;
+//	private static File file = new File(System.getProperty("user.dir")
+//			+ File.separator + "data" + File.separator + "out.csv");
 	
 	public static void main(String[] args) {
 		Configuration conf = new Configuration();
@@ -33,6 +35,9 @@ public class Main {
 			} else {
 				System.out.println();
 			}
+			
+			// Store results
+//			ResultWriter.writeResults(conf, exp, file);
 			
 			// Cleanup
 			el.reset();
