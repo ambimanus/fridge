@@ -35,6 +35,10 @@ public class Main_LoadCollector {
 			results.put(conf, exp.getMeanLoad());
 			
 			// Cleanup
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException ie) {
+			}
 			el.reset();
 			el.coldReset();
 //			exp.clear();
