@@ -1,0 +1,28 @@
+Experiment1 @run0(1.0h) - 5.063s - mean load = 15.594895899446191
+Experiment2 @run0(2.0h) - 8.953s - mean load = 15.495188413769187
+Experiment3 @run0(3.0h) - 13.25s - mean load = 15.410490581772681
+Experiment4 @run0(4.0h) - 17.594s - mean load = 15.501118761497693
+Experiment5 @run0(5.0h) - 22.078s - mean load = 15.410203044908656
+Experiment6 @run0(6.0h) - 26.125s - mean load = 15.412491005712251
+Experiment7 @run0(7.0h) - 31.593s - mean load = 15.474459232701614
+Experiment8 @run0(8.0h) - 34.906s - mean load = 15.400604536445675
+Experiment9 @run0(9.0h) - 39.047s - mean load = 15.409984549663235
+Experiment10 @run0(10.0h) - 43.437s - mean load = 15.44762110164357
+Experiment11 @run0(11.0h) - 47.688s - mean load = 15.401046151722133
+Experiment12 @run0(12.0h) - 52.172s - mean load = 15.415077649241981
+Experiment13 @run0(13.0h) - 56.157s - mean load = 15.424891319848161
+Experiment14 @run0(14.0h) - 60.672s - mean load = 15.405461591670242
+Experiment15 @run0(15.0h) - 67.626s - mean load = 15.423610063528937
+Experiment16 @run0(16.0h) - 71.61s - mean load = 15.410084912040098
+Experiment17 @run0(17.0h) - 75.016s - mean load = 15.405644858119869
+Experiment18 @run0(18.0h) - 80.906s - mean load = 15.429019588723833
+Experiment19 @run0(19.0h) - 85.14s - mean load = 15.403529468542304
+Experiment20 @run0(20.0h) - 89.203s - mean load = 15.405994659960328
+
+Overall stats:
+	n        = 20
+	min      = 15.400604536445675
+	max      = 15.594895899446191
+	mean     = 15.434070869547933
+	variance = 0.0023576484717619675
+	std.dev  = 0.048555622452626096

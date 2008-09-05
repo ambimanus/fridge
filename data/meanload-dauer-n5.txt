@@ -1,0 +1,14 @@
+Experiment1 @run0(1.0h) - 4.969s - mean load = 15.594895899446183
+Experiment2 @run0(2.0h) - 9.171s - mean load = 15.495188413769194
+Experiment3 @run0(3.0h) - 13.25s - mean load = 15.410490581772688
+Experiment4 @run0(4.0h) - 17.64s - mean load = 15.50111876149769
+Experiment5 @run0(5.0h) - 21.953s - mean load = 15.41020304490865
+
+Overall stats:
+	n        = 5
+	min      = 15.41020304490865
+	max      = 15.594895899446183
+	mean     = 15.48237934027888
+	variance = 0.00588815639276945
+	std.dev  = 0.07673432343332057
+
