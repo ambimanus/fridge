@@ -1,0 +1,208 @@
+Experiment1 @run0(10.0h) - 44.625s
+
+Stats of current run:
+	n        = 36125
+	min      = 14.377999999999979
+	max      = 16.50599999999997
+	mean     = 15.44761235617017
+	variance = 0.2440823167657085
+	std.dev  = 0.49404687709336703
+
+Experiment2 @run0(10.0h) - 43.515s
+
+Stats of current run:
+	n        = 36125
+	min      = 14.293999999999992
+	max      = 16.91200000000002
+	mean     = 15.42710813678234
+	variance = 0.25838167981231525
+	std.dev  = 0.50831258081255
+
+Experiment3 @run0(10.0h) - 43.0s
+
+Stats of current run:
+	n        = 35943
+	min      = 14.182000000000013
+	max      = 16.352000000000004
+	mean     = 15.38204689927375
+	variance = 0.3303781326953281
+	std.dev  = 0.574785292692261
+
+Experiment4 @run0(10.0h) - 43.031s
+
+Stats of current run:
+	n        = 36068
+	min      = 14.237999999999985
+	max      = 16.57600000000003
+	mean     = 15.436512850814097
+	variance = 0.3180929843619889
+	std.dev  = 0.5639973265557107
+
+Experiment5 @run0(10.0h) - 43.5s
+
+Stats of current run:
+	n        = 36020
+	min      = 14.252000000000008
+	max      = 16.39400000000003
+	mean     = 15.416726444460238
+	variance = 0.2654397768711335
+	std.dev  = 0.5152085015787295
+
+Experiment6 @run0(10.0h) - 43.032s
+
+Stats of current run:
+	n        = 35911
+	min      = 13.971999999999978
+	max      = 16.407999999999998
+	mean     = 15.373310836809836
+	variance = 0.32644600274948415
+	std.dev  = 0.5713545333236485
+
+Experiment7 @run0(10.0h) - 42.766s
+
+Stats of current run:
+	n        = 35989
+	min      = 14.727999999999982
+	max      = 16.14199999999996
+	mean     = 15.380227841359751
+	variance = 0.07435577221181475
+	std.dev  = 0.2726825484181464
+
+Experiment8 @run0(10.0h) - 43.375s
+
+Stats of current run:
+	n        = 35997
+	min      = 14.601999999999986
+	max      = 16.240000000000027
+	mean     = 15.37934592309666
+	variance = 0.18501425849061043
+	std.dev  = 0.4301328381914248
+
+Experiment9 @run0(10.0h) - 43.157s
+
+Stats of current run:
+	n        = 36053
+	min      = 14.685999999999963
+	max      = 16.26799999999999
+	mean     = 15.431237029829429
+	variance = 0.11298367414470636
+	std.dev  = 0.3361304421570685
+
+Experiment10 @run0(10.0h) - 43.359s
+
+Stats of current run:
+	n        = 36007
+	min      = 14.560000000000025
+	max      = 16.520000000000007
+	mean     = 15.396548146891824
+	variance = 0.1741248560389549
+	std.dev  = 0.4172827051759453
+
+Experiment11 @run0(10.0h) - 43.5s
+
+Stats of current run:
+	n        = 36078
+	min      = 14.433999999999992
+	max      = 16.22600000000002
+	mean     = 15.427989597275216
+	variance = 0.11367963347863604
+	std.dev  = 0.33716410467105784
+
+Experiment12 @run0(10.0h) - 43.39s
+
+Stats of current run:
+	n        = 36085
+	min      = 14.405999999999933
+	max      = 16.32400000000001
+	mean     = 15.434975934648627
+	variance = 0.16703403841017214
+	std.dev  = 0.40869797945447706
+
+Experiment13 @run0(10.0h) - 43.219s
+
+Stats of current run:
+	n        = 36068
+	min      = 14.574000000000012
+	max      = 16.141999999999985
+	mean     = 15.407057576530644
+	variance = 0.09077398464418905
+	std.dev  = 0.3012984601672125
+
+Experiment14 @run0(10.0h) - 43.453s
+
+Stats of current run:
+	n        = 36072
+	min      = 14.601999999999977
+	max      = 16.14200000000001
+	mean     = 15.421665526304057
+	variance = 0.14178659723624903
+	std.dev  = 0.37654561109678203
+
+Experiment15 @run0(10.0h) - 44.0s
+
+Stats of current run:
+	n        = 35996
+	min      = 14.573999999999993
+	max      = 16.10000000000003
+	mean     = 15.398033390209127
+	variance = 0.12023212450212496
+	std.dev  = 0.3467450425054769
+
+Experiment16 @run0(10.0h) - 43.984s
+
+Stats of current run:
+	n        = 35986
+	min      = 14.517999999999992
+	max      = 16.211999999999943
+	mean     = 15.395002963815507
+	variance = 0.09883559197470385
+	std.dev  = 0.31438128438999646
+
+Experiment17 @run0(10.0h) - 47.032s
+
+Stats of current run:
+	n        = 36062
+	min      = 14.517999999999986
+	max      = 16.28199999999998
+	mean     = 15.386964372442238
+	variance = 0.07677378911459176
+	std.dev  = 0.2770808349824862
+
+Experiment18 @run0(10.0h) - 45.312s
+
+Stats of current run:
+	n        = 35964
+	min      = 13.944000000000026
+	max      = 16.17000000000002
+	mean     = 15.385912766079569
+	variance = 0.3016842487028931
+	std.dev  = 0.54925790727389
+
+Experiment19 @run0(10.0h) - 46.672s
+
+Stats of current run:
+	n        = 36074
+	min      = 14.55999999999999
+	max      = 16.422000000000047
+	mean     = 15.424301759614002
+	variance = 0.12554215084224032
+	std.dev  = 0.35431927811260894
+
+Experiment20 @run0(10.0h) - 44.963s
+
+Stats of current run:
+	n        = 36023
+	min      = 14.58800000000003
+	max      = 16.156000000000034
+	mean     = 15.393327884388412
+	variance = 0.12275665635345143
+	std.dev  = 0.35036646008636646
+
+
+Overall stats:
+	n        = 20
+	min      = 15.373310836809836
+	max      = 15.44761235617017
+	mean     = 15.407294035583424
+	variance = 5.235224311206986E-4
+	std.dev  = 0.022880612559997134
