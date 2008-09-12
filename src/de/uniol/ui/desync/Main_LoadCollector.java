@@ -29,7 +29,7 @@ public class Main_LoadCollector {
 					.getEventList(list);
 			
 			Experiment exp = new Experiment(conf);
-			exp.run(el);
+			exp.run(el, i == runs);
 			
 			// Store results
 			results.put(conf, exp.getMeanLoad());

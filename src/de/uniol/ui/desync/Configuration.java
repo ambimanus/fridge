@@ -3,6 +3,13 @@ package de.uniol.ui.desync;
 import simkit.random.LKSeeds;
 
 public class Configuration {
+	
+	/** instance-counter */
+	private static int instance = -1;
+	
+	public Configuration() {
+		instance++;
+	}
 
 	/* Constants */
 	/** Available model types */
@@ -42,14 +49,14 @@ public class Configuration {
 	/** Used model type */
 	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public SIGNAL strategy = SIGNAL.NONE;
+	public SIGNAL strategy = SIGNAL.TLR;
 	/** Used damping */
-	public DAMPING damping = DAMPING.NONE;
+	public DAMPING damping = DAMPING.RANDOM;
 	
 	/** Show progress? */
 	public boolean showProgress = true;
 	/** Show results? */
-	public boolean showResults = false;
+	public boolean showResults = true;
 	
 	/* Strategy params: direct storage control */
 	public double direct_t_notify = 90.0;

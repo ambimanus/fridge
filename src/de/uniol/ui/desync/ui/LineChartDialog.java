@@ -103,18 +103,21 @@ public class LineChartDialog extends Dialog {
 	 * 
 	 * @param col
 	 */
-	public void addSeries(AbstractCollector col) {
+	public void addSeries(String name, double[][] data) {
 		if (xy instanceof FastXYDataset) {
-			FastXYSeries series = new FastXYSeries(col.getName());
-			double[][] results = col.getResults();
-			for (int i = 0; i < results[0].length; i++) {
-				boolean notify = i == results[0].length - 1;
-				series.add(results[0][i], results[1][i], notify);
+			FastXYSeries series = new FastXYSeries(name);
+			for (int i = 0; i < data[0].length; i++) {
+				boolean notify = i == data[0].length - 1;
+				series.add(data[0][i], data[1][i], notify);
 			}
 			((FastXYDataset) xy).addSeries(series);
 		} else if (xy instanceof DefaultXYDataset) {
-			((DefaultXYDataset) xy).addSeries(col.getName(), col.getResults());
+			((DefaultXYDataset) xy).addSeries(name, data);
 		}
+	}
+	
+	public void addSeries(AbstractCollector col) {
+		this.addSeries(col.getName(), col.getResults());
 	}
 	
 	/**

@@ -30,7 +30,7 @@ public class Main {
 					.getEventList(list);
 			
 			Experiment exp = new Experiment(conf);
-			exp.run(el);
+			exp.run(el, i == runs);
 			System.out.println(exp.getName() + "(" + conf.SIMULATION_LENGTH
 					+ "h) - " + exp.getSimulationTime() + "s");
 			

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import simkit.stat.SimpleStatsTally;
+
 import de.uniol.ui.desync.Configuration;
 import de.uniol.ui.desync.Experiment;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
@@ -104,7 +106,8 @@ public class ResultWriter {
 			HashMap<Configuration, TimeseriesMultiMeanCollector> results,
 			File file) {
 		// Interpolate data
-		HashMap<Configuration, ArrayList<Double>[]> data = interpolate(results);
+		HashMap<Configuration, ArrayList<Double>[]> data = interpolate(results,
+				false);
 		// Write data
 		FileWriter fw = null;
 		try {
@@ -168,8 +171,9 @@ public class ResultWriter {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected static HashMap<Configuration, ArrayList<Double>[]> interpolate(
-			HashMap<Configuration, TimeseriesMultiMeanCollector> data) {
+	public static HashMap<Configuration, ArrayList<Double>[]> interpolate(
+			HashMap<Configuration, TimeseriesMultiMeanCollector> data,
+			boolean interpolateLinear) {
 		Set<Configuration> keys = data.keySet();
 		HashMap<Configuration, ArrayList<Double>[]> ret = new HashMap<Configuration, ArrayList<Double>[]>(
 				keys.size());
@@ -210,8 +214,51 @@ public class ResultWriter {
 					list[1] = new ArrayList<Double>(size);
 					ret.put(tsi.getKey(), list);
 				}
-				list[0].add(lowest.getCurrentTime());
-				list[1].add(tsi.getCurrentValue());
+				
+				// Only proceed if this datapoint has not been processed
+				if (list[0].size() == 0
+						|| (list[0].get(list[0].size() - 1) != lowest
+								.getCurrentTime())) {
+					list[0].add(lowest.getCurrentTime());
+					if (tsi == lowest
+							|| tsi.getCurrentTime() == lowest.getCurrentTime()) {
+						// Just add the current value
+						list[1].add(tsi.getCurrentValue());
+					} else {
+						if (interpolateLinear) {
+							// Take prev value and next value with according
+							// times, and calculate current value by linear
+							// interpolation
+							boolean switchedTsiToPrevious = tsi.prev();
+							double[] prev = new double[] {
+									tsi.getCurrentTime(), tsi.getCurrentValue() };
+							if (switchedTsiToPrevious) {
+								tsi.next();
+							}
+							double[] next = new double[] {
+									tsi.getCurrentTime(), tsi.getCurrentValue() };
+							// equation of line through points prev and next:
+							// y = y1 + (((y2-y1)/(x2-x1)) * (x-x1))
+							double interpolatedValue = prev[1]
+									+ (((next[1] - prev[1]) / (next[0] - prev[0])) * (lowest
+											.getCurrentTime() - prev[0]));
+							// Error checking
+							if (Double.isNaN(interpolatedValue)) {
+								// Division through zero or something like that,
+								// just take prev value instead.
+								interpolatedValue = prev[1];
+							}
+							list[1].add(interpolatedValue);
+						} else {
+							// Add previous value
+							boolean switchedTsiToPrevious = tsi.prev();
+							list[1].add(tsi.getCurrentValue());
+							if (switchedTsiToPrevious) {
+								tsi.next();
+							}
+						}
+					}
+				}
 			}
 			// Move tsi to next time/value (or remove it if no more values)
 			if (!lowest.next()) {
@@ -219,6 +266,32 @@ public class ResultWriter {
 			}
 		}
 		return ret;
+	}
+	
+	public static double[][] mean(HashMap<Configuration, ArrayList<Double>[]> data) {
+		ArrayList<Double>[] tester = data.values().iterator().next();
+		int size = tester[0].size();
+		double[][] ret = new double[2][size];
+		for (int i = 0; i < size; i++) {
+			SimpleStatsTally sstt = new SimpleStatsTally();
+			SimpleStatsTally sstl = new SimpleStatsTally();
+			Iterator<Configuration> it = data.keySet().iterator();
+			while (it.hasNext()) {
+				ArrayList<Double>[] current = data.get(it.next());
+				sstt.newObservation(current[0].get(i));
+				sstl.newObservation(current[1].get(i));
+			}
+			ret[0][i] = sstt.getMean();
+			ret[1][i] = sstl.getMean();
+		}
+		return ret;
+	}
+	
+	public static double[][] convertToMilliseconds(double[][] data) {
+		for (int i = 0; i < data[0].length; i++) {
+			data[0][i] = data[0][i] * 60000d;
+		}
+		return data;
 	}
 	
 	protected static class TimeSeriesIterator {
@@ -236,6 +309,16 @@ public class ResultWriter {
 			this.key = key;
 			this.times = times;
 			this.values = values;
+		}
+		
+		public boolean prev() {
+			if (tPointer > 0) {
+				currentTime = times.get(--tPointer);
+				currentValue = values.get(--vPointer);
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 		public boolean next() {

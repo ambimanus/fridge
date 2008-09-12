@@ -66,7 +66,7 @@ public class Experiment {
 	 * 
 	 * @param conf
 	 */
-	public void run(MessagingEventList el) {
+	public void run(MessagingEventList el, boolean blockResults) {
 		name = "Experiment" + instances + " @run" + runs++;
 		
 		// Create fridges
@@ -84,12 +84,13 @@ public class Experiment {
 
 		// Simulate
 		double start = System.currentTimeMillis();
-		simulation.simulate(conf.SIMULATION_LENGTH * 60.0, conf.showProgress);
+		simulation.simulate(conf.SIMULATION_LENGTH * 60.0, conf.showProgress,
+				name);
 		simulationTime = (System.currentTimeMillis() - start) / 1000.0;
 
 		// Create charts
 		if (conf.showResults) {
-			simulation.showResults();
+			simulation.showResults(blockResults);
 		}
 		
 		// Cleanup
@@ -349,9 +350,9 @@ public class Experiment {
 		}
 	}
 	
-	public void showLastResults() {
+	public void showLastResults(boolean block) {
 		if (simulation != null) {
-			simulation.showResults();
+			simulation.showResults(block);
 		}
 	}
 }

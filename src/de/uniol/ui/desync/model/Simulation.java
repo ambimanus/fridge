@@ -110,55 +110,51 @@ public class Simulation {
 	 * 
 	 * @param end
 	 */
-	public void simulate(double end, boolean showProgress) {
+	public void simulate(double end, boolean showProgress, String title) {
 		initStatistics();
 		el.stopAtTime(end);
 		el.reset();
+		Thread sim = null;
 		if (showProgress) {
 			final ProgressComposite pc = new ProgressComposite();
+			pc.setTitle(title);
 			el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
 					new ProgressListener(end) {
 						protected void progressChanged(int progress) {
 							pc.setProgress(progress);
 						}
 					});
-			new Thread() {
+			sim = new Thread() {
 				public void run() {
 					el.startSimulation();
 				}
-			}.start();
+			};
+			sim.start();
 			pc.open();
-		} else {
-			ProgressListener pl = null;
-			el.addPropertyChangeListener(MessagingEventList.PROP_SIMTIME,
-					pl = new ProgressListener(end) {
-						private int lastProgress = 0;
-						protected void progressChanged(int progress) {
-							if (progress > lastProgress + 9) {
-								System.out.println("Progress: "
-										+ (progress / 10 * 10) + "%");
-								lastProgress = progress;
-							}
-							if (progress >= 100 && lastProgress < 100) {
-								System.out.println("Progress: 100%");
-								lastProgress = 100;
-							}
-							synchronized (this.progress) {
-								this.progress = progress;
-							}
-						}
-					});
-			new Thread() {
-				public void run() {
-					el.startSimulation();
-				}
-			}.start();
-			while (pl.getProgress() < 100) {
+			while (sim.isAlive()) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 				}
 			}
+		} else {
+			sim = new Thread() {
+				public void run() {
+					el.startSimulation();
+				}
+			};
+			sim.start();
+			while (sim.isAlive()) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+		if (collectMeanLoad) {
+			// Add load observations at finish time
+			meanLoad.addObservation(el.getStopTime(), meanLoad
+					.getObservation(meanLoad.getSize() - 1)[1]);
 		}
 	}
 
@@ -169,7 +165,7 @@ public class Simulation {
 	 * @param highlightFirst
 	 * @param firstColor
 	 */
-	public void showResults() {
+	public void showResults(boolean block) {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
@@ -202,9 +198,6 @@ public class Simulation {
 			StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 					"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
 			if (collectMeanLoad) {
-				// Add load observations at finish time
-				meanLoad.addObservation(el.getStopTime(), meanLoad
-						.getObservation(meanLoad.getSize() - 1)[1]);
 				// Add series
 				scd.addSeries(meanLoad);
 			}
@@ -234,9 +227,11 @@ public class Simulation {
 		// Open shell
 		shell.setSize(900, numberOfCharts * 400);
 		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
+		if (block) {
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch())
+					display.sleep();
+			}
 		}
 	}
 

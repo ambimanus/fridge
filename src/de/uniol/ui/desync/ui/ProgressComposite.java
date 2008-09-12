@@ -20,6 +20,8 @@ public class ProgressComposite extends Composite {
 	private static Display display;
 	/** parent shell */
 	private static Shell shell;
+	/** title of the progress window */
+	private String title = new String();
 	
 	/**
 	 * Creates a shell with this composite as contents.
@@ -73,6 +75,20 @@ public class ProgressComposite extends Composite {
 	}
 	
 	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
 	 * Creates a new shell for this composite.
 	 * 
 	 * @return
@@ -94,6 +110,7 @@ public class ProgressComposite extends Composite {
 		if (shell == null) {
 			shell = getShell();
 		}
+		shell.setText(title);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
