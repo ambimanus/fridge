@@ -5,13 +5,19 @@ import simkit.random.LKSeeds;
 public class Configuration {
 	
 	/** instance-counter */
-	private static int instance = -1;
+	public static int instance = -1;
+	/** distinction-counter */
+	public static int distinct = -1;
 	
 	public Configuration() {
 		instance++;
 	}
 
 	/* Constants */
+	/** Available model types */
+	public static enum VARIATE {
+		NONE, UNIFORM, NORMAL
+	}
 	/** Available model types */
 	public static enum MODEL {
 		ITERATIVE, LINEAR, COMPACT_LINEAR
@@ -31,11 +37,11 @@ public class Configuration {
 	/** Thermal mass maximum */
 	public double MC_MAX = 32.0;
 	/** Perform variation of m_c ? */
-	public boolean variate_mc = false;
+	public VARIATE variate_mc = VARIATE.NONE;
 	/** Seed for mc variation generator */
 	public long variate_mc_seed = LKSeeds.ZRNG[1];
 	/** Perform variation of T_current ? */
-	public boolean variate_Tcurrent = true;
+	public VARIATE variate_Tcurrent = VARIATE.NONE;
 	/** Seed for Tcurrent variation generator */
 	public long variate_Tcurrent_seed = LKSeeds.ZRNG[99];
 	/** The propability a fridge is set active at simulation start */
@@ -49,9 +55,9 @@ public class Configuration {
 	/** Used model type */
 	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public SIGNAL strategy = SIGNAL.TLR;
+	public SIGNAL strategy = SIGNAL.NONE;
 	/** Used damping */
-	public DAMPING damping = DAMPING.RANDOM;
+	public DAMPING damping = DAMPING.NONE;
 	
 	/** Show progress? */
 	public boolean showProgress = true;

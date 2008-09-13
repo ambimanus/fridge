@@ -28,7 +28,7 @@ public class Main_LoadCollector {
 			MessagingEventList el = (MessagingEventList) Schedule
 					.getEventList(list);
 			
-			Experiment exp = new Experiment(conf);
+			Experiment exp = new Experiment(conf, i, 0);
 			exp.run(el, i == runs);
 			
 			// Store results

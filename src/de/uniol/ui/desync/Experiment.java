@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import simkit.random.BernoulliVariate;
 import simkit.random.Congruential;
+import simkit.random.NormalVariate;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import simkit.stat.SimpleStatsTimeVarying;
@@ -54,9 +55,10 @@ public class Experiment {
 	/** Time needed for the simulation */
 	private double simulationTime = Double.NaN;
 
-	public Experiment(Configuration conf) {
+	public Experiment(Configuration conf, int instance, int run) {
 		this.conf = conf;
-		name = "Experiment" + instances++;
+		instances++;
+		name = "Experiment" + instance + "@run" + run;
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class Experiment {
 	 * @param conf
 	 */
 	public void run(MessagingEventList el, boolean blockResults) {
-		name = "Experiment" + instances + " @run" + runs++;
+		runs++;
 		
 		// Create fridges
 		ArrayList<AbstractFridge> fridges = createFridges(el.getID());
@@ -107,18 +109,58 @@ public class Experiment {
 	 */
 	private ArrayList<AbstractFridge> createFridges(int list) {
 		AbstractFridge.resetInstanceCounter();
-		// Create distinct uniform random variates for m_c and t_current
-		RandomVariate thermalMassVariate = new UniformVariate();
-		Congruential cong = new Congruential();
-		cong.setSeed(conf.variate_mc_seed);
-		thermalMassVariate.setRandomNumber(cong);
-		thermalMassVariate.setParameters(conf.MC_MIN, conf.MC_MAX);
-		RandomVariate tCurrentVariate = new UniformVariate();
-		cong = new Congruential();
-		cong.setSeed(conf.variate_Tcurrent_seed);
-		tCurrentVariate.setRandomNumber(cong);
-		tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
-				AbstractFridge.DEFAULT_t_max);
+		// Create distinct random variates for m_c and t_current
+		RandomVariate thermalMassVariate = null;
+		switch (conf.variate_mc) {
+		case UNIFORM: {
+			thermalMassVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_mc_seed);
+			thermalMassVariate.setRandomNumber(cong);
+			thermalMassVariate.setParameters(conf.MC_MIN, conf.MC_MAX);
+			break;
+		}
+		case NORMAL: {
+			thermalMassVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_mc_seed);
+			thermalMassVariate.setRandomNumber(cong);
+			thermalMassVariate.setParameters((conf.MC_MIN + conf.MC_MAX) / 2.0,
+					1.0);
+			break;
+		}
+		default: {
+			thermalMassVariate = null;
+			break;
+		}
+		}
+		RandomVariate tCurrentVariate = null;
+		switch (conf.variate_Tcurrent) {
+		case UNIFORM: {
+			tCurrentVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_Tcurrent_seed);
+			tCurrentVariate.setRandomNumber(cong);
+			tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
+					AbstractFridge.DEFAULT_t_max);
+			break;
+		}
+		case NORMAL: {
+			tCurrentVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_Tcurrent_seed);
+			tCurrentVariate.setRandomNumber(cong);
+			tCurrentVariate
+			.setParameters(
+					(AbstractFridge.DEFAULT_t_min + AbstractFridge.DEFAULT_t_max) / 2.0,
+					1.0);
+			break;
+		}
+		default: {
+			tCurrentVariate = null;
+			break;
+		}
+		}
 		// Create [0|1] variate for starting states
 		RandomVariate activityAtStartVariate = new BernoulliVariate();
 		activityAtStartVariate.setParameters(conf.ACTIVE_AT_START_PROPABILITY);
@@ -221,19 +263,16 @@ public class Experiment {
 				break;
 			}
 			}
-			if (conf.variate_mc) {
-				// Equally distribute m_c between MC_MIN and MC_MAX
+			if (conf.variate_mc != Configuration.VARIATE.NONE) {
+				// Distribute m_c between MC_MIN and MC_MAX
 				f.generate_mC(thermalMassVariate);
 			}
-			if (conf.variate_Tcurrent) {
-				// Equally distribute t_current between t_min and t_max
+			if (conf.variate_Tcurrent != Configuration.VARIATE.NONE) {
+				// Distribute t_current between t_min and t_max
 				f.generate_tCurrent(tCurrentVariate);
 			}
 			// Make (ACTIVE_AT_START_PROPABILITY*100)% of the fridges active
 			f.setStartActive(activityAtStartVariate.generate() > 0);
-			// Assign proper FEL
-//			f.setEventListID(list);
-//			c.setEventListID(list);
 			// Assign controller
 			f.setController(c);
 			// Store created fridge

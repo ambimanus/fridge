@@ -359,6 +359,13 @@ public abstract class AbstractFridge extends SimEntityClean {
 		q_warming *= var;
 		t_surround *= var;
 		t_current *= var;
+		
+		if (t_current < t_min) {
+			t_current = t_min;
+		}
+		if (t_current > t_max) {
+			t_current = t_max;
+		}
 	}
 	
 	/**
@@ -429,6 +436,12 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 */
 	public void variate_tCurrent(RandomVariate rv) {
 		t_current *= rv.generate();
+		if (t_current < t_min) {
+			t_current = t_min;
+		}
+		if (t_current > t_max) {
+			t_current = t_max;
+		}
 	}
 	
 	/**
@@ -515,6 +528,12 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 */
 	public void generate_tCurrent(RandomVariate rv) {
 		t_current = rv.generate();
+		if (t_current < t_min) {
+			t_current = t_min;
+		}
+		if (t_current > t_max) {
+			t_current = t_max;
+		}
 	}
 	
 	/*

@@ -1,6 +1,5 @@
 package de.uniol.ui.desync.ui;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 
 import org.eclipse.swt.widgets.Shell;
@@ -47,11 +46,12 @@ public class StepChartDialog extends LineChartDialog {
 				yTitle, xy, PlotOrientation.VERTICAL, true, false, false);
 
 		chart.setBackgroundPaint(Color.white);
+		chart.getLegend().setBackgroundPaint(new Color(224, 224, 224));
 		
 		XYPlot plot = (XYPlot) chart.getPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
+		plot.setBackgroundPaint(new Color(224, 224, 224));
+		plot.setDomainGridlinePaint(Color.lightGray);
+		plot.setRangeGridlinePaint(Color.lightGray);
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
 		plot.setRenderer(new XYStepRendererFast(null, null));
 		
@@ -66,8 +66,8 @@ public class StepChartDialog extends LineChartDialog {
 //			}
 //		});
 		
-		for (int i : seriesWidths.keySet()) {
-			xyr.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
+		for (int i : seriesStrokes.keySet()) {
+			xyr.setSeriesStroke(i, seriesStrokes.get(i));
 		}
 		for (int i : seriesColors.keySet()) {
 			xyr.setSeriesPaint(i, seriesColors.get(i));

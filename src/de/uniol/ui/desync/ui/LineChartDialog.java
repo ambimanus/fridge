@@ -1,7 +1,7 @@
 package de.uniol.ui.desync.ui;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,7 +67,7 @@ public class LineChartDialog extends Dialog {
 	protected double maxRange;
 	
 	/** Defines width values for individual series */
-	protected HashMap<Integer, Float> seriesWidths = new HashMap<Integer, Float>();
+	protected HashMap<Integer, Stroke> seriesStrokes = new HashMap<Integer, Stroke>();
 	/** Defines color values for individual series */
 	protected HashMap<Integer, Color> seriesColors = new HashMap<Integer, Color>();
 
@@ -133,13 +133,13 @@ public class LineChartDialog extends Dialog {
 	}
 
 	/**
-	 * Defines the width of the specified series.
+	 * Defines the stroke of the specified series.
 	 * 
 	 * @param series
-	 * @param width
+	 * @param stroke
 	 */
-	public void setSeriesWidth(int series, float width) {
-		seriesWidths.put(series, width);
+	public void setSeriesStroke(int series, Stroke stroke) {
+		seriesStrokes.put(series, stroke);
 	}
 	
 	/**
@@ -160,18 +160,19 @@ public class LineChartDialog extends Dialog {
 				xTitle, yTitle, xy, true, false, false);
 
 		chart.setBackgroundPaint(Color.white);
+		chart.getLegend().setBackgroundPaint(new Color(224, 224, 224));
 
 		FastXYPlot plot = (FastXYPlot) chart.getPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
+		plot.setBackgroundPaint(new Color(224, 224, 224));
+		plot.setDomainGridlinePaint(Color.lightGray);
+		plot.setRangeGridlinePaint(Color.lightGray);
 		plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
 		StandardXYItemRendererFast r = new StandardXYItemRendererFast(
 				StandardXYItemRendererFast.LINES, null, null);
 		plot.setRenderer(r);
 		
-		for (int i : seriesWidths.keySet()) {
-			r.setSeriesStroke(i, new BasicStroke(seriesWidths.get(i)));
+		for (int i : seriesStrokes.keySet()) {
+			r.setSeriesStroke(i, seriesStrokes.get(i));
 		}
 		for (int i : seriesColors.keySet()) {
 			r.setSeriesPaint(i, seriesColors.get(i));
@@ -184,7 +185,7 @@ public class LineChartDialog extends Dialog {
 
 		ValueAxis yaxis = plot.getRangeAxis();
 		yaxis.setRange(new Range(minRange, maxRange));
-
+		
 		return chart;
 	}
 	

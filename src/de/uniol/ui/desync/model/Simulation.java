@@ -1,5 +1,6 @@
 package de.uniol.ui.desync.model;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.util.ArrayList;
@@ -183,7 +184,7 @@ public class Simulation {
 				lcd.addAllSeries(temps);
 			}
 			if (collectMeanTemperature && collectAllTemperature) {
-				lcd.setSeriesWidth(0, 2.0f);
+				lcd.setSeriesStroke(0, new BasicStroke(2.0f));
 			}
 //lcd.setSeriesWidth(0, 2.0f);
 // TODO
@@ -213,7 +214,7 @@ public class Simulation {
 				scd.addAllSeries(loads);
 			}
 			if (collectMeanLoad && collectAllLoad) {
-				scd.setSeriesWidth(0, 2.0f);
+				scd.setSeriesStroke(0, new BasicStroke(2.0f));
 			}
 //scd.setSeriesWidth(0, 2.0f);
 // TODO

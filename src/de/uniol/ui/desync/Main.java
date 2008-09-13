@@ -16,8 +16,8 @@ public class Main {
 		// Perform experiment(s)
 		for (int i = 1; i <= runs; i++) {
 			if (i < 99) {
-				conf.variate_mc_seed = LKSeeds.ZRNG[i + 1];
-				conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i - 1];
+				conf.variate_mc_seed = LKSeeds.ZRNG[i];
+				conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
 			} else {
 				conf.variate_mc_seed = Math.round(Math.random() * 1000000000d);
 				conf.variate_Tcurrent_seed = Math
@@ -29,7 +29,7 @@ public class Main {
 			MessagingEventList el = (MessagingEventList) Schedule
 					.getEventList(list);
 			
-			Experiment exp = new Experiment(conf);
+			Experiment exp = new Experiment(conf, i, 0);
 			exp.run(el, i == runs);
 			System.out.println(exp.getName() + "(" + conf.SIMULATION_LENGTH
 					+ "h) - " + exp.getSimulationTime() + "s");

@@ -1,6 +1,7 @@
 package de.uniol.ui.desync;
 
 import java.awt.SystemColor;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -12,6 +13,7 @@ import simkit.Schedule;
 import simkit.random.LKSeeds;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
+import de.uniol.ui.desync.Configuration.VARIATE;
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.StepChartDialog;
 import de.uniol.ui.desync.util.MessagingEventList;
@@ -23,17 +25,122 @@ public class Main_MultipleRuns {
 	private static int runs = 5;
 	
 	public static void main(String[] args) {
+		/* Create results list */
+		HashMap<String, double[][][]> results = new HashMap<String, double[][][]>();
+		ArrayList<String> sortedKeys = new ArrayList<String>();
+
+		/* Perform runs: */
+
+		long start = System.currentTimeMillis();
+		Configuration conf;
+		String title;
+
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		// Run
+		title = "T=3.0,mc=19.95";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 0));
+
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		// Run
+		title = "T=uniform(3.0,8.0),mc=19.95";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 1));
+		
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent = Configuration.VARIATE.NORMAL;
+		// Run
+		title = "T=normal(5.0,1.0),mc=19.95";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 2));
+
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.UNIFORM;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		// Run
+		title = "T=3.0,mc=uniform(7.9,32.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 3));
+		
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		// Run
+		title = "T=3.0,mc=normal(19.95,1.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 4));
+		
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.UNIFORM;
+		conf.variate_Tcurrent = Configuration.VARIATE.NORMAL;
+		// Run
+		title = "T=normal(5.0,1.0),mc=uniform(7.9,32.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 5));
+		
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		// Run
+		title = "T=uniform(3.0,8.0),mc=normal(19.95,1.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 6));
+
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.UNIFORM;
+		conf.variate_Tcurrent = VARIATE.UNIFORM;
+		// Run
+		title = "T=uniform(3.0,8.0),mc=uniform(7.9,32.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 7));
+		
+		// Create config
+		conf = new Configuration();
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_Tcurrent = VARIATE.NORMAL;
+		// Run
+		title = "T=normal(5.0,1.0),mc=normal(19.95,1.0)";
+		sortedKeys.add(title);
+		results.put(title, run(conf, runs, 8));
+
+		/* Print status */
+		System.out.println("\n*********************************************");
+		long dur = System.currentTimeMillis() - start;
+		long min = dur / 60000l;
+		long sec = (dur % 60000l) / 1000l;
+		System.out.println("All experiments finished in " + min + "m" + sec
+				+ "s");
+
+		/* Show overall results */
+		showResults(sortedKeys, results);
+	}
+	
+	protected static double[][][] run(Configuration conf, int repetitions, int instance) {
 		long start = System.currentTimeMillis();
 		SimpleStatsTally sst = new SimpleStatsTally();
 		HashMap<Configuration, TimeseriesMultiMeanCollector> temps = new HashMap<Configuration, TimeseriesMultiMeanCollector>();
 		HashMap<Configuration, TimeseriesMultiMeanCollector> loads = new HashMap<Configuration, TimeseriesMultiMeanCollector>();
 		// Perform experiment(s)
-		for (int i = 1; i <= runs; i++) {
-			Configuration conf = new Configuration();
+		for (int i = 1; i <= repetitions; i++) {
+			Configuration.distinct++;
 			conf.showResults = false;
 			if (i < 99) {
-				conf.variate_mc_seed = LKSeeds.ZRNG[i + 1];
-				conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i - 1];
+				conf.variate_mc_seed = LKSeeds.ZRNG[i];
+				conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length
+						- i];
 			} else {
 				conf.variate_mc_seed = Math.round(Math.random() * 1000000000d);
 				conf.variate_Tcurrent_seed = Math
@@ -46,8 +153,8 @@ public class Main_MultipleRuns {
 					.getEventList(list);
 			
 			// Run
-			Experiment exp = new Experiment(conf);
-			exp.run(el, i == runs);
+			Experiment exp = new Experiment(conf, instance, i - 1);
+			exp.run(el, i == repetitions);
 			
 			// Print current results
 			System.out.println(exp.getName() + "(" + conf.SIMULATION_LENGTH
@@ -106,26 +213,46 @@ public class Main_MultipleRuns {
 //		System.out.println(Arrays.toString(lData[1]).replaceAll(", ", "\n").replaceAll("\\.", ","));
 		
 		// Print status
-		System.out.println("Experiments and analyzation finished in "
-				+ ((System.currentTimeMillis() - start) / 1000.0) + "s.");
+		long dur = System.currentTimeMillis() - start;
+		long min = dur / 60000l;
+		long sec = (dur % 60000l) / 1000l;
+		System.out.println("\nConfiguration run " + Configuration.instance
+				+ " finished in " + min + "m" + sec + "s");
 		
-		// Show overall results
+		// Return results
+		return new double[][][] { tData, lData };
+	}
+	
+	protected static void showResults(ArrayList<String> keys,
+			HashMap<String, double[][][]> results) {
+		// Prepare window
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		shell.setText("Simulation results");
-		// Temperature chart
+		// Prepare temperature chart
 		LineChartDialog lcd = new LineChartDialog(shell,
 				"Temperature progress", "Time (h)", "Temperature (°C)", "min",
 				"°C", 3.0, 8.0);
-		lcd.addSeries("temperature (mean of means)", tData);
-		lcd.setSeriesColor(0, SystemColor.BLACK);
-		lcd.create();
-		// Load chart
+		// Prepare load chart
 		StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 				"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
-		scd.addSeries("load (mean of means)", lData);
-		scd.setSeriesColor(0, SystemColor.BLACK);
+		// Create series
+		for (String key : keys) {
+			double[][][] data = results.get(key);
+			double[][] tData = data[0];
+			double[][] lData = data[1];
+			lcd.addSeries(key, tData);
+			if (keys.size() == 1) {
+				lcd.setSeriesColor(1, SystemColor.BLACK);
+			}
+			scd.addSeries(key, lData);
+			if (keys.size() == 1) {
+				scd.setSeriesColor(1, SystemColor.BLACK);
+			}
+		}
+		// Finish charts
+		lcd.create();
 		scd.create();
 		// Open shell
 		shell.setSize(900, 800);
