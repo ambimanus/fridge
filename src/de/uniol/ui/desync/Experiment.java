@@ -58,7 +58,8 @@ public class Experiment {
 	public Experiment(Configuration conf, int instance, int run) {
 		this.conf = conf;
 		instances++;
-		name = "Experiment" + instance + "@run" + run;
+//		name = "Experiment" + instance + "@run" + run;
+		name = conf.title + "___run" + run;
 	}
 
 	/**
@@ -109,55 +110,174 @@ public class Experiment {
 	 */
 	private ArrayList<AbstractFridge> createFridges(int list) {
 		AbstractFridge.resetInstanceCounter();
-		// Create distinct random variates for m_c and t_current
-		RandomVariate thermalMassVariate = null;
-		switch (conf.variate_mc) {
-		case UNIFORM: {
-			thermalMassVariate = new UniformVariate();
-			Congruential cong = new Congruential();
-			cong.setSeed(conf.variate_mc_seed);
-			thermalMassVariate.setRandomNumber(cong);
-			thermalMassVariate.setParameters(conf.MC_MIN, conf.MC_MAX);
-			break;
-		}
-		case NORMAL: {
-			thermalMassVariate = new NormalVariate();
-			Congruential cong = new Congruential();
-			cong.setSeed(conf.variate_mc_seed);
-			thermalMassVariate.setRandomNumber(cong);
-			thermalMassVariate.setParameters((conf.MC_MIN + conf.MC_MAX) / 2.0,
-					1.0);
-			break;
-		}
-		default: {
-			thermalMassVariate = null;
-			break;
-		}
-		}
-		RandomVariate tCurrentVariate = null;
+		// Create distinct random variates
+		RandomVariate tVariate = null;
 		switch (conf.variate_Tcurrent) {
 		case UNIFORM: {
-			tCurrentVariate = new UniformVariate();
+			tVariate = new UniformVariate();
 			Congruential cong = new Congruential();
 			cong.setSeed(conf.variate_Tcurrent_seed);
-			tCurrentVariate.setRandomNumber(cong);
-			tCurrentVariate.setParameters(AbstractFridge.DEFAULT_t_min,
-					AbstractFridge.DEFAULT_t_max);
+			tVariate.setRandomNumber(cong);
+			tVariate.setParameters(conf.variate_Tcurrent_min,
+					conf.variate_Tcurrent_max);
 			break;
 		}
 		case NORMAL: {
-			tCurrentVariate = new NormalVariate();
+			tVariate = new NormalVariate();
 			Congruential cong = new Congruential();
 			cong.setSeed(conf.variate_Tcurrent_seed);
-			tCurrentVariate.setRandomNumber(cong);
-			tCurrentVariate
-			.setParameters(
-					(AbstractFridge.DEFAULT_t_min + AbstractFridge.DEFAULT_t_max) / 2.0,
-					1.0);
+			tVariate.setRandomNumber(cong);
+			tVariate.setParameters(conf.variate_Tcurrent_default,
+					conf.variate_Tcurrent_sdev);
 			break;
 		}
 		default: {
-			tCurrentVariate = null;
+			tVariate = null;
+			break;
+		}
+		}
+		RandomVariate mcVariate = null;
+		switch (conf.variate_mc) {
+		case UNIFORM: {
+			mcVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_mc_seed);
+			mcVariate.setRandomNumber(cong);
+			mcVariate.setParameters(conf.variate_mc_min, conf.variate_mc_max);
+			break;
+		}
+		case NORMAL: {
+			mcVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_mc_seed);
+			mcVariate.setRandomNumber(cong);
+			mcVariate.setParameters(conf.variate_mc_default,
+					conf.variate_mc_sdev);
+			break;
+		}
+		default: {
+			mcVariate = null;
+			break;
+		}
+		}
+		RandomVariate aVariate = null;
+		switch (conf.variate_A) {
+		case UNIFORM: {
+			aVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_A_seed);
+			aVariate.setRandomNumber(cong);
+			aVariate.setParameters(conf.variate_A_min, conf.variate_A_max);
+			break;
+		}
+		case NORMAL: {
+			aVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_A_seed);
+			aVariate.setRandomNumber(cong);
+			aVariate.setParameters(conf.variate_A_default,
+					conf.variate_A_sdev);
+			break;
+		}
+		default: {
+			aVariate = null;
+			break;
+		}
+		}
+
+		RandomVariate toVariate = null;
+		switch (conf.variate_TO) {
+		case UNIFORM: {
+			toVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_TO_seed);
+			toVariate.setRandomNumber(cong);
+			toVariate.setParameters(conf.variate_TO_min, conf.variate_TO_max);
+			break;
+		}
+		case NORMAL: {
+			toVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_TO_seed);
+			toVariate.setRandomNumber(cong);
+			toVariate.setParameters(conf.variate_TO_default,
+					conf.variate_TO_sdev);
+			break;
+		}
+		default: {
+			toVariate = null;
+			break;
+		}
+		}
+		RandomVariate etaVariate = null;
+		switch (conf.variate_eta) {
+		case UNIFORM: {
+			etaVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_eta_seed);
+			etaVariate.setRandomNumber(cong);
+			etaVariate.setParameters(conf.variate_eta_min, conf.variate_eta_max);
+			break;
+		}
+		case NORMAL: {
+			etaVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_eta_seed);
+			etaVariate.setRandomNumber(cong);
+			etaVariate.setParameters(conf.variate_eta_default,
+					conf.variate_eta_sdev);
+			break;
+		}
+		default: {
+			etaVariate = null;
+			break;
+		}
+		}
+		RandomVariate qcVariate = null;
+		switch (conf.variate_qc) {
+		case UNIFORM: {
+			qcVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_qc_seed);
+			qcVariate.setRandomNumber(cong);
+			qcVariate.setParameters(conf.variate_qc_min, conf.variate_qc_max);
+			break;
+		}
+		case NORMAL: {
+			qcVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_qc_seed);
+			qcVariate.setRandomNumber(cong);
+			qcVariate.setParameters(conf.variate_qc_default,
+					conf.variate_qc_sdev);
+			break;
+		}
+		default: {
+			qcVariate = null;
+			break;
+		}
+		}
+		RandomVariate qwVariate = null;
+		switch (conf.variate_qw) {
+		case UNIFORM: {
+			qwVariate = new UniformVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_qw_seed);
+			qwVariate.setRandomNumber(cong);
+			qwVariate.setParameters(conf.variate_qw_min, conf.variate_qw_max);
+			break;
+		}
+		case NORMAL: {
+			qwVariate = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(conf.variate_qw_seed);
+			qwVariate.setRandomNumber(cong);
+			qwVariate.setParameters(conf.variate_qw_default,
+					conf.variate_qw_sdev);
+			break;
+		}
+		default: {
+			qwVariate = null;
 			break;
 		}
 		}
@@ -263,13 +383,26 @@ public class Experiment {
 				break;
 			}
 			}
-			if (conf.variate_mc != Configuration.VARIATE.NONE) {
-				// Distribute m_c between MC_MIN and MC_MAX
-				f.generate_mC(thermalMassVariate);
-			}
 			if (conf.variate_Tcurrent != Configuration.VARIATE.NONE) {
-				// Distribute t_current between t_min and t_max
-				f.generate_tCurrent(tCurrentVariate);
+				f.generate_tCurrent(tVariate);
+			}
+			if (conf.variate_mc != Configuration.VARIATE.NONE) {
+				f.generate_mC(mcVariate);
+			}
+			if (conf.variate_A != Configuration.VARIATE.NONE) {
+				f.generate_a(aVariate);
+			}
+			if (conf.variate_TO != Configuration.VARIATE.NONE) {
+				f.generate_tSurround(toVariate);
+			}
+			if (conf.variate_eta != Configuration.VARIATE.NONE) {
+				f.generate_eta(etaVariate);
+			}
+			if (conf.variate_qc != Configuration.VARIATE.NONE) {
+				f.generate_qCooling(qcVariate);
+			}
+			if (conf.variate_qw != Configuration.VARIATE.NONE) {
+				f.generate_qWarming(qwVariate);
 			}
 			// Make (ACTIVE_AT_START_PROPABILITY*100)% of the fridges active
 			f.setStartActive(activityAtStartVariate.generate() > 0);

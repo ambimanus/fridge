@@ -3,6 +3,7 @@ package de.uniol.ui.desync;
 import java.awt.SystemColor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -13,7 +14,6 @@ import simkit.Schedule;
 import simkit.random.LKSeeds;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
-import de.uniol.ui.desync.Configuration.VARIATE;
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.StepChartDialog;
 import de.uniol.ui.desync.util.MessagingEventList;
@@ -22,99 +22,31 @@ import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 public class Main_MultipleRuns {
 
-	private static int runs = 5;
-	
 	public static void main(String[] args) {
 		/* Create results list */
 		HashMap<String, double[][][]> results = new HashMap<String, double[][][]>();
 		ArrayList<String> sortedKeys = new ArrayList<String>();
-
-		/* Perform runs: */
-
 		long start = System.currentTimeMillis();
+		
+		/* Perform runs: */
 		Configuration conf;
-		String title;
-
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NONE;
-		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
-		// Run
-		title = "T=3.0,mc=19.95";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 0));
-
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NONE;
-		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
-		// Run
-		title = "T=uniform(3.0,8.0),mc=19.95";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 1));
+		ArrayList<Configuration> objectives;
 		
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NONE;
-		conf.variate_Tcurrent = Configuration.VARIATE.NORMAL;
-		// Run
-		title = "T=normal(5.0,1.0),mc=19.95";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 2));
-
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.UNIFORM;
-		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
-		// Run
-		title = "T=3.0,mc=uniform(7.9,32.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 3));
+//		objectives = Objectives.createObjectives_T();
+		objectives = Objectives.createObjectives_mc();
+//		objectives = Objectives.createObjectives_A();
+//		objectives = Objectives.createObjectives_TO();
+//		objectives = Objectives.createObjectives_eta();
 		
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NORMAL;
-		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
-		// Run
-		title = "T=3.0,mc=normal(19.95,1.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 4));
+//		objectives = Objectives.createObjectives_T_mc();
 		
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.UNIFORM;
-		conf.variate_Tcurrent = Configuration.VARIATE.NORMAL;
-		// Run
-		title = "T=normal(5.0,1.0),mc=uniform(7.9,32.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 5));
-		
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NORMAL;
-		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
-		// Run
-		title = "T=uniform(3.0,8.0),mc=normal(19.95,1.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 6));
-
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.UNIFORM;
-		conf.variate_Tcurrent = VARIATE.UNIFORM;
-		// Run
-		title = "T=uniform(3.0,8.0),mc=uniform(7.9,32.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 7));
-		
-		// Create config
-		conf = new Configuration();
-		conf.variate_mc = Configuration.VARIATE.NORMAL;
-		conf.variate_Tcurrent = VARIATE.NORMAL;
-		// Run
-		title = "T=normal(5.0,1.0),mc=normal(19.95,1.0)";
-		sortedKeys.add(title);
-		results.put(title, run(conf, runs, 8));
+		Iterator<Configuration> it = objectives.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			conf = it.next();
+			sortedKeys.add(conf.title);
+			results.put(conf.title, run(conf, i++));
+		}
 
 		/* Print status */
 		System.out.println("\n*********************************************");
@@ -127,24 +59,33 @@ public class Main_MultipleRuns {
 		/* Show overall results */
 		showResults(sortedKeys, results);
 	}
-	
-	protected static double[][][] run(Configuration conf, int repetitions, int instance) {
+
+	protected static double[][][] run(Configuration conf, int instance) {
 		long start = System.currentTimeMillis();
 		SimpleStatsTally sst = new SimpleStatsTally();
 		HashMap<Configuration, TimeseriesMultiMeanCollector> temps = new HashMap<Configuration, TimeseriesMultiMeanCollector>();
 		HashMap<Configuration, TimeseriesMultiMeanCollector> loads = new HashMap<Configuration, TimeseriesMultiMeanCollector>();
 		// Perform experiment(s)
-		for (int i = 1; i <= repetitions; i++) {
+		for (int i = 1; i <= conf.repetitions; i++) {
 			Configuration.distinct++;
 			conf.showResults = false;
 			if (i < 99) {
-				conf.variate_mc_seed = LKSeeds.ZRNG[i];
-				conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length
-						- i];
+				conf.variate_Tcurrent_seed = getSeed(i);
+				conf.variate_mc_seed = getSeed(i + 1);
+				conf.variate_A_seed = getSeed(i + 2);
+				conf.variate_TO_seed = getSeed(i + 3);
+				conf.variate_eta_seed = getSeed(i + 4);
+				conf.variate_qc_seed = getSeed(i + 5);
+				conf.variate_qw_seed = getSeed(i + 6);
 			} else {
-				conf.variate_mc_seed = Math.round(Math.random() * 1000000000d);
 				conf.variate_Tcurrent_seed = Math
 						.round(Math.random() * 1000000000d);
+				conf.variate_mc_seed = Math.round(Math.random() * 1000000000d);
+				conf.variate_A_seed = Math.round(Math.random() * 1000000000d);
+				conf.variate_TO_seed = Math.round(Math.random() * 1000000000d);
+				conf.variate_eta_seed = Math.round(Math.random() * 1000000000d);
+				conf.variate_qc_seed = Math.round(Math.random() * 1000000000d);
+				conf.variate_qw_seed = Math.round(Math.random() * 1000000000d);
 			}
 
 			// Get FEL
@@ -154,7 +95,7 @@ public class Main_MultipleRuns {
 			
 			// Run
 			Experiment exp = new Experiment(conf, instance, i - 1);
-			exp.run(el, i == repetitions);
+			exp.run(el, i == conf.repetitions);
 			
 			// Print current results
 			System.out.println(exp.getName() + "(" + conf.SIMULATION_LENGTH
@@ -178,7 +119,7 @@ public class Main_MultipleRuns {
 			temps.put(conf, exp.getMeanTemp());
 			loads.put(conf, exp.getMeanLoad());
 			
-//			double[][] res = exp.getMeanLoad().getResults();
+//			double[][] res = exp.getMeanTemp().getResults();
 //			System.out.println(Arrays.toString(res[0]).replaceAll(", ", "\n").replaceAll("\\.", ","));
 //			System.out.println(Arrays.toString(res[1]).replaceAll(", ", "\n").replaceAll("\\.", ","));
 			
@@ -216,11 +157,18 @@ public class Main_MultipleRuns {
 		long dur = System.currentTimeMillis() - start;
 		long min = dur / 60000l;
 		long sec = (dur % 60000l) / 1000l;
-		System.out.println("\nConfiguration run " + Configuration.instance
-				+ " finished in " + min + "m" + sec + "s");
+		System.out.println("\n" + conf.title + " finished in " + min + "m"
+				+ sec + "s");
 		
 		// Return results
 		return new double[][][] { tData, lData };
+	}
+	
+	protected static long getSeed(int index) {
+		if (index > 99) {
+			index -= 99;
+		}
+		return LKSeeds.ZRNG[index];
 	}
 	
 	protected static void showResults(ArrayList<String> keys,
