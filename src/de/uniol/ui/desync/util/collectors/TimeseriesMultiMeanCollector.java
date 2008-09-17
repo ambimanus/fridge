@@ -66,7 +66,7 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 				stopListener);
 		oldSimTime = eventlist.getSimTime();
 		sst = new SimpleStatsTally();
-		sstv = new SimpleStatsTimeVarying("Estimator Stats for 'Load'") {
+		sstv = new SimpleStatsTimeVarying() {
 			/* (non-Javadoc)
 			 * @see simkit.stat.SimpleStatsTimeVarying#newObservation(double)
 			 */
