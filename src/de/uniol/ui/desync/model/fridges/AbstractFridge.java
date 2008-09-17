@@ -352,9 +352,18 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 */
 	public void variateAllParallel(RandomVariate rv) {
 		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
 		a *= var;
+		if (a == 0.0) {
+			a = 0.001;
+		}
 		eta *= var;
 		m_c *= var;
+		if (m_c == 0.0) {
+			m_c = 0.001;
+		}
 		q_cooling *= var;
 		q_warming *= var;
 		t_surround *= var;
@@ -375,7 +384,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_a(RandomVariate rv) {
-		a *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0.001;
+		}
+		a *= var;
 	}
 	
 	/**
@@ -385,7 +398,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_eta(RandomVariate rv) {
-		eta *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		eta *= var;
 	}
 	
 	/**
@@ -395,7 +412,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_mC(RandomVariate rv) {
-		m_c *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0.001;
+		}
+		m_c *= var;
 	}
 	
 	/**
@@ -405,7 +426,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_qCooling(RandomVariate rv) {
-		q_cooling *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		q_cooling *= var;
 	}
 	
 	/**
@@ -415,7 +440,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_qWarming(RandomVariate rv) {
-		q_warming *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		q_warming *= var;
 	}
 	
 	/**
@@ -425,7 +454,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void variate_tSurround(RandomVariate rv) {
-		t_surround *= rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		t_surround *= var;
 	}
 	
 	/**
@@ -467,7 +500,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_a(RandomVariate rv) {
-		a = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0.001;
+		}
+		a = var;
 	}
 	
 	/**
@@ -477,7 +514,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_eta(RandomVariate rv) {
-		eta = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		eta = var;
 	}
 	
 	/**
@@ -487,7 +528,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_mC(RandomVariate rv) {
-		m_c = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0.001;
+		}
+		m_c = var;
 	}
 	
 	/**
@@ -497,7 +542,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_qCooling(RandomVariate rv) {
-		q_cooling = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		q_cooling = var;
 	}
 	
 	/**
@@ -507,7 +556,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_qWarming(RandomVariate rv) {
-		q_warming = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		q_warming = var;
 	}
 	
 	/**
@@ -517,7 +570,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param rv
 	 */
 	public void generate_tSurround(RandomVariate rv) {
-		t_surround = rv.generate();
+		double var = rv.generate();
+		if (var < 0) {
+			var = 0;
+		}
+		t_surround = var;
 	}
 	
 	/**
@@ -651,6 +708,9 @@ public abstract class AbstractFridge extends SimEntityClean {
 		double dividend = t_dest - t_surround + (eta * (load / a));
 		double divisor = t_from - t_surround + (eta * (load / a));
 		double tau = -1 * Math.log((dividend / divisor)) * (m_c / a);
+		if (tau < 0.0) {
+			System.err.println("tau=" + tau);
+		}
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes
 		return tau * 60.0;
