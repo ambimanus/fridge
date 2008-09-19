@@ -34,6 +34,8 @@ import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 public class Gui {
 
+	protected boolean allowSimulation = true;
+	
 	protected Shell shell;
 	protected Table table;
 	protected Button add;
@@ -59,6 +61,7 @@ public class Gui {
 		Display display = new Display();
 		shell = new Shell(display);
 		shell.setLayout(new FillLayout());
+		shell.setText("The adaptive fridge - a discrete-event system simulation (Chh, 2008)");
 	}
 	
 	private void initControls() {
@@ -182,7 +185,7 @@ public class Gui {
 	protected void updateButtons() {
 		edit.setEnabled(selectedConf != null);
 		remove.setEnabled(selectedConf != null);
-		simulate.setEnabled(items.size() > 0);
+		simulate.setEnabled(allowSimulation && items.size() > 0);
 	}
 	
 	protected void addObjective(Configuration conf) {
@@ -208,9 +211,10 @@ public class Gui {
 	
 	protected void startSimulation() {
 		// Disable buttons
-		add.setEnabled(false);
-		edit.setEnabled(false);
-		remove.setEnabled(false);
+//		add.setEnabled(false);
+//		edit.setEnabled(false);
+//		remove.setEnabled(false);
+		allowSimulation = false;
 		simulate.setEnabled(false);
 		
 		/* Create results list */
@@ -218,7 +222,8 @@ public class Gui {
 		ArrayList<String> sortedKeys = new ArrayList<String>();
 		long start = System.currentTimeMillis();
 		
-		Iterator<Configuration> it = items.keySet().iterator();
+		Iterator<Configuration> it = new ArrayList<Configuration>(items
+				.keySet()).iterator();
 		int i = 0;
 		while (it.hasNext()) {
 			Configuration conf = it.next();
@@ -238,9 +243,10 @@ public class Gui {
 		showResults(sortedKeys, results);
 		
 		// Enable buttons
-		add.setEnabled(true);
-		edit.setEnabled(true);
-		remove.setEnabled(true);
+//		add.setEnabled(true);
+//		edit.setEnabled(true);
+//		remove.setEnabled(true);
+		allowSimulation = true;
 		simulate.setEnabled(true);
 		
 		updateSelectedObjective();
