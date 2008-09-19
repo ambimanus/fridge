@@ -11,6 +11,9 @@ public class Configuration {
 	
 	public Configuration() {
 		instance++;
+		title = "New Configuration"
+				+ (Configuration.instance == 0 ? ""
+						: (" " + Configuration.instance));
 	}
 
 	/* Constants */
@@ -53,7 +56,7 @@ public class Configuration {
 	public double variate_Tcurrent_sdev = 0.75;
 	
 	/** Variation of m_c */
-	public VARIATE variate_mc = VARIATE.NONE;
+	public VARIATE variate_mc = VARIATE.NORMAL;
 	/** Seed for mc variation generator */
 	public long variate_mc_seed = LKSeeds.ZRNG[2];
 	/** mc default */
@@ -140,9 +143,9 @@ public class Configuration {
 	/** Used model type */
 	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public SIGNAL strategy = SIGNAL.DSC;
+	public SIGNAL strategy = SIGNAL.TLR;
 	/** Used damping */
-	public DAMPING damping = DAMPING.STATEFUL_HALF;
+	public DAMPING damping = DAMPING.RANDOM;
 	
 	/** Show progress? */
 	public boolean showProgress = true;

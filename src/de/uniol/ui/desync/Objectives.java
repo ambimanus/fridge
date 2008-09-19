@@ -3,6 +3,8 @@ package de.uniol.ui.desync;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+import de.uniol.ui.desync.Configuration.DAMPING;
+import de.uniol.ui.desync.Configuration.SIGNAL;
 import de.uniol.ui.desync.Configuration.VARIATE;
 
 public class Objectives {
@@ -211,6 +213,130 @@ public class Objectives {
 		conf.title = "T=normal(" + conf.variate_Tcurrent_default + ","
 				+ conf.variate_Tcurrent_sdev + "),mc=normal("
 				+ conf.variate_mc_default + "," + conf.variate_mc_sdev + ")";
+		objectives.add(conf);
+
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_AllVariated_DifferentStrategies() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		Configuration conf;
+
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.NONE;
+		conf.damping = DAMPING.NONE;
+		conf.title = "signal=" + conf.strategy;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = false;
+		conf.damping = DAMPING.STATEFUL_HALF;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = false;
+		conf.damping = DAMPING.STATEFUL_FULL;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = false;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = true;
+		conf.damping = DAMPING.STATEFUL_HALF;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = true;
+		conf.damping = DAMPING.STATEFUL_FULL;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = true;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "signal=" + conf.strategy + " ("
+				+ (conf.direct_doUnload ? "unload" : "load") + "), damping="
+				+ conf.damping;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.STATEFUL_FULL;
+		conf.title = "signal=" + conf.strategy + ", damping=STATEFUL";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "signal=" + conf.strategy + ", damping=RANDOM";
 		objectives.add(conf);
 
 		return objectives;

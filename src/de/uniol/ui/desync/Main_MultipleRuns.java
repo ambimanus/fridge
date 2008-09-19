@@ -33,12 +33,13 @@ public class Main_MultipleRuns {
 		ArrayList<Configuration> objectives;
 		
 //		objectives = Objectives.createObjectives_T();
-		objectives = Objectives.createObjectives_mc();
+//		objectives = Objectives.createObjectives_mc();
 //		objectives = Objectives.createObjectives_A();
 //		objectives = Objectives.createObjectives_TO();
 //		objectives = Objectives.createObjectives_eta();
 		
 //		objectives = Objectives.createObjectives_T_mc();
+		objectives = Objectives.createObjectives_AllVariated_DifferentStrategies();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;
