@@ -29,7 +29,8 @@ public class ObjectiveDialog extends Dialog {
 
 	public Configuration open() {
 		Shell parent = getParent();
-		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
+				| SWT.RESIZE);
 		shell.setText(getText());
 		shell.setLayout(new FillLayout());
 		
