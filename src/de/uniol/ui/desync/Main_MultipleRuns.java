@@ -39,7 +39,10 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_eta();
 		
 //		objectives = Objectives.createObjectives_T_mc();
-		objectives = Objectives.createObjectives_AllVariated_DifferentStrategies();
+//		objectives = Objectives.createObjectives_AllVariated_TLR_Random();
+//		objectives = Objectives.createObjectives_AllVariated_DifferentStrategies();
+		
+		objectives = Objectives.createObjectives_Lamps();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;

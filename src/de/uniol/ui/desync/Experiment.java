@@ -28,6 +28,7 @@ import de.uniol.ui.desync.model.controller.extended.StatefulTimedCompactLinear;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
+import de.uniol.ui.desync.model.lamps.Lamp;
 import de.uniol.ui.desync.model.signals.AbstractSignalPerformer;
 import de.uniol.ui.desync.model.signals.SignalPerformerDirect;
 import de.uniol.ui.desync.model.signals.SignalPerformerTimed;
@@ -78,6 +79,10 @@ public class Experiment {
 			// Create ControlCenter and Strategy
 			new ControlCenter(el.getID(), fridges, createStrategy(el.getID()));
 		}
+		// Create lamps
+		if (conf.includeLamps) {
+			createLamps(el.getID(), fridges);
+		}
 
 		// Prepare simulation
 		simulation = new Simulation(el, fridges);
@@ -98,6 +103,18 @@ public class Experiment {
 		
 		// Cleanup
 		fridges.clear();
+	}
+
+	private ArrayList<Lamp> createLamps(int id,
+			ArrayList<AbstractFridge> fridges) {
+		ArrayList<Lamp> lamps = new ArrayList<Lamp>();
+		UniformVariate uv = new UniformVariate();
+		uv.setMinimum(5.0);
+		uv.setMaximum(25.0);
+		for (AbstractFridge fridge : fridges) {
+			lamps.add(new Lamp(id, fridge));
+		}
+		return lamps;
 	}
 
 	/**

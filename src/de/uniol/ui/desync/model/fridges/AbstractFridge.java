@@ -71,9 +71,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 
 	/* state variables */
 	/** inner temperature at current timestamp */
-	protected double t_current = t_min;
+	protected double t_current = (t_min + t_max) / 2.0;
 	/** load at current timestamp */
-	protected double load = Double.NaN;
+	private double load = Double.NaN;
+	/** extra load (e.g. from lamp) at current timestamp */
+	private double extraLoad = 0.0;
 	
 	/* Components */
 	/** Controller which controls this device */
@@ -110,7 +112,7 @@ public abstract class AbstractFridge extends SimEntityClean {
 		loadsToTauCooling.clear();
 		loadsToTauWarming.clear();
 		// Init state vars
-		t_current = t_min;
+		t_current = (t_min + t_max) / 2.0;
 		load = Double.NaN;
 	}
 	
@@ -284,12 +286,31 @@ public abstract class AbstractFridge extends SimEntityClean {
 	 * @param load the load to set
 	 */
 	public void setLoad(double load) {
-		double bak = this.load;
+		double bak = this.load + this.extraLoad;
 		this.load = load;
 		// Announce state change
-		firePropertyChange(IterativeFridge.PROP_LOAD, bak, this.load);
+		firePropertyChange(IterativeFridge.PROP_LOAD, bak, this.load
+				+ this.extraLoad);
 	}
 	
+	/**
+	 * @return the extraLoad
+	 */
+	public double getExtraLoad() {
+		return extraLoad;
+	}
+
+	/**
+	 * @param extraLoad the extraLoad to set
+	 */
+	public void setExtraLoad(double extraLoad) {
+		double bak = this.load + this.extraLoad;
+		this.extraLoad = extraLoad;
+		// Announce state change
+		firePropertyChange(IterativeFridge.PROP_LOAD, bak, this.load
+				+ this.extraLoad);
+	}
+
 	/**
 	 * @return whether this device starts in state 'cooling'
 	 */

@@ -46,7 +46,8 @@ public class IterativeFridge extends AbstractFridge {
 	public double updateTemperature() {
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
-		t_current = calculateTemperatureAfter(isActive(), tau, t_current, load);
+		t_current = calculateTemperatureAfter(isActive(), tau, t_current,
+				getLoad());
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Range check
@@ -55,7 +56,7 @@ public class IterativeFridge extends AbstractFridge {
 			System.err.println(getEventList().getSimTime()
 					+ " ERROR - out of range: " + getName()
 					+ ".updateTemperature(previousTemperature=" + t_previous
-					+ ", load=" + load + ") = " + t_current);
+					+ ", load=" + getLoad() + ") = " + t_current);
 		}
 		// Return
 		return t_current;

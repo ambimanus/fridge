@@ -35,7 +35,7 @@ public class Simulation {
 
 	/** The underlying FEL */
 	private MessagingEventList el;
-	/** The simulated entities */
+	/** The simulated fridge entities */
 	private ArrayList<? extends AbstractFridge> fridges;
 
 	/* Statistics collectors */
@@ -54,7 +54,7 @@ public class Simulation {
 	private boolean collectAllLoad = false;
 	/** the color which will be used to highlight the mean curves */
 	private Color highlightColor = SystemColor.BLACK;
-
+	
 	/**
 	 * Creates a new simulation using the specified {@link EventList} and the
 	 * given population of {@link SimEntity}s.
@@ -62,7 +62,8 @@ public class Simulation {
 	 * @param el
 	 * @param fridges
 	 */
-	public Simulation(MessagingEventList el, ArrayList<? extends AbstractFridge> fridges) {
+	public Simulation(MessagingEventList el,
+			ArrayList<? extends AbstractFridge> fridges) {
 		this.el = el;
 		this.fridges = fridges;
 		if (fridges.size() > 1 && fridges.size() < 10) {

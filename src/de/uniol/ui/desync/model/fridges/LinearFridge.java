@@ -57,7 +57,8 @@ public class LinearFridge extends AbstractFridge {
 												+ getName()
 												+ ".updateTemperature(previousTemperature="
 												+ previousTemperature
-												+ ", load=" + load + ") = "
+												+ ", load=" + getLoad()
+												+ ") = "
 												+ newTemp);
 							}
 							previousTemperature = newTemp;
@@ -91,7 +92,7 @@ public class LinearFridge extends AbstractFridge {
 		double tau = (getEventList().getSimTime() - lastActionTime);
 		// Calculate current temperature based on temperature at last state
 		// switch and elapsed time since
-		return calculateTemperatureAfter(isActive(), tau, t_current, load);
+		return calculateTemperatureAfter(isActive(), tau, t_current, getLoad());
 	}
 	
 	/*
@@ -113,7 +114,8 @@ public class LinearFridge extends AbstractFridge {
 		double tau = (getEventList().getSimTime() - lastActionTime);
 		// Update temperature in current phase defined by given load
 		t_previous = t_current;
-		t_current = calculateTemperatureAfter(isActive(), tau, t_previous, load);
+		t_current = calculateTemperatureAfter(isActive(), tau, t_previous,
+				getLoad());
 		// Announce state change
 		firePropertyChange(PROP_TEMPERATURE, t_previous, t_current);
 		// Update action timestamp

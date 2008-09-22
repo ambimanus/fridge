@@ -14,6 +14,30 @@ public class Objectives {
 		nf.setMinimumFractionDigits(1);
 	}
 	
+	public static ArrayList<Configuration> createObjectives_Lamps() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.POPULATION_SIZE = 5000;
+		conf.includeLamps = false;
+		conf.title = "5000 devices, without lamps";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.POPULATION_SIZE = 100;
+		conf.includeLamps = true;
+		conf.title = "100 devices, with lamps";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.POPULATION_SIZE = 5000;
+		conf.includeLamps = true;
+		conf.title = "5000 devices, with lamps";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
 	public static ArrayList<Configuration> createObjectives_T() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -137,7 +161,7 @@ public class Objectives {
 	public static ArrayList<Configuration> createObjectives_T_mc() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
-
+		
 		// Create config
 		conf = new Configuration();
 		conf.variate_mc = Configuration.VARIATE.NONE;
@@ -215,6 +239,48 @@ public class Objectives {
 				+ conf.variate_mc_default + "," + conf.variate_mc_sdev + ")";
 		objectives.add(conf);
 
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_AllVariated_TLR_Random() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		Configuration conf;
+
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "mc=" + conf.variate_mc_default;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.UNIFORM;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "mc=uniform(" + conf.variate_mc_min + ","
+				+ conf.variate_mc_max + ")";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.title = "mc=normal(" + conf.variate_mc_default + ","
+				+ conf.variate_mc_sdev + ")";
+		objectives.add(conf);
+		
 		return objectives;
 	}
 	

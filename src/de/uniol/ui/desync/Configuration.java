@@ -43,7 +43,7 @@ public class Configuration {
 	public double ACTIVE_AT_START_PROPABILITY = 0.22;
 	
 	/** Variation of T_current */
-	public VARIATE variate_Tcurrent = VARIATE.UNIFORM;
+	public VARIATE variate_Tcurrent = VARIATE.NONE;
 	/** Seed for Tcurrent variation generator */
 	public long variate_Tcurrent_seed = LKSeeds.ZRNG[1];
 	/** Tcurrent default */
@@ -56,7 +56,7 @@ public class Configuration {
 	public double variate_Tcurrent_sdev = 0.75;
 	
 	/** Variation of m_c */
-	public VARIATE variate_mc = VARIATE.NORMAL;
+	public VARIATE variate_mc = VARIATE.NONE;
 	/** Seed for mc variation generator */
 	public long variate_mc_seed = LKSeeds.ZRNG[2];
 	/** mc default */
@@ -143,14 +143,16 @@ public class Configuration {
 	/** Used model type */
 	public MODEL model = MODEL.COMPACT_LINEAR;
 	/** Used strategy */
-	public SIGNAL strategy = SIGNAL.TLR;
+	public SIGNAL strategy = SIGNAL.NONE;
 	/** Used damping */
-	public DAMPING damping = DAMPING.RANDOM;
+	public DAMPING damping = DAMPING.NONE;
 	
 	/** Show progress? */
 	public boolean showProgress = true;
 	/** Show results? */
 	public boolean showResults = true;
+	/** Include lamps? */
+	public boolean includeLamps = false;
 	
 	/* Strategy params: direct storage control */
 	public double direct_t_notify = 90.0;
