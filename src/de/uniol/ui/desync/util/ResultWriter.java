@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import simkit.random.Congruential;
+import simkit.random.NormalVariate;
 import simkit.stat.SimpleStatsTally;
-
 import de.uniol.ui.desync.Configuration;
 import de.uniol.ui.desync.Experiment;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
@@ -32,13 +33,57 @@ public class ResultWriter {
 		tf.setMaximumIntegerDigits(3);
 		
 		vf.setGroupingUsed(false);
-		vf.setMinimumFractionDigits(2);
-		vf.setMaximumFractionDigits(2);
+		vf.setMinimumFractionDigits(3);
+		vf.setMaximumFractionDigits(3);
 		vf.setMinimumIntegerDigits(2);
 		vf.setMaximumIntegerDigits(2);
 		
 		cf.setGroupingUsed(false);
 		cf.setMinimumFractionDigits(1);
+	}
+	
+	public static void writeArray(File file, double[] data, NumberFormat nf,
+			String separator) {
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file, false);
+			// Write values
+			for (int i = 0; i < data.length; i++) {
+				fw.write(nf.format(data[i]));
+				if (i < data.length - 1l) {
+					fw.write(separator);
+				}
+			}
+			// Close stream
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeNormalDistribution(File file, long length,
+			long seed, double mean, double sdev) {
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file, false);
+			// Prepare values
+			NormalVariate nv = new NormalVariate();
+			Congruential cong = new Congruential();
+			cong.setSeed(seed);
+			nv.setRandomNumber(cong);
+			nv.setParameters(mean, sdev);
+			// Write values
+			for (long i = 0l; i < length; i++) {
+				fw.write(vf.format(nv.generate()));
+				if (i < length - 1l) {
+					fw.write("\n");
+				}
+			}
+			// Close stream
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void writeResults(Configuration config, Experiment exp,
@@ -145,6 +190,51 @@ public class ResultWriter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static ArrayList<SimpleStatsTally> writeLoadResultsSimple(
+			HashMap<Configuration, TimeseriesMultiMeanCollector> results,
+			File file) {
+		ArrayList<SimpleStatsTally> stats = new ArrayList<SimpleStatsTally>();
+		// Interpolate data
+		HashMap<Configuration, ArrayList<Double>[]> data = interpolate(results,
+				false);
+		// Write data
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file, false);
+			// Prepare values
+			ArrayList<Double>[] main = null;
+			ArrayList<ArrayList<Double>[]> lists = new ArrayList<ArrayList<Double>[]>();
+			Iterator<Configuration> it = data.keySet().iterator();
+			while (it.hasNext()) {
+				ArrayList<Double>[] current = data.get(it.next());
+				if (main == null) {
+					main = current;
+				}
+				lists.add(current);
+			}
+			// Write values
+			for (int i = 0; i < main[1].size(); i++) {
+				for (int j = 0; j < lists.size(); j++) {
+					ArrayList<Double>[] current = lists.get(j);
+					fw.write(vf.format(current[1].get(i)));
+					if (j >= stats.size()) {
+						stats.add(new SimpleStatsTally());
+					}
+					SimpleStatsTally sst = stats.get(j);
+					sst.newObservation(current[1].get(i));
+					if (i < main[1].size() - 1) {
+						fw.write("\n");
+					}
+				}
+			}
+			// Close stream
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return stats;
 	}
 	
 	protected static void writeConfigs(FileWriter fw, Set<Configuration> configs)

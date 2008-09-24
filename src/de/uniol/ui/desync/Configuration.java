@@ -43,7 +43,7 @@ public class Configuration {
 	public double ACTIVE_AT_START_PROPABILITY = 0.22;
 	
 	/** Variation of T_current */
-	public VARIATE variate_Tcurrent = VARIATE.NONE;
+	public VARIATE variate_Tcurrent = VARIATE.UNIFORM;
 	/** Seed for Tcurrent variation generator */
 	public long variate_Tcurrent_seed = LKSeeds.ZRNG[1];
 	/** Tcurrent default */
@@ -150,7 +150,7 @@ public class Configuration {
 	/** Show progress? */
 	public boolean showProgress = true;
 	/** Show results? */
-	public boolean showResults = true;
+	public boolean showResults = false;
 	/** Include lamps? */
 	public boolean includeLamps = false;
 	

@@ -1,17 +1,18 @@
 package de.uniol.ui.desync;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import simkit.Schedule;
-import simkit.random.LKSeeds;
+import simkit.stat.SimpleStatsTally;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 public class Main_LoadCollector {
 
-	private static int runs = 2;
+	private static int runs = 1;
 	private static File file = new File(System.getProperty("user.dir")
 			+ File.separator + "data" + File.separator + "out.csv");
 	
@@ -20,8 +21,8 @@ public class Main_LoadCollector {
 		// Perform experiment(s)
 		for (int i = 1; i <= runs; i++) {
 			Configuration conf = new Configuration();
-			conf.variate_mc_seed = LKSeeds.ZRNG[i];
-			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
+//			conf.variate_mc_seed = LKSeeds.ZRNG[i];
+//			conf.variate_Tcurrent_seed = LKSeeds.ZRNG[LKSeeds.ZRNG.length - i];
 
 			// Get FEL
 			int list = Schedule.addNewEventList(MessagingEventList.class);
@@ -47,6 +48,15 @@ public class Main_LoadCollector {
 			System.gc();
 		}
 		// Output results
-		ResultWriter.writeLoadResults(results, file);
+		ArrayList<SimpleStatsTally> stats = ResultWriter.writeLoadResultsSimple(results, file);
+		for (SimpleStatsTally sst : stats) {
+			System.out.println("\nStats:");
+			System.out.println("\tn        = " + sst.getCount());
+			System.out.println("\tmin      = " + sst.getMinObs());
+			System.out.println("\tmax      = " + sst.getMaxObs());
+			System.out.println("\tmean     = " + sst.getMean());
+			System.out.println("\tvariance = " + sst.getVariance());
+			System.out.println("\tstd.dev  = " + sst.getStandardDeviation());
+		}
 	}
 }

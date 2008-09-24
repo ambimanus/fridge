@@ -14,6 +14,37 @@ public class Objectives {
 		nf.setMinimumFractionDigits(1);
 	}
 	
+	public static ArrayList<Configuration> createObjectives_Default() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.title = "default settings";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Spread() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.direct_spread = 10.0;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.direct_spread = 30.0;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.direct_spread = 60.0;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
 	public static ArrayList<Configuration> createObjectives_Lamps() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
