@@ -1,6 +1,8 @@
 package de.uniol.ui.desync;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,17 +40,24 @@ public class DistributionTest {
 		// Create results
 		double[] values = exp.getMeanLoad().getResults()[1];
 		SimpleStatsTally sst = new SimpleStatsTally();
+		// Sort dataset
 		Arrays.sort(values);
+		// Remove duplicates
 		ArrayList<Double> val = new ArrayList<Double>();
 		for (int i = 0; i < values.length; i++) {
-			if (i == 0 || val.get(val.size() - 1) != values[i]) {
-				val.add(values[i]);
-				sst.newObservation(values[i]);
+			// Round to 4 fraction digits
+			double d = new BigDecimal(values[i]).setScale(4,
+					RoundingMode.HALF_UP).doubleValue();
+			if (i == 0 || val.get(val.size() - 1) != d) {
+				val.add(d);
 			}
 		}
+		// Recreate dataset with cleaned values
 		values = new double[val.size()];
 		for (int i = 0; i < values.length; i++) {
 			values[i] = val.get(i);
+			// Add to stats tally
+			sst.newObservation(values[i]);
 		}
 		System.out.println("\nsst:");
 		System.out.println("\tn        = " + sst.getCount());
@@ -65,15 +74,18 @@ public class DistributionTest {
 		System.out.println("\tmean     = " + sstv.getMean());
 		System.out.println("\tvariance = " + sstv.getVariance());
 		System.out.println("\tstd.dev  = " + sstv.getStandardDeviation());
+		// Create normal distributed reference dataset
 		double[] normal = new double[values.length];
 		NormalVariate nv = new NormalVariate();
 		Congruential cong = new Congruential();
 		cong.setSeed(LKSeeds.ZRNG[50]);
 		nv.setRandomNumber(cong);
+		// Take params from collected stats tally
 		nv.setParameters(sst.getMean(), sst.getStandardDeviation());
 		for (int i = 0; i < normal.length; i++) {
 			normal[i] = nv.generate();
 		}
+		// Sort reference dataset
 		Arrays.sort(normal);
 		
 		// Output results
