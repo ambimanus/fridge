@@ -169,7 +169,7 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 			}
 		} else {
 			// We are able to survive tau_reduce. Try to reach T_max-act.
-			// To do this, we have to check an intersecion with sCCa or sBA. We
+			// To do this, we have to check an intersecion with sCC1 or sBA. We
 			// don't know which one, so we have to test both.
 			double tC1 = tAct + tau_reduce - tauW;
 			double aw = (fridge.getT_max() - fridge.getT_min())
