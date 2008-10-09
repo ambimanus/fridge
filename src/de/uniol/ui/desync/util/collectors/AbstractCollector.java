@@ -3,7 +3,7 @@ package de.uniol.ui.desync.util.collectors;
 import java.beans.PropertyChangeListener;
 
 /**
- * This abstract class defines base maethods which must be implemented by all
+ * This abstract class defines base methods which must be implemented by all
  * statistical collectors in this software. The collectors are implemented as
  * {@link PropertyChangeListener}s (or internally use them) to collect the data
  * from the simulation model.
