@@ -50,18 +50,21 @@ public class Objectives {
 		
 		Configuration conf = new Configuration();
 		conf.POPULATION_SIZE = 5000;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
 		conf.includeLamps = false;
 		conf.title = "5000 devices, without lamps";
 		objectives.add(conf);
 		
 		conf = new Configuration();
 		conf.POPULATION_SIZE = 100;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
 		conf.includeLamps = true;
 		conf.title = "100 devices, with lamps";
 		objectives.add(conf);
 		
 		conf = new Configuration();
 		conf.POPULATION_SIZE = 5000;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
 		conf.includeLamps = true;
 		conf.title = "5000 devices, with lamps";
 		objectives.add(conf);
