@@ -13,6 +13,8 @@ import simkit.random.LKSeeds;
 import simkit.random.NormalVariate;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 

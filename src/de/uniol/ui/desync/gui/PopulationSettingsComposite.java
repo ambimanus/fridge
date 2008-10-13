@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
 import simkit.random.LKSeeds;
-import de.uniol.ui.desync.Configuration;
-import de.uniol.ui.desync.Configuration.VARIATE;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Configuration.VARIATE;
 
 public class PopulationSettingsComposite extends Composite {
 

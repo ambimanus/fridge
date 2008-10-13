@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import simkit.Schedule;
 import simkit.stat.SimpleStatsTally;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;

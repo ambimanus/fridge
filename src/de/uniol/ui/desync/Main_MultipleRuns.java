@@ -14,6 +14,8 @@ import simkit.Schedule;
 import simkit.random.LKSeeds;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.StepChartDialog;
 import de.uniol.ui.desync.util.MessagingEventList;
@@ -42,8 +44,10 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_AllVariated_TLR_Random();
 //		objectives = Objectives.createObjectives_AllVariated_DifferentStrategies();
 		
-		objectives = Objectives.createObjectives_Lamps();
+//		objectives = Objectives.createObjectives_Lamps();
 //		objectives = Objectives.createObjectives_Spread();
+//		objectives = Objectives.createObjectives_TLR_preload();
+		objectives = Objectives.createObjectives_TLR_reduce();
 //		objectives = Objectives.createObjectives_Default();
 		
 		Iterator<Configuration> it = objectives.iterator();

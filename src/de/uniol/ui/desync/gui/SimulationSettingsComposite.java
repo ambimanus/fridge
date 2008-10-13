@@ -15,10 +15,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 
-import de.uniol.ui.desync.Configuration;
-import de.uniol.ui.desync.Configuration.DAMPING;
-import de.uniol.ui.desync.Configuration.MODEL;
-import de.uniol.ui.desync.Configuration.SIGNAL;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Configuration.DAMPING;
+import de.uniol.ui.desync.model.Configuration.MODEL;
+import de.uniol.ui.desync.model.Configuration.SIGNAL;
 
 public class SimulationSettingsComposite extends Composite {
 
@@ -37,7 +37,7 @@ public class SimulationSettingsComposite extends Composite {
 	private Spinner tnotify;
 	private Spinner spread;
 	private Spinner tnotify2;
-	private Spinner tauActiv;
+	private Spinner tauPreload;
 	private Spinner tauReduce;
 
 	public SimulationSettingsComposite(Composite parent, int style,
@@ -437,27 +437,27 @@ public class SimulationSettingsComposite extends Composite {
 			}
 		});
 
-		Label tauActivLabel = new Label(tlr, SWT.NONE);
-		tauActivLabel.setText("tau_activ (minutes)");
+		Label tauPreloadLabel = new Label(tlr, SWT.NONE);
+		tauPreloadLabel.setText("tau_preload (minutes)");
 		gd = new GridData();
 		gd.grabExcessVerticalSpace = true;
-		tauActivLabel.setLayoutData(gd);
+		tauPreloadLabel.setLayoutData(gd);
 
-		tauActiv = new Spinner(tlr, SWT.BORDER);
-		tauActiv.setDigits(1);
-		tauActiv.setIncrement(10);
-		tauActiv.setPageIncrement(100);
-		tauActiv.setMinimum(0);
-		tauActiv.setMaximum(Integer.MAX_VALUE);
-		tauActiv.setSelection((int) (conf.timed_tau_activ * 10));
+		tauPreload = new Spinner(tlr, SWT.BORDER);
+		tauPreload.setDigits(1);
+		tauPreload.setIncrement(10);
+		tauPreload.setPageIncrement(100);
+		tauPreload.setMinimum(0);
+		tauPreload.setMaximum(Integer.MAX_VALUE);
+		tauPreload.setSelection((int) (conf.timed_tau_preload * 10));
 		gd = new GridData();
 		gd.widthHint = 35;
 		gd.horizontalAlignment = SWT.RIGHT;
 		gd.grabExcessVerticalSpace = true;
-		tauActiv.setLayoutData(gd);
-		tauActiv.addModifyListener(new ModifyListener() {
+		tauPreload.setLayoutData(gd);
+		tauPreload.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				conf.timed_tau_activ = (double) tauActiv.getSelection() / 10.0;
+				conf.timed_tau_preload = (double) tauPreload.getSelection() / 10.0;
 			}
 		});
 
@@ -499,7 +499,7 @@ public class SimulationSettingsComposite extends Composite {
 	private void setTlrEnabled(boolean enabled) {
 		tlr.setEnabled(enabled);
 		tnotify2.setEnabled(enabled);
-		tauActiv.setEnabled(enabled);
+		tauPreload.setEnabled(enabled);
 		tauReduce.setEnabled(enabled);
 	}
 }

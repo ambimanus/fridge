@@ -1,4 +1,4 @@
-package de.uniol.ui.desync;
+package de.uniol.ui.desync.model;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,6 @@ import simkit.random.NormalVariate;
 import simkit.random.RandomVariate;
 import simkit.random.UniformVariate;
 import simkit.stat.SimpleStatsTimeVarying;
-import de.uniol.ui.desync.model.ControlCenter;
-import de.uniol.ui.desync.model.Simulation;
 import de.uniol.ui.desync.model.controller.AbstractController;
 import de.uniol.ui.desync.model.controller.BaseControllerCompactLinear;
 import de.uniol.ui.desync.model.controller.BaseControllerIterative;
@@ -446,7 +444,7 @@ public class Experiment {
 		}
 		case TLR: {
 			return new SignalPerformerTimed(eventListID, conf.timed_t_notify,
-					conf.timed_tau_activ, conf.timed_tau_reduce);
+					conf.timed_tau_preload, conf.timed_tau_reduce);
 		}
 		}
 		return null;

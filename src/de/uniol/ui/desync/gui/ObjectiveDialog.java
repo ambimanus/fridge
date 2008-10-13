@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import de.uniol.ui.desync.Configuration;
+import de.uniol.ui.desync.model.Configuration;
 
 public class ObjectiveDialog extends Dialog {
 

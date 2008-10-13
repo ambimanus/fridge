@@ -4,6 +4,8 @@ import simkit.Schedule;
 import simkit.random.LKSeeds;
 import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.MessagingEventList;
 
 public class Main {

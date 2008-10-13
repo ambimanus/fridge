@@ -15,8 +15,8 @@ import java.util.Set;
 import simkit.random.Congruential;
 import simkit.random.NormalVariate;
 import simkit.stat.SimpleStatsTally;
-import de.uniol.ui.desync.Configuration;
-import de.uniol.ui.desync.Experiment;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 public class ResultWriter {

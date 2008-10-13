@@ -3,9 +3,10 @@ package de.uniol.ui.desync;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import de.uniol.ui.desync.Configuration.DAMPING;
-import de.uniol.ui.desync.Configuration.SIGNAL;
-import de.uniol.ui.desync.Configuration.VARIATE;
+import de.uniol.ui.desync.model.Configuration;
+import de.uniol.ui.desync.model.Configuration.DAMPING;
+import de.uniol.ui.desync.model.Configuration.SIGNAL;
+import de.uniol.ui.desync.model.Configuration.VARIATE;
 
 public class Objectives {
 
@@ -28,18 +29,227 @@ public class Objectives {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
 		Configuration conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
+		conf.direct_spread = 0.0;
+		conf.direct_doUnload = false;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
+		conf.direct_spread = 5.0;
+		conf.direct_doUnload = false;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
 		conf.direct_spread = 10.0;
+		conf.direct_doUnload = false;
 		conf.title = "spread=" + conf.direct_spread;
 		objectives.add(conf);
 		
 		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
 		conf.direct_spread = 30.0;
+		conf.direct_doUnload = false;
 		conf.title = "spread=" + conf.direct_spread;
 		objectives.add(conf);
 		
 		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
 		conf.direct_spread = 60.0;
+		conf.direct_doUnload = false;
 		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.DSC;
+		conf.damping = DAMPING.RANDOM;
+		conf.direct_spread = 120.0;
+		conf.direct_doUnload = false;
+		conf.title = "spread=" + conf.direct_spread;
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_TLR_preload() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 0.0;
+		conf.timed_t_notify = 210;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 5.0;
+		conf.timed_t_notify = 205;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 10.0;
+		conf.timed_t_notify = 200;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 30.0;
+		conf.timed_t_notify = 180;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 60.0;
+		conf.timed_t_notify = 150;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_preload = 120.0;
+		conf.timed_t_notify = 90;
+		conf.title = "preload=" + conf.timed_tau_preload;
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_TLR_reduce() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_reduce = 0;
+		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+		conf.timed_t_notify = 240 - conf.timed_tau_preload;
+		conf.title = "reduce=" + conf.timed_tau_reduce;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_reduce = 30;
+		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+		conf.timed_t_notify = 240 - conf.timed_tau_preload;
+		conf.title = "reduce=" + conf.timed_tau_reduce;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_reduce = 90;
+		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+		conf.timed_t_notify = 240 - conf.timed_tau_preload;
+		conf.title = "reduce=" + conf.timed_tau_reduce;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+		conf.timed_tau_reduce = 150;
+		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+		conf.timed_t_notify = 240 - conf.timed_tau_preload;
+		conf.title = "reduce=" + conf.timed_tau_reduce;
 		objectives.add(conf);
 		
 		return objectives;
