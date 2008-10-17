@@ -49,6 +49,7 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_TLR_preload();
 		objectives = Objectives.createObjectives_TLR_reduce();
 //		objectives = Objectives.createObjectives_Default();
+//		objectives = Objectives.createObjectives_Iterative();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Configuration.DAMPING;
+import de.uniol.ui.desync.model.Configuration.MODEL;
 import de.uniol.ui.desync.model.Configuration.SIGNAL;
 import de.uniol.ui.desync.model.Configuration.VARIATE;
 
@@ -20,6 +21,32 @@ public class Objectives {
 		
 		Configuration conf = new Configuration();
 		conf.title = "default settings";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Iterative() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.title = "iterative";
+		conf.ACTIVE_AT_START_PROPABILITY = 1.0;
+		conf.model = MODEL.ITERATIVE;
+		conf.repetitions = 1;
+		conf.POPULATION_SIZE = 1;
+		conf.strategy = SIGNAL.NONE;
+		conf.variate_Tcurrent = VARIATE.NONE;
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.title = "iterative";
+		conf.ACTIVE_AT_START_PROPABILITY = 1.0;
+		conf.model = MODEL.ITERATIVE;
+		conf.repetitions = 1;
+		conf.POPULATION_SIZE = 1;
+		conf.strategy = SIGNAL.TLR;
+		conf.variate_Tcurrent = VARIATE.NONE;
 		objectives.add(conf);
 		
 		return objectives;
@@ -206,6 +233,7 @@ public class Objectives {
 		conf.damping = DAMPING.RANDOM;
 		conf.timed_tau_reduce = 0;
 		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+//		conf.timed_tau_preload = 30.0;
 		conf.timed_t_notify = 240 - conf.timed_tau_preload;
 		conf.title = "reduce=" + conf.timed_tau_reduce;
 		objectives.add(conf);
@@ -220,6 +248,7 @@ public class Objectives {
 		conf.damping = DAMPING.RANDOM;
 		conf.timed_tau_reduce = 30;
 		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+//		conf.timed_tau_preload = 30.0;
 		conf.timed_t_notify = 240 - conf.timed_tau_preload;
 		conf.title = "reduce=" + conf.timed_tau_reduce;
 		objectives.add(conf);
@@ -234,6 +263,7 @@ public class Objectives {
 		conf.damping = DAMPING.RANDOM;
 		conf.timed_tau_reduce = 90;
 		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+//		conf.timed_tau_preload = 30.0;
 		conf.timed_t_notify = 240 - conf.timed_tau_preload;
 		conf.title = "reduce=" + conf.timed_tau_reduce;
 		objectives.add(conf);
@@ -248,6 +278,7 @@ public class Objectives {
 		conf.damping = DAMPING.RANDOM;
 		conf.timed_tau_reduce = 150;
 		conf.timed_tau_preload = conf.timed_tau_reduce / 4.0;
+//		conf.timed_tau_preload = 30.0;
 		conf.timed_t_notify = 240 - conf.timed_tau_preload;
 		conf.title = "reduce=" + conf.timed_tau_reduce;
 		objectives.add(conf);

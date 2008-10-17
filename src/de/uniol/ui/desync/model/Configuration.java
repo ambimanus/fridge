@@ -135,9 +135,9 @@ public class Configuration {
 	
 	/* Simulation params */
 	/** Simulation repititions with different seeds */
-	public int repetitions = 1;
+	public int repetitions = 5;
 	/** Amount of simulated fridges */
-	public int POPULATION_SIZE = 1000;
+	public int POPULATION_SIZE = 5000;
 	/** Length of simulation, 1 unit == 1 hour */
 	public double SIMULATION_LENGTH = 10.0;
 	/** Used model type */
