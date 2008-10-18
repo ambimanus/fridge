@@ -179,14 +179,31 @@ public class SimulationSettingsComposite extends Composite {
 				switch(model.getSelectionIndex()) {
 				case 0: {
 					conf.model = MODEL.ITERATIVE;
+					if (signal.getSelectionIndex() == 3) {
+						signal.select(0);
+						conf.strategy = SIGNAL.NONE;
+					}
+					signal.remove(3);
+					
+					damping.select(0);
+					conf.damping = DAMPING.NONE;
+					damping.setEnabled(false);
 					break;
 				}
 				case 1: {
 					conf.model = MODEL.LINEAR;
+					if (signal.getItemCount() == 3) {
+						signal.add("TLR");
+					}
+					damping.setEnabled(true);
 					break;
 				}
 				case 2: {
 					conf.model = MODEL.COMPACT_LINEAR;
+					if (signal.getItemCount() == 3) {
+						signal.add("TLR");
+					}
+					damping.setEnabled(true);
 					break;
 				}
 				}
