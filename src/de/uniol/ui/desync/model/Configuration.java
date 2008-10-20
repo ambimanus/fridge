@@ -64,7 +64,7 @@ public class Configuration {
 	public double variate_Tcurrent_sdev = 0.75;
 	
 	/** Variation of m_c */
-	public VARIATE variate_mc = VARIATE.NONE;
+	public VARIATE variate_mc = VARIATE.NORMAL;
 	/** Seed for mc variation generator */
 	public long variate_mc_seed = LKSeeds.ZRNG[2];
 	/** mc default */
@@ -77,7 +77,7 @@ public class Configuration {
 	public double variate_mc_sdev = 3.5;
 	
 	/** Variation of A */
-	public VARIATE variate_A = VARIATE.NONE;
+	public VARIATE variate_A = VARIATE.NORMAL;
 	/** Seed for A variation generator */
 	public long variate_A_seed = LKSeeds.ZRNG[3];
 	/** A default */
@@ -90,7 +90,7 @@ public class Configuration {
 	public double variate_A_sdev = 0.09;
 	
 	/** Variation of TO */
-	public VARIATE variate_TO = VARIATE.NONE;
+	public VARIATE variate_TO = VARIATE.NORMAL;
 	/** Seed for TO variation generator */
 	public long variate_TO_seed = LKSeeds.ZRNG[4];
 	/** TO default */
@@ -103,7 +103,7 @@ public class Configuration {
 	public double variate_TO_sdev = 1.5;
 	
 	/** Variation of eta */
-	public VARIATE variate_eta = VARIATE.NONE;
+	public VARIATE variate_eta = VARIATE.NORMAL;
 	/** Seed for eta variation generator */
 	public long variate_eta_seed = LKSeeds.ZRNG[5];
 	/** eta default */
@@ -116,7 +116,7 @@ public class Configuration {
 	public double variate_eta_sdev = 0.25;
 	
 	/** Variation of qc */
-	public VARIATE variate_qc = VARIATE.NONE;
+	public VARIATE variate_qc = VARIATE.NORMAL;
 	/** Seed for qc variation generator */
 	public long variate_qc_seed = LKSeeds.ZRNG[6];
 	/** qc default */
@@ -129,7 +129,7 @@ public class Configuration {
 	public double variate_qc_sdev = 0.75;
 	
 	/** Variation of qw */
-	public VARIATE variate_qw = VARIATE.NONE;
+	public VARIATE variate_qw = VARIATE.NORMAL;
 	/** Seed for qw variation generator */
 	public long variate_qw_seed = LKSeeds.ZRNG[7];
 	/** qw default */
