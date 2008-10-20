@@ -116,7 +116,7 @@ public class Configuration {
 	public double variate_eta_sdev = 0.25;
 	
 	/** Variation of qc */
-	public VARIATE variate_qc = VARIATE.NORMAL;
+	public VARIATE variate_qc = VARIATE.NONE;
 	/** Seed for qc variation generator */
 	public long variate_qc_seed = LKSeeds.ZRNG[6];
 	/** qc default */
@@ -129,7 +129,7 @@ public class Configuration {
 	public double variate_qc_sdev = 0.75;
 	
 	/** Variation of qw */
-	public VARIATE variate_qw = VARIATE.NORMAL;
+	public VARIATE variate_qw = VARIATE.NONE;
 	/** Seed for qw variation generator */
 	public long variate_qw_seed = LKSeeds.ZRNG[7];
 	/** qw default */
