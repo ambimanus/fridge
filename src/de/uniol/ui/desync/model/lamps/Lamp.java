@@ -5,11 +5,21 @@ import simkit.random.UniformVariate;
 import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
+/**
+ * This class represents a lamp of a fridge as SimEntity.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class Lamp extends SimEntityClean {
 
+	/* event identifiers */
 	public static String EV_SWITCH_ON = "SwitchOn";
 	public static String EV_SWITCH_OFF = "SwitchOff";
 	
+	/* some fields */
 	protected static int instance = -1;
 	protected static double activationsPerDay = 11.07;
 	protected static double stddev = 4.81;
@@ -31,6 +41,7 @@ public class Lamp extends SimEntityClean {
 		loadVariate.setMaximum(q_max);
 	}
 	
+	/** length of a lighting phase */
 	protected double blockSize = 5.0 / 60.0;
 	protected UniformVariate firstSwitchVariate;
 	

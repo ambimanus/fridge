@@ -5,6 +5,15 @@ import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.signals.Itlr;
 import de.uniol.ui.desync.util.Geometry;
 
+/**
+ * This controller extension adds the TLR control mode to a
+ * {@link BaseControllerCompactLinear}.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		implements Itlr {
 	
@@ -20,7 +29,14 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 //		strategyCoolFitting(tau_preload, tau_reduce);
 		strategyCoolFitting2(tau_preload, tau_reduce);
 	}
-	
+
+	/**
+	 * This simple strategy immediately cools down in tau_preload as much as
+	 * possible.
+	 * 
+	 * @param tau_preload
+	 * @param tau_reduce
+	 */
 	protected void strategyCoolImmediately(Double tau_preload, Double tau_reduce) {
 		// Classify f to apply proper cooling program
 		double now = getEventList().getSimTime();
@@ -69,7 +85,14 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		}
 		}
 	}
-	
+
+	/**
+	 * This strategy tries to reach T_min and is not very efficient. Should not
+	 * be used, exists for testing purposes.
+	 * 
+	 * @param tau_preload
+	 * @param tau_reduce
+	 */
 	protected void strategyCoolMin(Double tau_preload, Double tau_reduce) {
 		// TODO case "T_current > sCB(now)"
 		// Calculate fitting cooling curve sCB
@@ -81,6 +104,14 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		}
 	}
 	
+	/**
+	 * First version of the fitting strategy based on {@link TimedClassifier}.
+	 * 
+	 * @param tau_preload
+	 * @param tau_reduce
+	 * 
+	 * @deprecated Use {@link #strategyCoolFitting2(Double, Double)}.
+	 */
 	protected void strategyCoolFitting(Double tau_preload, Double tau_reduce) {
 		// Classify f to apply proper cooling program
 		double now = getEventList().getSimTime();
@@ -152,7 +183,15 @@ public class TimedControllerCompactLinear extends BaseControllerCompactLinear
 		}
 		}
 	}
-	
+
+	/**
+	 * This strategy tries to reach T_activ which allows the fridge to warmup
+	 * exactly in tau_reduce and to be able to leave the reduction interval with
+	 * T_max.
+	 * 
+	 * @param tau_preload
+	 * @param tau_reduce
+	 */
 	protected void strategyCoolFitting2(Double tau_preload, Double tau_reduce) {
 		double now = getEventList().getSimTime();
 		double tAct = now + tau_preload;

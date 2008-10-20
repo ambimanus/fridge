@@ -8,7 +8,9 @@ import java.beans.PropertyChangeListener;
  * {@link PropertyChangeListener}s (or internally use them) to collect the data
  * from the simulation model.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public abstract class AbstractCollector {
 	

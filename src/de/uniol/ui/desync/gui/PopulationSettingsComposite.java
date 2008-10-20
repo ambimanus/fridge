@@ -18,6 +18,15 @@ import simkit.random.LKSeeds;
 import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Configuration.VARIATE;
 
+/**
+ * Page of the objective dialog which allows setting the population settings
+ * (mainly the distribution of the device params).
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class PopulationSettingsComposite extends Composite {
 
 	private Configuration conf;

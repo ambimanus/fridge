@@ -5,6 +5,15 @@ import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.fridges.State;
 import de.uniol.ui.desync.util.Geometry;
 
+/**
+ * This controller extension adds the stateful damping mode to a
+ * {@link TimedControllerCompactLinear}.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class StatefulTimedCompactLinear extends
 		TimedControllerCompactLinear implements IStateful {
 

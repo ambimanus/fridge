@@ -15,7 +15,9 @@ import de.uniol.ui.desync.util.MessagingEventList;
  * This collector collects data from multiple {@link SimEntity}s and calculates
  * the statistical mean of the observed values.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class TimeseriesMultiMeanCollector extends AbstractCollector {
 

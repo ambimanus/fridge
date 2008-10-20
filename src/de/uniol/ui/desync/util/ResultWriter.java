@@ -19,9 +19,20 @@ import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
+/**
+ * Utility class which performs calcualtions on simulation results and is able
+ * to format and write them to files.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class ResultWriter {
 
+	/** counts the written results */
 	protected static int counter = 0;
+	/* some formatting */
 	protected static NumberFormat tf = NumberFormat.getNumberInstance();
 	protected static NumberFormat vf = NumberFormat.getNumberInstance();
 	protected static NumberFormat cf = NumberFormat.getNumberInstance();
@@ -41,7 +52,16 @@ public class ResultWriter {
 		cf.setGroupingUsed(false);
 		cf.setMinimumFractionDigits(1);
 	}
-	
+
+	/**
+	 * Writes the given values separated by the specified separator to the named
+	 * file.
+	 * 
+	 * @param file
+	 * @param data
+	 * @param nf
+	 * @param separator
+	 */
 	public static void writeArray(File file, double[] data, NumberFormat nf,
 			String separator) {
 		FileWriter fw = null;
@@ -60,7 +80,16 @@ public class ResultWriter {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Produces a synthetic normal distribution and writes it to the named file.
+	 * 
+	 * @param file
+	 * @param length
+	 * @param seed
+	 * @param mean
+	 * @param sdev
+	 */
 	public static void writeNormalDistribution(File file, long length,
 			long seed, double mean, double sdev) {
 		FileWriter fw = null;
@@ -86,6 +115,14 @@ public class ResultWriter {
 		}
 	}
 
+	/**
+	 * Writes the results of the given experiment to the named file. Adds a
+	 * header and the used configuration to the top of the file.
+	 * 
+	 * @param config
+	 * @param exp
+	 * @param file
+	 */
 	public static void writeResults(Configuration config, Experiment exp,
 			File file) {
 		double[][] t = exp.getTemperatureResults();
@@ -133,6 +170,13 @@ public class ResultWriter {
 		}
 	}
 	
+	/**
+	 * Writes the given configuration to the named file.
+	 * 
+	 * @param fw
+	 * @param config
+	 * @throws IOException
+	 */
 	protected static void writeConfig(FileWriter fw, Configuration config)
 			throws IOException {
 		fw.write("\n\n*** Configuration:\n");
@@ -146,7 +190,17 @@ public class ResultWriter {
 			}
 		}
 	}
-	
+
+	/**
+	 * Writes the load result values denoted by the given hashmap to the named
+	 * file. The hashmap may contain a number of results with different lenghts.
+	 * An interpolation will be done to be able to directly compare the written
+	 * values with each other. The configurations used to produce the results
+	 * will be written at top of each 'column'.
+	 * 
+	 * @param results
+	 * @param file
+	 */
 	public static void writeLoadResults(
 			HashMap<Configuration, TimeseriesMultiMeanCollector> results,
 			File file) {
@@ -191,7 +245,19 @@ public class ResultWriter {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * This method writes the load result values denoted by the given hashmap to
+	 * the named file. The hashmap may contain a number of results with
+	 * different lenghts. An interpolation will be done to be able to directly
+	 * compare the written values with each other. For each value column, a
+	 * {@link SimpleStatsTally} will be filled and added to the later returned
+	 * list.
+	 * 
+	 * @param results
+	 * @param file
+	 * @return
+	 */
 	public static ArrayList<SimpleStatsTally> writeLoadResultsSimple(
 			HashMap<Configuration, TimeseriesMultiMeanCollector> results,
 			File file) {
@@ -236,7 +302,15 @@ public class ResultWriter {
 		}
 		return stats;
 	}
-	
+
+	/**
+	 * Writes the given configurations to the specified file writer. The values
+	 * will be written in columns, and each colum is separated by tabulators.
+	 * 
+	 * @param fw
+	 * @param configs
+	 * @throws IOException
+	 */
 	protected static void writeConfigs(FileWriter fw, Set<Configuration> configs)
 			throws IOException {
 		fw.write("\n\n*** Configuration:\n");
@@ -259,7 +333,19 @@ public class ResultWriter {
 			}
 		}
 	}
-	
+
+	/**
+	 * This method interpolates the given data by identifying the maximum data
+	 * length and filling up the other series. The parameter
+	 * <code>interpolateLinear</code> defines whether simple duplicates of the
+	 * last value (false, used for load values), or a linear interpolation
+	 * between the previous time/value point and the next will be done (true,
+	 * used for temperature values).
+	 * 
+	 * @param data
+	 * @param interpolateLinear
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static HashMap<Configuration, ArrayList<Double>[]> interpolate(
 			HashMap<Configuration, TimeseriesMultiMeanCollector> data,
@@ -357,7 +443,18 @@ public class ResultWriter {
 		}
 		return ret;
 	}
-	
+
+	/**
+	 * This method gets a number of time series as input, each mapped to its
+	 * configuration which was used to produce the results, and calculates the
+	 * mean of all given time series for all points in time. In other words,
+	 * this method merges the given input data to a single time series of mean
+	 * values.<br>
+	 * <b>Warning: the input data must be of the same length each.</b>
+	 * 
+	 * @param data
+	 * @return
+	 */
 	public static double[][] mean(HashMap<Configuration, ArrayList<Double>[]> data) {
 		ArrayList<Double>[] tester = data.values().iterator().next();
 		int size = tester[0].size();
@@ -376,14 +473,29 @@ public class ResultWriter {
 		}
 		return ret;
 	}
-	
+
+	/**
+	 * Converts the given time series' time values from minutes to milliseconds.
+	 * 
+	 * @param data
+	 * @return
+	 */
 	public static double[][] convertToMilliseconds(double[][] data) {
 		for (int i = 0; i < data[0].length; i++) {
 			data[0][i] = data[0][i] * 60000d;
 		}
 		return data;
 	}
-	
+
+	/**
+	 * Helper class which is used in the interpolation of time series. It
+	 * iterates over the values of a time series.
+	 * 
+	 * @author <a href=
+	 *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+	 *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+	 * 
+	 */
 	protected static class TimeSeriesIterator {
 		
 		private Configuration key;

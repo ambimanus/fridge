@@ -2,6 +2,14 @@ package de.uniol.ui.desync.model;
 
 import simkit.random.LKSeeds;
 
+/**
+ * This class contains the configuration values for an experiment.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class Configuration {
 	
 	/** instance-counter */

@@ -7,7 +7,9 @@ import java.beans.PropertyChangeListener;
  * This class listens to value changes and calculates a progress based on a
  * predefined target value.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public abstract class ProgressListener implements PropertyChangeListener {
 	

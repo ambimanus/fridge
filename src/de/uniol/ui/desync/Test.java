@@ -1,6 +1,14 @@
 package de.uniol.ui.desync;
 
-
+/**
+ * Small utility class which calculates the slope of a straight between two
+ * points in two-dimensional space.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class Test {
 
 	public static void main(String[] args) {

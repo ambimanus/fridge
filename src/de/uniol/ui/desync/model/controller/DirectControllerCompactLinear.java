@@ -3,6 +3,15 @@ package de.uniol.ui.desync.model.controller;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 import de.uniol.ui.desync.model.signals.Idsc;
 
+/**
+ * This controller extension adds the DSC control mode to a
+ * {@link BaseControllerCompactLinear}.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class DirectControllerCompactLinear extends BaseControllerCompactLinear
 		implements Idsc {
 

@@ -32,10 +32,21 @@ import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
+/**
+ * This class represents the main GUI window of this application. Contains a
+ * main method which runs this.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class Gui {
 
+	/** flag which shows if a simulation is currently allowed */
 	protected boolean allowSimulation = true;
 	
+	/* Some controls */
 	protected Shell shell;
 	protected Table table;
 	protected Button add;
@@ -43,6 +54,7 @@ public class Gui {
 	protected Button remove;
 	protected Button simulate;
 	
+	/* data */
 	protected HashMap<TableItem, Configuration> objectives = new HashMap<TableItem, Configuration>();
 	protected HashMap<Configuration, TableItem> items = new HashMap<Configuration, TableItem>();
 	protected Configuration selectedConf = null;

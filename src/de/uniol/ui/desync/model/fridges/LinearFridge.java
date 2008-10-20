@@ -5,7 +5,15 @@ import java.beans.PropertyChangeListener;
 
 import de.uniol.ui.desync.util.MessagingEventList;
 
-
+/**
+ * Linearized implementation of a fridge. This follows the equation of the
+ * linear model in the thesis.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class LinearFridge extends AbstractFridge {
 	
 	/** timestamp at which the last event occured */

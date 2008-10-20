@@ -11,7 +11,9 @@ import simkit.SimEntity;
  * This collector just collects simple data points with their occurence
  * timestamps.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class TimeseriesCollector extends AbstractCollector {
 

@@ -6,6 +6,14 @@ import simkit.random.UniformVariate;
 import de.uniol.ui.desync.model.SimEntityClean;
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
+/**
+ * Abstract base class of a controller as SimEntity. Contains random number generators.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public abstract class AbstractController extends SimEntityClean {
 
 	protected AbstractFridge fridge;

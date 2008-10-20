@@ -2,6 +2,16 @@ package de.uniol.ui.desync.model.controller;
 
 import de.uniol.ui.desync.model.fridges.AbstractFridge;
 
+/**
+ * This class has previously been used to classify a fridge based on the classes
+ * defined in the thesis.<br>
+ * Will be used by some cooling strategies in the TLR controllers.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class TimedClassifier {
 
 	public static enum classes {

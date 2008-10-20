@@ -18,6 +18,17 @@ import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 
+/**
+ * This class first runs an experiment, and afterwards creates a synthetic
+ * normal distribution based on mean and standard deviation of the load results
+ * from the experiment. The experiment load results and the normal distributed
+ * synthetic dataset are then each written to a separaten csv file.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class DistributionTest {
 
 	private static File file1 = new File(System.getProperty("user.dir")

@@ -1,21 +1,26 @@
 package de.uniol.ui.desync;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Configuration.DAMPING;
-import de.uniol.ui.desync.model.Configuration.MODEL;
 import de.uniol.ui.desync.model.Configuration.SIGNAL;
 import de.uniol.ui.desync.model.Configuration.VARIATE;
 
+/**
+ * This class was introduced to outsource the generation of test cases.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class Objectives {
 
-	protected static NumberFormat nf = NumberFormat.getNumberInstance();
-	static {
-		nf.setMinimumFractionDigits(1);
-	}
-	
+	/**
+	 * @return a single configuration with current values of
+	 *         {@link Configuration}
+	 */
 	public static ArrayList<Configuration> createObjectives_Default() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
@@ -26,32 +31,9 @@ public class Objectives {
 		return objectives;
 	}
 	
-	public static ArrayList<Configuration> createObjectives_Iterative() {
-		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
-		
-		Configuration conf = new Configuration();
-		conf.title = "iterative";
-		conf.ACTIVE_AT_START_PROPABILITY = 1.0;
-		conf.model = MODEL.ITERATIVE;
-		conf.repetitions = 1;
-		conf.POPULATION_SIZE = 1;
-		conf.strategy = SIGNAL.NONE;
-		conf.variate_Tcurrent = VARIATE.NONE;
-		objectives.add(conf);
-		
-		conf = new Configuration();
-		conf.title = "iterative";
-		conf.ACTIVE_AT_START_PROPABILITY = 1.0;
-		conf.model = MODEL.ITERATIVE;
-		conf.repetitions = 1;
-		conf.POPULATION_SIZE = 1;
-		conf.strategy = SIGNAL.TLR;
-		conf.variate_Tcurrent = VARIATE.NONE;
-		objectives.add(conf);
-		
-		return objectives;
-	}
-	
+	/**
+	 * @return test cases to demonstrate different spread values in DSC
+	 */
 	public static ArrayList<Configuration> createObjectives_Spread() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
@@ -135,7 +117,10 @@ public class Objectives {
 		
 		return objectives;
 	}
-	
+
+	/**
+	 * @return test cases to demonstrate different preload values in TLR
+	 */
 	public static ArrayList<Configuration> createObjectives_TLR_preload() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
@@ -220,8 +205,16 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different reduce values in TLR
+	 */
 	public static ArrayList<Configuration> createObjectives_TLR_reduce() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+
+		/*
+		 * The commented lines can be used to switch between fix preload and
+		 * variable preload values.
+		 */
 		
 		Configuration conf = new Configuration();
 		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
@@ -286,6 +279,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate the effect of lamps
+	 */
 	public static ArrayList<Configuration> createObjectives_Lamps() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		
@@ -313,6 +309,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different distributions of T_init
+	 */
 	public static ArrayList<Configuration> createObjectives_T() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -337,6 +336,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different distributions of mc
+	 */
 	public static ArrayList<Configuration> createObjectives_mc() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -361,6 +363,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different distributions of A
+	 */
 	public static ArrayList<Configuration> createObjectives_A() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -385,6 +390,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different distributions of TO
+	 */
 	public static ArrayList<Configuration> createObjectives_TO() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -409,6 +417,9 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/**
+	 * @return test cases to demonstrate different distributions of eta
+	 */
 	public static ArrayList<Configuration> createObjectives_eta() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -432,7 +443,11 @@ public class Objectives {
 		
 		return objectives;
 	}
-	
+
+	/**
+	 * @return test cases to demonstrate different distributions of T_init and
+	 *         mc
+	 */
 	public static ArrayList<Configuration> createObjectives_T_mc() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -516,7 +531,12 @@ public class Objectives {
 
 		return objectives;
 	}
-	
+
+	/**
+	 * @return test cases to demonstrate different distributions of mc while
+	 *         T_init is uniform and others are normal distributed. Uses
+	 *         TLR-random.
+	 */
 	public static ArrayList<Configuration> createObjectives_AllVariated_TLR_Random() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;
@@ -558,7 +578,11 @@ public class Objectives {
 		
 		return objectives;
 	}
-	
+
+	/**
+	 * @return test cases to demonstrate different signals and damping while all
+	 *         device params are variated (T_init uniform, others normal).
+	 */
 	public static ArrayList<Configuration> createObjectives_AllVariated_DifferentStrategies() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		Configuration conf;

@@ -12,6 +12,15 @@ import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
+/**
+ * This class was used to produce a csv file with simple load values (one per
+ * line) from an experiment.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class Main_LoadCollector {
 
 	private static int runs = 1;

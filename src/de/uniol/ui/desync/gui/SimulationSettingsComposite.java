@@ -20,6 +20,15 @@ import de.uniol.ui.desync.model.Configuration.DAMPING;
 import de.uniol.ui.desync.model.Configuration.MODEL;
 import de.uniol.ui.desync.model.Configuration.SIGNAL;
 
+/**
+ * Page of the objective dialog which allows setting the simulation settings
+ * (model, signal, damping etc.).
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class SimulationSettingsComposite extends Composite {
 
 	private Configuration conf;

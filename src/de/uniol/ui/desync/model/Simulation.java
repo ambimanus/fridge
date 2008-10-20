@@ -29,7 +29,9 @@ import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
  * as input, provides them with statistical collectors if desired and is able to
  * present the collected data visually after the simulation finished.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class Simulation {
 

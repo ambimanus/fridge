@@ -4,6 +4,18 @@ import de.uniol.ui.desync.model.fridges.IterativeFridge;
 import de.uniol.ui.desync.model.signals.Itlr;
 import de.uniol.ui.desync.util.Geometry;
 
+/**
+ * This controller extension adds the TLR control mode to a
+ * {@link BaseControllerIterative}.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ * @deprecated NOT FINISHED YET! Copy code from
+ *             {@link TimedControllerCompactLinear} to finish.
+ * 
+ */
 public class TimedControllerIterative extends BaseControllerIterative implements
 		Itlr {
 	

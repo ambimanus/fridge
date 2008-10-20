@@ -10,9 +10,19 @@ import org.eclipse.swt.widgets.TabItem;
 
 import de.uniol.ui.desync.model.Configuration;
 
+/**
+ * This class represents a dialog which allows editing a simulation objective.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class ObjectiveDialog extends Dialog {
 
+	/** Underlying shell */
 	protected Shell shell;
+	/** Objective */
 	protected Configuration conf;
 	
 	public ObjectiveDialog(Shell parent, Configuration conf) {

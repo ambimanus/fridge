@@ -3,6 +3,15 @@ package de.uniol.ui.desync.model.controller.extended;
 import de.uniol.ui.desync.model.controller.TimedControllerCompactLinear;
 import de.uniol.ui.desync.model.fridges.LinearFridge;
 
+/**
+ * This controller extension adds the randomized damping mode to a
+ * {@link TimedControllerCompactLinear}.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class RandomizedTimedCompactLinear extends
 		TimedControllerCompactLinear implements IRandomized {
 	

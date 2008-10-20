@@ -1,5 +1,14 @@
 package de.uniol.ui.desync.model.fridges;
 
+/**
+ * Iterative implementation of a fridge. This follows the main equation of the
+ * iterative model in the thesis.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class IterativeFridge extends AbstractFridge {
 	
 	/** time between simulation steps (for equations, one unit == one hour) */

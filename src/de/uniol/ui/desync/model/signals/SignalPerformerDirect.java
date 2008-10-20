@@ -2,6 +2,14 @@ package de.uniol.ui.desync.model.signals;
 
 import de.uniol.ui.desync.model.controller.AbstractController;
 
+/**
+ * Signal performer which sends the DSC signal to controllers.
+ *
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ *
+ */
 public class SignalPerformerDirect extends AbstractSignalPerformer {
 
 	public final static String EV_NOTIFY = "Notify";

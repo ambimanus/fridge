@@ -8,6 +8,16 @@ import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Experiment;
 import de.uniol.ui.desync.util.MessagingEventList;
 
+/**
+ * "Old" main class which was used to produce the simulation results in the
+ * first part of the thesis. Shows each experiment results in a separate viewer
+ * afterwards.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class Main {
 
 	private static int runs = 5;

@@ -10,7 +10,9 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This composite represents a progress bar.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class ProgressComposite extends Composite {
 

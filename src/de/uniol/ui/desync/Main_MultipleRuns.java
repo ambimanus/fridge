@@ -22,6 +22,16 @@ import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.ResultWriter;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
+/**
+ * This class was mainly used to produce the results used in the second part of
+ * the thesis. It follows the rules of statistically correct data by rerunning the
+ * experiments a sufficient number of times with different random numbers.
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class Main_MultipleRuns {
 
 	public static void main(String[] args) {
@@ -71,6 +81,14 @@ public class Main_MultipleRuns {
 		showResults(sortedKeys, results);
 	}
 
+	/**
+	 * Runs an experiment with the given configuration and the specified number
+	 * of repititions.
+	 * 
+	 * @param conf
+	 * @param instance
+	 * @return the results as double[][][] = { temperature[][], load[][] }
+	 */
 	protected static double[][][] run(Configuration conf, int instance) {
 		long start = System.currentTimeMillis();
 		SimpleStatsTally sst = new SimpleStatsTally();
@@ -175,13 +193,26 @@ public class Main_MultipleRuns {
 		return new double[][][] { tData, lData };
 	}
 	
+	/**
+	 * @param index
+	 * @return the seed in {@link LKSeeds#ZRNG} with given index
+	 */
 	protected static long getSeed(int index) {
 		if (index > 99) {
 			index -= 99;
 		}
 		return LKSeeds.ZRNG[index];
 	}
-	
+
+	/**
+	 * Opens the graphical results viewer with the performed experiment results.
+	 * 
+	 * @param keys
+	 *            list of configurations of the performed experiments
+	 * @param results
+	 *            hashmap which contains the results arrays, mapped to their
+	 *            configurations
+	 */
 	protected static void showResults(ArrayList<String> keys,
 			HashMap<String, double[][][]> results) {
 		// Prepare window

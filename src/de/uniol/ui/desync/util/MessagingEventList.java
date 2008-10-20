@@ -36,7 +36,9 @@ import simkit.Stop;
  * Unfortunately the <code>simTime</code> field is a private one, so the whole
  * class had to be copied. However, it works ;)
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class MessagingEventList extends EventList {
 

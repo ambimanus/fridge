@@ -2,6 +2,15 @@ package de.uniol.ui.desync.model.fridges;
 
 import java.text.NumberFormat;
 
+/**
+ * Represents a fridge's state consisting of the tupel (temperature, load,
+ * phase).
+ * 
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
+ * 
+ */
 public class State {
 
 	private final static NumberFormat nfT = NumberFormat.getInstance();

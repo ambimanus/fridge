@@ -34,10 +34,11 @@ import de.uniol.ui.desync.util.MessagingEventList;
 import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
 
 /**
- * This class is the main class of this simulation. It creates all entities and
- * prepares and runs the simulation.
+ * This class creates all entities and prepares and runs a simulation.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class Experiment {
 
@@ -103,6 +104,14 @@ public class Experiment {
 		fridges.clear();
 	}
 
+	/**
+	 * Creates the lamp SimEntities for the specified fridges and with the given
+	 * FEL id.
+	 * 
+	 * @param id
+	 * @param fridges
+	 * @return
+	 */
 	private ArrayList<Lamp> createLamps(int id,
 			ArrayList<AbstractFridge> fridges) {
 		ArrayList<Lamp> lamps = new ArrayList<Lamp>();
@@ -432,6 +441,11 @@ public class Experiment {
 		return fridges;
 	}
 
+	/**
+	 * @param eventListID
+	 * @return an {@link AbstractSignalPerformer} based on settings in
+	 *         configuration
+	 */
 	private AbstractSignalPerformer createStrategy(int eventListID) {
 		switch (conf.strategy) {
 		case NONE: {
@@ -536,7 +550,13 @@ public class Experiment {
 			simulation.clearStats();
 		}
 	}
-	
+
+	/**
+	 * Visually presents the results of the last simulation run
+	 * 
+	 * @param block
+	 *            whether this method should block until the window is closed
+	 */
 	public void showLastResults(boolean block) {
 		if (simulation != null) {
 			simulation.showResults(block);

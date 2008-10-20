@@ -9,7 +9,9 @@ import de.uniol.ui.desync.model.fridges.LinearFridge;
  * uses even less calculations than the linear version, while producing exactly
  * similar results.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class BaseControllerCompactLinear extends AbstractController {
 

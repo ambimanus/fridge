@@ -18,7 +18,9 @@ import org.jfree.ui.RectangleInsets;
  * This class shows a step chart. That is a chart which connects data points
  * only with horizontal and vertical lines.
  * 
- * @author Chh
+ * @author <a href=
+ *         "mailto:Christian%20Hinrichs%20%3Cchristian.hinrichs@uni-oldenburg.de%3E"
+ *         >Christian Hinrichs, christian.hinrichs@uni-oldenburg.de</a>
  */
 public class StepChartDialog extends LineChartDialog {
 
