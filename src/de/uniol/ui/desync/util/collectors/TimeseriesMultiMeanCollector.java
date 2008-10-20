@@ -156,7 +156,7 @@ public class TimeseriesMultiMeanCollector extends AbstractCollector {
 	 * observed entities had changed since the last inverall, a new mean value
 	 * is calculated and added to the data points.
 	 * 
-	 * @param oldSimtime
+	 * @param oldSimTime
 	 */
 	protected void nextInterval(double oldSimTime) {
 		this.oldSimTime = oldSimTime;

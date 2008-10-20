@@ -127,7 +127,7 @@ public class Experiment {
 
 	/**
 	 * Creates the fridges population using the runtime type defined in
-	 * {@link mode}.
+	 * {@link Configuration#model}.
 	 * 
 	 * @param list
 	 *            the underlying FEL id
