@@ -165,9 +165,7 @@ public class Simulation {
 	/**
 	 * Displays the simulation results as line/step charts.
 	 * 
-	 * @param showAll
-	 * @param highlightFirst
-	 * @param firstColor
+	 * @param block
 	 */
 	public void showResults(boolean block) {
 		Display display = Display.getDefault();

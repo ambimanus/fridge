@@ -103,7 +103,8 @@ public class LineChartDialog extends Dialog {
 	/**
 	 * Adds a series represented in the given Collector.
 	 * 
-	 * @param col
+	 * @param name
+	 * @param data
 	 */
 	public void addSeries(String name, double[][] data) {
 		if (xy instanceof FastXYDataset) {

@@ -67,7 +67,8 @@ public class Experiment {
 	 * the given {@link Configuration}. The EventList will be resetted after
 	 * the simulation.
 	 * 
-	 * @param conf
+	 * @param el
+	 * @param blockResults
 	 */
 	public void run(MessagingEventList el, boolean blockResults) {
 		runs++;
