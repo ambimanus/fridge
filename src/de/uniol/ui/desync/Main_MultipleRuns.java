@@ -1,6 +1,7 @@
 package de.uniol.ui.desync;
 
 import java.awt.SystemColor;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,9 @@ import simkit.stat.SimpleStatsTally;
 import simkit.stat.SimpleStatsTimeVarying;
 import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Experiment;
+import de.uniol.ui.desync.model.Configuration.DAMPING;
+import de.uniol.ui.desync.model.Configuration.MODEL;
+import de.uniol.ui.desync.model.Configuration.SIGNAL;
 import de.uniol.ui.desync.ui.LineChartDialog;
 import de.uniol.ui.desync.ui.StepChartDialog;
 import de.uniol.ui.desync.util.MessagingEventList;
@@ -34,7 +38,18 @@ import de.uniol.ui.desync.util.collectors.TimeseriesMultiMeanCollector;
  */
 public class Main_MultipleRuns {
 
+	private static File file = new File(System.getProperty("user.dir")
+			+ File.separator + "data" + File.separator + "out.csv");
+	
 	public static void main(String[] args) {
+//		runAndShow();
+		runAndWrite();
+	}
+	
+	/**
+	 * Runs objectives and shows the results afterwards.
+	 */
+	private static void runAndShow() {
 		/* Create results list */
 		HashMap<String, double[][][]> results = new HashMap<String, double[][][]>();
 		ArrayList<String> sortedKeys = new ArrayList<String>();
@@ -82,8 +97,48 @@ public class Main_MultipleRuns {
 	}
 
 	/**
-	 * Runs an experiment with the given configuration and the specified number
-	 * of repititions.
+	 * Runs an experiment and writes the results afterwards to a file.
+	 */
+	private static void runAndWrite() {
+		long start = System.currentTimeMillis();
+		
+		Configuration conf = new Configuration();
+		conf.model = MODEL.COMPACT_LINEAR;
+		conf.repetitions = 5;
+		conf.SIMULATION_LENGTH = 20.0;
+		conf.POPULATION_SIZE = 5000;
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_A = Configuration.VARIATE.NORMAL;
+		conf.variate_TO = Configuration.VARIATE.NORMAL;
+		conf.variate_eta = Configuration.VARIATE.NORMAL;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.RANDOM;
+//		conf.direct_t_notify = 6.0 * 60.0;
+//		conf.direct_spread = 10.0;
+//		conf.direct_doUnload = true;
+		conf.timed_t_notify = 6.0 * 60.0;
+		conf.timed_tau_preload = 10.0;
+		conf.timed_tau_reduce = 120.0;
+		conf.title = "event simulation";
+		double[][][] result = run(conf, 0);
+		
+		// Write first result to file
+		ResultWriter.writeResultsSimple(result[0], result[1], file);
+
+		/* Print status */
+		System.out.println("\n*********************************************");
+		long dur = System.currentTimeMillis() - start;
+		long min = dur / 60000l;
+		long sec = (dur % 60000l) / 1000l;
+		System.out.println("All experiments finished in " + min + "m" + sec
+				+ "s");
+	}
+
+	/**
+	 * Runs an experiment with the given configuration. The
+	 * <code>instance</code> parameter defines the instance counter (for window
+	 * titles etc).
 	 * 
 	 * @param conf
 	 * @param instance
