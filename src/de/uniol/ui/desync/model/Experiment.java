@@ -430,18 +430,28 @@ public class Experiment {
 			}
 			if (conf.variate_Tcurrent != Configuration.VARIATE.NONE) {
 				f.generate_tCurrent(tVariate);
+			} else {
+				f.setT_current(conf.variate_Tcurrent_default);
 			}
 			if (conf.variate_mc != Configuration.VARIATE.NONE) {
 				f.generate_mC(mcVariate);
+			} else {
+				f.setM_c(conf.variate_mc_default);
 			}
 			if (conf.variate_A != Configuration.VARIATE.NONE) {
 				f.generate_a(aVariate);
+			} else {
+				f.setA(conf.variate_A_default);
 			}
 			if (conf.variate_TO != Configuration.VARIATE.NONE) {
 				f.generate_tSurround(toVariate);
+			} else {
+				f.setT_surround(conf.variate_TO_default);
 			}
 			if (conf.variate_eta != Configuration.VARIATE.NONE) {
 				f.generate_eta(etaVariate);
+			} else {
+				f.setEta(conf.variate_eta_default);
 			}
 			if (conf.variate_qc != Configuration.VARIATE.NONE) {
 				f.generate_qCooling(qcVariate);
