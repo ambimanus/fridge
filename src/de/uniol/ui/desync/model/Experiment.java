@@ -344,7 +344,30 @@ public class Experiment {
 					break;
 				}
 				case DSC: {
-					c = new DirectControllerIterative((IterativeFridge) f, list);
+					switch(conf.damping) {
+					case NONE: {
+						c = new DirectControllerIterative((IterativeFridge) f, list);
+						break;
+					}
+					case RANDOM: {
+						c = new DirectControllerIterative((IterativeFridge) f, list);
+						System.err.println("Damping not implement for iterative model!");
+						// TODO
+						break;
+					}
+					case STATEFUL_HALF: {
+						c = new DirectControllerIterative((IterativeFridge) f, list);
+						System.err.println("Damping not implement for iterative model!");
+						// TODO
+						break;
+					}
+					case STATEFUL_FULL: {
+						c = new DirectControllerIterative((IterativeFridge) f, list);
+						System.err.println("Damping not implement for iterative model!");
+						// TODO
+						break;
+					}
+					}
 					break;
 				}
 				case TLR: {

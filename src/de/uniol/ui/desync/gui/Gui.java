@@ -414,8 +414,8 @@ public class Gui {
 		shell.setText("Simulation results");
 		// Prepare temperature chart
 		LineChartDialog lcd = new LineChartDialog(shell,
-				"Temperature progress", "Time (h)", "Temperature (�C)", "min",
-				"�C", 3.0, 8.0);
+				"Temperature progress", "Time (h)", "Temperature (°C)", "min",
+				"°C", 3.0, 8.0);
 		// Prepare load chart
 		StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 				"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);

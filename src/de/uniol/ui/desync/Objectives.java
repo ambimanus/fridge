@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import de.uniol.ui.desync.model.Configuration;
 import de.uniol.ui.desync.model.Configuration.DAMPING;
+import de.uniol.ui.desync.model.Configuration.MODEL;
 import de.uniol.ui.desync.model.Configuration.SIGNAL;
 import de.uniol.ui.desync.model.Configuration.VARIATE;
 
@@ -46,6 +47,189 @@ public class Objectives {
 		
 		Configuration conf = new Configuration();
 		conf.title = "default settings";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Ontje() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.POPULATION_SIZE = 500;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.21;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_mc_default = 20.0;
+		conf.variate_mc_sdev = 4.5;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_TO_default = 20.0;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_eta_default = 3.0;
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_Tcurrent_min = 3.0;
+		conf.variate_Tcurrent_max = 8.0;
+		conf.variate_Tcurrent_default = 5.0;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.variate_A_default = 3.21;
+
+		conf.strategy = SIGNAL.NONE;
+		conf.direct_doUnload = false;
+		conf.direct_spread = 15.0;
+		conf.direct_t_notify = 120.0;
+		conf.damping = DAMPING.NONE;
+		conf.SIMULATION_LENGTH = 20.0;
+		conf.model = MODEL.ITERATIVE;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "ontje";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Stefan() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.POPULATION_SIZE = 5000;
+		conf.ACTIVE_AT_START_PROPABILITY = 1.0;
+		conf.variate_mc = Configuration.VARIATE.NORMAL;
+		conf.variate_mc_default = 20.0;
+		conf.variate_mc_sdev = 4.5;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_TO_default = 20.0;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_eta_default = 3.0;
+		conf.variate_Tcurrent = Configuration.VARIATE.UNIFORM;
+		conf.variate_Tcurrent_min = 5.0;
+		conf.variate_Tcurrent_max = 8.0;
+		conf.variate_Tcurrent_default = 5.0;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.variate_A_default = 3.21;
+
+		conf.strategy = SIGNAL.NONE;
+		conf.direct_doUnload = false;
+		conf.direct_spread = 15.0;
+		conf.direct_t_notify = 120.0;
+		conf.damping = DAMPING.NONE;
+		conf.SIMULATION_LENGTH = 50.0;
+		conf.model = MODEL.ITERATIVE;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "stefan";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Demo() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent_min = 3.0;
+		conf.variate_Tcurrent_max = 8.0;
+		conf.variate_Tcurrent_default = 3.0;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_mc_min = 10.97;
+		conf.variate_mc_max = 20.97;
+		conf.variate_mc_default = 19.95;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.variate_A_min = 3.11;
+		conf.variate_A_max = 3.31;
+		conf.variate_A_default = 3.21;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_TO_min = 18.0;
+		conf.variate_TO_max = 21.0;
+		conf.variate_TO_default = 20.0;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_eta_default = 3.0;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = false;
+		conf.direct_spread = 10.0;
+		conf.direct_t_notify = 90.0;
+		conf.damping = DAMPING.NONE;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+		conf.SIMULATION_LENGTH = 10.0;
+		conf.model = MODEL.COMPACT_LINEAR;
+		conf.POPULATION_SIZE = 1000;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "sync";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent_min = 3.0;
+		conf.variate_Tcurrent_max = 8.0;
+		conf.variate_Tcurrent_default = 3.0;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_mc_min = 10.97;
+		conf.variate_mc_max = 20.97;
+		conf.variate_mc_default = 19.95;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.variate_A_min = 3.11;
+		conf.variate_A_max = 3.31;
+		conf.variate_A_default = 3.21;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_TO_min = 18.0;
+		conf.variate_TO_max = 21.0;
+		conf.variate_TO_default = 20.0;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_eta_default = 3.0;
+		conf.strategy = SIGNAL.DSC;
+		conf.direct_doUnload = false;
+		conf.direct_spread = 10.0;
+		conf.direct_t_notify = 90.0;
+		conf.damping = DAMPING.RANDOM;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+		conf.SIMULATION_LENGTH = 10.0;
+		conf.model = MODEL.COMPACT_LINEAR;
+		conf.POPULATION_SIZE = 1000;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "desync";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
+	public static ArrayList<Configuration> createObjectives_Modeltest() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent_min = 3.0;
+		conf.variate_Tcurrent_max = 8.0;
+		conf.variate_Tcurrent_default = 3.0;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_mc_min = 10.97;
+		conf.variate_mc_max = 20.97;
+		conf.variate_mc_default = 19.95;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.variate_A_min = 3.11;
+		conf.variate_A_max = 3.31;
+		conf.variate_A_default = 3.21;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_TO_min = 18.0;
+		conf.variate_TO_max = 21.0;
+		conf.variate_TO_default = 20.0;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_eta_default = 3.0;
+		conf.strategy = SIGNAL.NONE;
+		conf.damping = DAMPING.NONE;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+		conf.SIMULATION_LENGTH = 10.0;
+		conf.model = MODEL.ITERATIVE;
+		conf.POPULATION_SIZE = 1;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "test";
 		objectives.add(conf);
 		
 		return objectives;

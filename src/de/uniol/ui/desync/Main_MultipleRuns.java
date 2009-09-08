@@ -62,8 +62,8 @@ public class Main_MultipleRuns {
 			+ File.separator + "data" + File.separator + "out.csv");
 	
 	public static void main(String[] args) {
-//		runAndShow();
-		runAndWrite();
+		runAndShow();
+//		runAndWrite();
 	}
 	
 	/**
@@ -92,9 +92,13 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_Lamps();
 //		objectives = Objectives.createObjectives_Spread();
 //		objectives = Objectives.createObjectives_TLR_preload();
-		objectives = Objectives.createObjectives_TLR_reduce();
+//		objectives = Objectives.createObjectives_TLR_reduce();
 //		objectives = Objectives.createObjectives_Default();
 //		objectives = Objectives.createObjectives_Iterative();
+//		objectives = Objectives.createObjectives_Modeltest();
+//		objectives = Objectives.createObjectives_Demo();
+//		objectives = Objectives.createObjectives_Stefan();
+		objectives = Objectives.createObjectives_Ontje();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;
