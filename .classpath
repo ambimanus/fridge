@@ -4,7 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/actions.jar" sourcepath="C:/Program Files/Java/Simkit-Actions/src"/>
 	<classpathentry kind="lib" path="lib/simkit.jar" sourcepath="/opt/src/Simkit-RELEASE_1_3_4.r1045"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jfreechart-1.0.10-fastpatch"/>
 	<classpathentry kind="lib" path="lib/swt-3.4-gtk-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.10-fastpatch.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
