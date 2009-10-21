@@ -52,6 +52,76 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/** Objectives for the randomization demo in the EWE presentation */
+	public static ArrayList<Configuration> createObjectives_EWE() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+		Configuration conf = new Configuration();
+		conf.POPULATION_SIZE = 1;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.strategy = SIGNAL.TLR;
+		conf.timed_t_notify = 150.0;
+		conf.timed_tau_preload = 30.0;
+		conf.timed_tau_reduce = 120.0;
+		conf.SIMULATION_LENGTH = 10.0;
+		conf.model = MODEL.COMPACT_LINEAR;
+		conf.damping = DAMPING.NONE;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = "TLR";
+		objectives.add(conf);
+		
+		conf = new Configuration();
+		conf.POPULATION_SIZE = 1;
+		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+		conf.variate_mc = Configuration.VARIATE.NONE;
+		conf.variate_TO = Configuration.VARIATE.NONE;
+		conf.variate_eta = Configuration.VARIATE.NONE;
+		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+		conf.variate_A = Configuration.VARIATE.NONE;
+		conf.strategy = SIGNAL.TLR;
+		conf.timed_t_notify = 150.0;
+		conf.timed_tau_preload = 30.0;
+		conf.timed_tau_reduce = 120.0;
+		conf.SIMULATION_LENGTH = 10.0;
+		conf.model = MODEL.COMPACT_LINEAR;
+		conf.damping = DAMPING.NONE;
+		conf.repetitions = 1;
+		conf.showProgress = true;
+		conf.showResults = true;
+		conf.title = " ";
+		objectives.add(conf);
+		
+//		conf = new Configuration();
+//		conf.POPULATION_SIZE = 1;
+//		conf.ACTIVE_AT_START_PROPABILITY = 0.0;
+//		conf.variate_mc = Configuration.VARIATE.NONE;
+//		conf.variate_TO = Configuration.VARIATE.NONE;
+//		conf.variate_eta = Configuration.VARIATE.NONE;
+//		conf.variate_Tcurrent = Configuration.VARIATE.NONE;
+//		conf.variate_A = Configuration.VARIATE.NONE;
+//		conf.strategy = SIGNAL.TLR;
+//		conf.timed_t_notify = 150.0;
+//		conf.timed_tau_preload = 30.0;
+//		conf.timed_tau_reduce = 120.0;
+//		conf.SIMULATION_LENGTH = 10.0;
+//		conf.model = MODEL.COMPACT_LINEAR;
+//		conf.damping = DAMPING.RANDOM;
+//		conf.repetitions = 1;
+//		conf.showProgress = true;
+//		conf.showResults = true;
+//		conf.title = "TLR randomization";
+//		objectives.add(conf);
+		
+		return objectives;
+	}
+	
 	public static ArrayList<Configuration> createObjectives_Ontje() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
 		

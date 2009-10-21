@@ -98,7 +98,8 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_Modeltest();
 //		objectives = Objectives.createObjectives_Demo();
 //		objectives = Objectives.createObjectives_Stefan();
-		objectives = Objectives.createObjectives_Ontje();
+//		objectives = Objectives.createObjectives_Ontje();
+		objectives = Objectives.createObjectives_EWE();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;
@@ -301,8 +302,8 @@ public class Main_MultipleRuns {
 		shell.setText("Simulation results");
 		// Prepare temperature chart
 		LineChartDialog lcd = new LineChartDialog(shell,
-				"Temperature progress", "Time (h)", "Temperature (�C)", "min",
-				"�C", 3.0, 8.0);
+				"Temperature progress", "Time (h)", "Temperature (°C)", "min",
+				"°C", 3.0, 8.0);
 		// Prepare load chart
 		StepChartDialog scd = new StepChartDialog(shell, "Load progress",
 				"Time (h)", "Load (W)", "min", "W", 0.0, 70.0);
