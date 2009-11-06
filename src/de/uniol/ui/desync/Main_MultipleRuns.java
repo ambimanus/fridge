@@ -99,7 +99,8 @@ public class Main_MultipleRuns {
 //		objectives = Objectives.createObjectives_Demo();
 //		objectives = Objectives.createObjectives_Stefan();
 //		objectives = Objectives.createObjectives_Ontje();
-		objectives = Objectives.createObjectives_EWE();
+//		objectives = Objectives.createObjectives_EWE();
+		objectives = Objectives.createObjectives_EUREC();
 		
 		Iterator<Configuration> it = objectives.iterator();
 		int i = 0;

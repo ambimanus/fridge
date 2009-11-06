@@ -52,6 +52,27 @@ public class Objectives {
 		return objectives;
 	}
 	
+	/** Objectives for the TLR demo in the EUREC presentation (Ontje) */
+	public static ArrayList<Configuration> createObjectives_EUREC() {
+		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
+		
+//		Configuration conf = new Configuration();
+//		conf.POPULATION_SIZE = 5000;
+//		conf.strategy = SIGNAL.TLR;
+//		conf.damping = DAMPING.STATEFUL_FULL;
+//		conf.title = "TLR-staterecovery";
+//		objectives.add(conf);
+		
+		Configuration conf = new Configuration();
+		conf.POPULATION_SIZE = 5000;
+		conf.strategy = SIGNAL.TLR;
+		conf.damping = DAMPING.NONE;
+		conf.title = "TLR";
+		objectives.add(conf);
+		
+		return objectives;
+	}
+	
 	/** Objectives for the randomization demo in the EWE presentation */
 	public static ArrayList<Configuration> createObjectives_EWE() {
 		ArrayList<Configuration> objectives = new ArrayList<Configuration>();
