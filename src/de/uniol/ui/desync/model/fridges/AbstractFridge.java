@@ -752,7 +752,11 @@ public abstract class AbstractFridge extends SimEntityClean {
 		double divisor = t_from - t_surround + (eta * (load / a));
 		double tau = -1 * Math.log((dividend / divisor)) * (m_c / a);
 		if (tau < 0.0) {
-			System.err.println("tau=" + tau);
+			System.err
+					.printf(
+							"%s, tau=%.2f, t_from=%.2f, t_dest=%.2f, load=%f.1, TO=%.2f, eta=%.2f, a=%.2f, mc=%.2f\n",
+							getName(), tau, t_from, t_dest, load, t_surround,
+							eta, a, m_c);
 		}
 		// Multiply by 60 because tau is calculated in hours, but simulation
 		// uses minutes

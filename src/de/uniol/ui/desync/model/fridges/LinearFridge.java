@@ -184,7 +184,8 @@ public class LinearFridge extends AbstractFridge {
 		// Calculate range from t_min to t_max
 		double range = getT_max() - getT_min();
 		// Check direction: warming or cooling
-		if (t_from < t_dest) {
+		if (t_from < t_dest
+				|| (Math.abs(t_dest - t_from) < 0.0001 && load == 0.0)) {
 			// Calculate tau_warming if not already done
 			Double t_w = loadsToTauWarming.get(load);
 			if (t_w == null) {
